@@ -1,0 +1,11 @@
+{
+  "name": "Kdefy Dashboard",
+  "short_name": "Kdefy",
+  "display": "standalone",
+  "background_color": "#007bff",
+  "theme_color": "#007bff",
+  "start_url": "index.html",
+  "icons": [
+    { "src": "assets/logo.svg", "sizes": "192x192", "type": "image/svg+xml" }
+  ]
+}

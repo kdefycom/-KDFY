@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kdefy Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="libs/jspdf.min.js"></script>
+  <script src="libs/html2canvas.min.js"></script>
+  <script src="libs/chart.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <div class="logo"><img src="assets/logo.svg" alt="">Kdefy</div>
+      <nav>
+        <ul>
+          <li data-route="pdf"><img src="assets/icons/pdf.svg"> PDF Simples</li>
+          <li data-route="contratos"><img src="assets/icons/contrato.svg"> Contratos</li>
+          <li data-route="lucro"><img src="assets/icons/lucro.svg"> Lucro / ROI</li>
+          <li data-route="propostas"><img src="assets/icons/proposta.svg"> Propostas</li>
+          <li data-route="posts"><img src="assets/icons/post.svg"> Postagens</li>
+          <li data-route="admin"><img src="assets/icons/admin.svg"> Admin</li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <header>
+        <div class="header-left">
+          <h1 id="page-title">Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <span id="username">👤 Usuário</span>
+          <span id="date"></span>
+        </div>
+      </header>
+
+      <section id="content">
+        <div class="welcome">
+          <h2>Bem-vindo à Plataforma Kdefy</h2>
+          <p>Escolha uma ferramenta no menu lateral.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
