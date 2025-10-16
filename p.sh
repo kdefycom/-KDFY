@@ -17,7 +17,8 @@ if ! git remote | grep -q origin; then
     git remote add origin "$REPO_URL"
 fi
 
+git branch -M main
 git add .
 git commit -m "$COMMIT_MSG" 2>/dev/null
-
 git push https://$USER:$TOKEN@github.com/kdefycom/-KDFY.git main --force
+
