@@ -3,723 +3,929 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Pro - Multi-Serviços</title>
+<title>Dashboard Multi-Serviços Pro</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
-  
-  body { 
-    display: flex; 
-    height: 100vh; 
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    overflow: hidden;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+  body { display: flex; height: 100vh; background: #0a0e27; color: #e0e6ed; overflow: hidden; }
   
   .sidebar { 
     width: 80px; 
-    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(180deg, #0f1420 0%, #1a1f3a 100%); 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    padding-top: 20px;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.3);
-    position: relative;
-    z-index: 10;
-  }
-  
-  .sidebar .logo {
-    font-size: 32px;
-    margin-bottom: 40px;
-    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.8));
+    padding: 20px 0; 
+    box-shadow: 2px 0 10px rgba(0,0,0,0.5);
   }
   
   .sidebar button { 
-    background: rgba(255,255,255,0.05);
-    border: 2px solid transparent;
-    color: #94a3b8; 
+    background: none; 
+    border: none; 
+    color: #8b93a7; 
     font-size: 24px; 
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    margin: 12px 0; 
+    margin: 15px 0; 
     cursor: pointer; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
+    padding: 12px;
+    border-radius: 8px;
     position: relative;
   }
   
-  .sidebar button::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    left: 70px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #1e293b;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  .sidebar button.active, .sidebar button:hover { 
+    color: #00d4aa; 
+    background: rgba(0,212,170,0.1);
+    transform: translateX(5px);
   }
   
   .sidebar button:hover::after {
-    opacity: 1;
-  }
-  
-  .sidebar button.active, .sidebar button:hover { 
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: rgba(255,255,255,0.2);
-    color: white;
-    transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    content: attr(title);
+    position: absolute;
+    left: 70px;
+    background: #1a1f3a;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
   }
   
   .main { 
     flex: 1; 
     padding: 30px; 
     overflow-y: auto;
-    background: rgba(255,255,255,0.95);
-    margin: 20px;
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-  }
-  
-  .main::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .main::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 10px;
-  }
-  
-  .main::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 10px;
+    background: #0a0e27;
   }
   
   .header {
-    margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1a1f3a;
   }
   
-  h1 { 
-    color: #1e293b;
-    font-size: 32px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .date-time {
-    color: #64748b;
-    font-size: 14px;
-    font-weight: 500;
-  }
-  
-  h2 { 
-    margin-bottom: 20px; 
-    color: #1e293b;
-    font-size: 24px;
+  .header h1 { 
+    color: #ffffff; 
+    font-size: 28px;
     font-weight: 600;
   }
   
-  .service { 
-    display: none;
-    animation: fadeIn 0.5s ease-in-out;
+  .datetime { 
+    color: #8b93a7; 
+    font-size: 14px;
   }
   
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  .service { display: none; }
+  .service.active { display: block; }
   
-  .service.active { 
-    display: block; 
+  .card { 
+    background: linear-gradient(135deg, #13192e 0%, #1a1f3a 100%);
+    padding: 25px; 
+    margin-bottom: 20px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    border: 1px solid #1a1f3a;
   }
   
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
   }
   
   .metric-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 24px;
-    border-radius: 16px;
-    color: white;
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-    transition: transform 0.3s;
+    background: linear-gradient(135deg, #1a1f3a 0%, #13192e 100%);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #2a3150;
+    transition: all 0.3s ease;
   }
   
   .metric-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,212,170,0.2);
+    border-color: #00d4aa;
   }
   
-  .metric-card .label {
+  .metric-card h3 {
+    color: #8b93a7;
     font-size: 14px;
-    opacity: 0.9;
-    margin-bottom: 8px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    text-transform: uppercase;
   }
   
   .metric-card .value {
     font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 4px;
+    font-weight: bold;
+    color: #00d4aa;
+    margin-bottom: 5px;
   }
   
   .metric-card .change {
     font-size: 12px;
-    opacity: 0.8;
+    color: #00d4aa;
   }
   
-  input, textarea { 
-    padding: 14px; 
+  .metric-card .change.negative {
+    color: #ff5370;
+  }
+  
+  h2 { 
+    margin-bottom: 20px; 
+    color: #ffffff; 
+    font-size: 22px;
+    font-weight: 600;
+  }
+  
+  input, textarea, select { 
+    padding: 12px; 
     margin: 8px 0; 
     width: 100%; 
-    border-radius: 12px; 
-    border: 2px solid #e2e8f0;
+    border-radius: 8px; 
+    border: 1px solid #2a3150; 
+    background: #0f1420;
+    color: #e0e6ed;
     font-size: 14px;
-    transition: all 0.3s;
-    background: white;
+    transition: all 0.3s ease;
   }
   
-  input:focus, textarea:focus {
+  input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #00d4aa;
+    box-shadow: 0 0 0 3px rgba(0,212,170,0.1);
   }
   
-  button.btn { 
+  button.primary { 
     cursor: pointer; 
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #00d4aa 0%, #00a87d 100%);
     border: none; 
-    color: white;
-    font-weight: 600;
-    border-radius: 12px; 
-    padding: 14px 28px; 
-    transition: all 0.3s;
+    color: #ffffff; 
+    font-weight: 600; 
+    border-radius: 8px; 
+    padding: 12px 24px; 
+    transition: all 0.3s ease;
     font-size: 14px;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
   }
   
-  button.btn:hover { 
+  button.primary:hover { 
+    background: linear-gradient(135deg, #00a87d 0%, #008c66 100%);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    box-shadow: 0 5px 15px rgba(0,212,170,0.3);
   }
   
-  button.btn:active {
-    transform: translateY(0);
-  }
-  
-  .card { 
-    background: white;
-    padding: 24px; 
-    margin-bottom: 24px; 
-    border-radius: 16px; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 1px solid #f1f5f9;
-  }
-  
-  .card h3 {
-    color: #475569;
-    font-size: 16px;
-    margin-bottom: 16px;
-    font-weight: 600;
-  }
-  
-  ul { 
-    list-style: none; 
-    margin-top: 12px; 
-    max-height: 300px; 
-    overflow-y: auto;
-  }
-  
-  li { 
-    padding: 12px; 
-    border-bottom: 1px solid #f1f5f9;
-    color: #475569;
+  button.secondary {
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid #2a3150;
+    color: #8b93a7;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
     font-size: 14px;
-    transition: background 0.2s;
   }
   
-  li:hover {
-    background: #f8fafc;
-  }
-  
-  li:last-child {
-    border-bottom: none;
-  }
-  
-  canvas { 
-    width: 100% !important; 
-    height: 350px !important;
-    border-radius: 12px;
-  }
-  
-  .chart-container {
-    position: relative;
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    margin-bottom: 24px;
-  }
-  
-  .grid-2 {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
+  button.secondary:hover {
+    border-color: #00d4aa;
+    color: #00d4aa;
+    background: rgba(0,212,170,0.05);
   }
   
   .input-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 15px;
+    margin-bottom: 20px;
   }
   
   .result-box {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 24px;
-    border-radius: 12px;
+    background: rgba(0,212,170,0.1);
+    border: 1px solid #00d4aa;
+    padding: 20px;
+    border-radius: 8px;
     margin: 20px 0;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
   }
   
-  .result-box .result-label {
-    font-size: 14px;
-    opacity: 0.9;
-    margin-bottom: 8px;
+  .result-box h3 {
+    color: #00d4aa;
+    font-size: 18px;
+    margin-bottom: 10px;
   }
   
   .result-box .result-value {
-    font-size: 42px;
-    font-weight: 700;
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  ul { 
+    list-style: none; 
+    margin-top: 15px;
+  }
+  
+  li { 
+    padding: 15px; 
+    margin: 10px 0;
+    background: #0f1420;
+    border-radius: 8px;
+    border-left: 3px solid #00d4aa;
+    transition: all 0.3s ease;
+  }
+  
+  li:hover {
+    background: #13192e;
+    transform: translateX(5px);
+  }
+  
+  li .date {
+    color: #8b93a7;
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+  
+  li .content {
+    color: #e0e6ed;
+    font-size: 14px;
+  }
+  
+  canvas { 
+    width: 100% !important; 
+    height: 400px !important;
+    border-radius: 8px;
+  }
+  
+  .chart-container {
+    background: #0f1420;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #2a3150;
+  }
+  
+  .label {
+    display: block;
+    color: #8b93a7;
+    font-size: 13px;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  
+  .btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #0f1420;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #2a3150;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00d4aa;
   }
 </style>
 </head>
 <body>
 
 <div class="sidebar">
-  <div class="logo">📊</div>
-  <button id="dashboard-btn" class="active" data-tooltip="Dashboard">🏠</button>
-  <button id="post-btn" data-tooltip="Posts">✍️</button>
-  <button id="calc-btn" data-tooltip="Calculadora">💰</button>
-  <button id="pdf-btn" data-tooltip="PDF">📄</button>
+  <button id="dashboard-btn" class="active" title="Dashboard">📊</button>
+  <button id="post-btn" title="Gerador de Posts">✍️</button>
+  <button id="calc-btn" title="Calculadora de Lucro">💰</button>
+  <button id="roi-btn" title="Calculadora de ROI">📈</button>
+  <button id="pdf-btn" title="Gerador de PDF">📄</button>
 </div>
 
 <div class="main">
   <div class="header">
     <h1 id="page-title">Dashboard</h1>
-    <div class="date-time" id="datetime"></div>
+    <div class="datetime" id="datetime"></div>
   </div>
 
   <!-- Dashboard Overview -->
   <div id="dashboard-service" class="service active">
     <div class="metrics-grid">
       <div class="metric-card">
-        <div class="label">Total de Posts</div>
+        <h3>Total de Posts</h3>
         <div class="value" id="total-posts">0</div>
-        <div class="change">↑ 12% este mês</div>
+        <div class="change">📝 Posts criados</div>
       </div>
       <div class="metric-card">
-        <div class="label">Cálculos Realizados</div>
+        <h3>Cálculos de Lucro</h3>
         <div class="value" id="total-calcs">0</div>
-        <div class="change">↑ 8% este mês</div>
+        <div class="change">💵 Análises feitas</div>
       </div>
       <div class="metric-card">
-        <div class="label">PDFs Gerados</div>
+        <h3>PDFs Gerados</h3>
         <div class="value" id="total-pdfs">0</div>
-        <div class="change">↑ 15% este mês</div>
+        <div class="change">📑 Documentos criados</div>
       </div>
       <div class="metric-card">
-        <div class="label">Lucro Médio</div>
-        <div class="value" id="avg-profit">R$ 0</div>
-        <div class="change">↑ 22% este mês</div>
+        <h3>ROI Médio</h3>
+        <div class="value" id="avg-roi">0%</div>
+        <div class="change">📊 Retorno sobre investimento</div>
       </div>
     </div>
 
-    <div class="grid-2">
-      <div class="chart-container">
-        <h3>Atividade Semanal</h3>
-        <canvas id="activity-chart"></canvas>
-      </div>
-      <div class="chart-container">
-        <h3>Performance</h3>
-        <canvas id="performance-chart"></canvas>
-      </div>
-    </div>
-
-    <div class="chart-container">
-      <h3>Evolução de Lucro</h3>
-      <canvas id="profit-evolution-chart"></canvas>
+    <div class="card chart-container">
+      <h2>Evolução de Lucro (Estilo Binance)</h2>
+      <canvas id="main-chart"></canvas>
     </div>
   </div>
 
   <!-- Gerador de Posts -->
   <div id="post-service" class="service card">
-    <h2>📝 Gerador de Posts</h2>
-    <textarea id="post-text" rows="6" placeholder="Digite seu texto aqui..."></textarea>
-    <button class="btn" onclick="savePost()">💾 Salvar Post</button>
-    <div class="card" style="margin-top: 24px;">
-      <h3>Posts Salvos</h3>
-      <ul id="post-list"></ul>
+    <h2>Gerador de Posts Profissional</h2>
+    <label class="label">Título do Post</label>
+    <input type="text" id="post-title" placeholder="Ex: Lançamento do novo produto">
+    
+    <label class="label">Categoria</label>
+    <select id="post-category">
+      <option value="marketing">Marketing</option>
+      <option value="vendas">Vendas</option>
+      <option value="produto">Produto</option>
+      <option value="anuncio">Anúncio</option>
+      <option value="educacional">Educacional</option>
+    </select>
+    
+    <label class="label">Conteúdo do Post</label>
+    <textarea id="post-text" rows="6" placeholder="Digite o conteúdo do seu post aqui..."></textarea>
+    
+    <div class="btn-group">
+      <button class="primary" onclick="savePost()">💾 Salvar Post</button>
+      <button class="secondary" onclick="clearPostForm()">🗑️ Limpar</button>
     </div>
+    
+    <h3 style="margin-top: 30px; margin-bottom: 15px;">Posts Salvos</h3>
+    <ul id="post-list"></ul>
   </div>
 
   <!-- Calculadora de Margem/Lucro -->
-  <div id="calc-service" class="service">
-    <h2>💰 Calculadora de Margem e Lucro</h2>
-    <div class="card">
-      <div class="input-group">
-        <input type="number" id="cost" placeholder="💵 Custo do Produto">
-        <input type="number" id="price" placeholder="💲 Preço de Venda">
+  <div id="calc-service" class="service card">
+    <h2>Calculadora de Margem e Lucro</h2>
+    
+    <div class="input-group">
+      <div>
+        <label class="label">Custo do Produto (R$)</label>
+        <input type="number" id="cost" placeholder="Ex: 50.00" step="0.01">
       </div>
-      <button class="btn" onclick="calculateMargin()" style="width: 100%; margin-top: 12px;">🧮 Calcular</button>
-      <div id="margin-result"></div>
+      <div>
+        <label class="label">Preço de Venda (R$)</label>
+        <input type="number" id="price" placeholder="Ex: 100.00" step="0.01">
+      </div>
     </div>
     
-    <div class="grid-2">
-      <div class="chart-container">
-        <h3>Histórico de Cálculos</h3>
-        <canvas id="profit-chart"></canvas>
+    <div class="input-group">
+      <div>
+        <label class="label">Custos Adicionais (R$)</label>
+        <input type="number" id="extra-costs" placeholder="Ex: 5.00" step="0.01" value="0">
       </div>
-      <div class="chart-container">
-        <h3>Distribuição de Margem</h3>
-        <canvas id="margin-distribution-chart"></canvas>
+      <div>
+        <label class="label">Impostos (%)</label>
+        <input type="number" id="tax" placeholder="Ex: 15" step="0.1" value="0">
       </div>
     </div>
+    
+    <button class="primary" onclick="calculateMargin()">🧮 Calcular Lucro Real</button>
+    
+    <div id="margin-result" class="result-box" style="display:none;">
+      <h3>Resultado da Análise</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+        <div>
+          <div class="label">Margem de Lucro</div>
+          <div class="result-value" id="margin-value">0%</div>
+        </div>
+        <div>
+          <div class="label">Lucro Líquido</div>
+          <div class="result-value" id="profit-value">R$ 0,00</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="chart-container" style="margin-top: 30px;">
+      <h3 style="color: #ffffff; margin-bottom: 15px;">Histórico de Lucro (Candlestick)</h3>
+      <canvas id="profit-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Calculadora de ROI -->
+  <div id="roi-service" class="service card">
+    <h2>Calculadora de ROI (Retorno sobre Investimento)</h2>
+    
+    <div class="input-group">
+      <div>
+        <label class="label">Investimento Inicial (R$)</label>
+        <input type="number" id="investment" placeholder="Ex: 1000.00" step="0.01">
+      </div>
+      <div>
+        <label class="label">Retorno Obtido (R$)</label>
+        <input type="number" id="return" placeholder="Ex: 1500.00" step="0.01">
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <div>
+        <label class="label">Período (meses)</label>
+        <input type="number" id="period" placeholder="Ex: 6" min="1">
+      </div>
+      <div>
+        <label class="label">Tipo de Investimento</label>
+        <select id="investment-type">
+          <option value="marketing">Marketing Digital</option>
+          <option value="produto">Desenvolvimento de Produto</option>
+          <option value="infra">Infraestrutura</option>
+          <option value="treinamento">Treinamento</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+    </div>
+    
+    <button class="primary" onclick="calculateROI()">📊 Calcular ROI</button>
+    
+    <div id="roi-result" class="result-box" style="display:none;">
+      <h3>Análise de ROI</h3>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 15px;">
+        <div>
+          <div class="label">ROI Total</div>
+          <div class="result-value" id="roi-value">0%</div>
+        </div>
+        <div>
+          <div class="label">ROI Mensal</div>
+          <div class="result-value" id="roi-monthly">0%</div>
+        </div>
+        <div>
+          <div class="label">Ganho Líquido</div>
+          <div class="result-value" id="net-gain">R$ 0,00</div>
+        </div>
+      </div>
+      <div style="margin-top: 15px; padding: 15px; background: rgba(0,212,170,0.05); border-radius: 8px;">
+        <div class="label">Análise</div>
+        <p id="roi-analysis" style="color: #e0e6ed; margin-top: 5px;"></p>
+      </div>
+    </div>
+    
+    <h3 style="margin-top: 30px; margin-bottom: 15px;">Histórico de ROIs</h3>
+    <ul id="roi-list"></ul>
   </div>
 
   <!-- Gerador de PDF -->
   <div id="pdf-service" class="service card">
-    <h2>📄 Gerador de PDF</h2>
-    <input type="text" id="pdf-title" placeholder="📋 Título do documento">
-    <textarea id="pdf-text" rows="10" placeholder="Digite o conteúdo para o PDF..."></textarea>
-    <button class="btn" onclick="generatePDF()">⬇️ Gerar e Baixar PDF</button>
+    <h2>Gerador de PDF Profissional</h2>
+    
+    <label class="label">Título do Documento</label>
+    <input type="text" id="pdf-title" placeholder="Ex: Relatório Mensal de Vendas">
+    
+    <label class="label">Tipo de Documento</label>
+    <select id="pdf-type">
+      <option value="relatorio">Relatório</option>
+      <option value="proposta">Proposta Comercial</option>
+      <option value="contrato">Contrato</option>
+      <option value="nota">Nota Técnica</option>
+    </select>
+    
+    <label class="label">Autor</label>
+    <input type="text" id="pdf-author" placeholder="Seu nome ou empresa">
+    
+    <label class="label">Conteúdo do Documento</label>
+    <textarea id="pdf-text" rows="8" placeholder="Digite o conteúdo detalhado do documento..."></textarea>
+    
+    <div class="btn-group">
+      <button class="primary" onclick="generatePDF()">📄 Gerar PDF</button>
+      <button class="secondary" onclick="clearPDFForm()">🗑️ Limpar</button>
+    </div>
+    
+    <h3 style="margin-top: 30px; margin-bottom: 15px;">PDFs Gerados Recentemente</h3>
+    <ul id="pdf-list"></ul>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.0"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  // Atualizar data/hora
-  function updateDateTime() {
-    const now = new Date();
-    document.getElementById('datetime').textContent = now.toLocaleString('pt-BR');
-  }
-  updateDateTime();
-  setInterval(updateDateTime, 1000);
-
-  // Navegação sidebar
+  // ==================== NAVIGATION ====================
   const dashboardBtn = document.getElementById('dashboard-btn');
   const postBtn = document.getElementById('post-btn');
   const calcBtn = document.getElementById('calc-btn');
+  const roiBtn = document.getElementById('roi-btn');
   const pdfBtn = document.getElementById('pdf-btn');
+  
   const services = {
     dashboard: document.getElementById('dashboard-service'),
     post: document.getElementById('post-service'),
     calc: document.getElementById('calc-service'),
+    roi: document.getElementById('roi-service'),
     pdf: document.getElementById('pdf-service')
   };
 
-  const titles = {
+  const pageTitles = {
     dashboard: 'Dashboard',
     post: 'Gerador de Posts',
     calc: 'Calculadora de Lucro',
+    roi: 'Calculadora de ROI',
     pdf: 'Gerador de PDF'
   };
 
   function setActive(service) {
     for(let key in services) services[key].classList.remove('active');
     services[service].classList.add('active');
-    document.getElementById('page-title').textContent = titles[service];
     
     dashboardBtn.classList.remove('active');
     postBtn.classList.remove('active');
     calcBtn.classList.remove('active');
+    roiBtn.classList.remove('active');
     pdfBtn.classList.remove('active');
     
     if(service==='dashboard') dashboardBtn.classList.add('active');
     if(service==='post') postBtn.classList.add('active');
     if(service==='calc') calcBtn.classList.add('active');
+    if(service==='roi') roiBtn.classList.add('active');
     if(service==='pdf') pdfBtn.classList.add('active');
     
-    if(service==='dashboard') updateDashboard();
+    document.getElementById('page-title').textContent = pageTitles[service];
+    
+    if(service === 'dashboard') updateDashboard();
   }
 
   dashboardBtn.onclick = ()=>setActive('dashboard');
   postBtn.onclick = ()=>setActive('post');
   calcBtn.onclick = ()=>setActive('calc');
+  roiBtn.onclick = ()=>setActive('roi');
   pdfBtn.onclick = ()=>setActive('pdf');
 
-  // Gráfico de Atividade Semanal
-  const activityCtx = document.getElementById('activity-chart').getContext('2d');
-  const activityChart = new Chart(activityCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
-      datasets: [{
-        label: 'Atividades',
-        data: [12, 19, 15, 25, 22, 30, 28],
-        backgroundColor: 'rgba(102, 126, 234, 0.8)',
-        borderColor: 'rgba(102, 126, 234, 1)',
-        borderWidth: 2,
-        borderRadius: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-        x: { grid: { display: false } }
-      }
-    }
-  });
+  // ==================== DATE TIME ====================
+  function updateDateTime() {
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    document.getElementById('datetime').textContent = now.toLocaleDateString('pt-BR', options);
+  }
+  updateDateTime();
+  setInterval(updateDateTime, 60000);
 
-  // Gráfico de Performance (Doughnut)
-  const performanceCtx = document.getElementById('performance-chart').getContext('2d');
-  const performanceChart = new Chart(performanceCtx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Posts', 'Cálculos', 'PDFs'],
-      datasets: [{
-        data: [45, 30, 25],
-        backgroundColor: [
-          'rgba(102, 126, 234, 0.8)',
-          'rgba(118, 75, 162, 0.8)',
-          'rgba(237, 100, 166, 0.8)'
-        ],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'bottom' }
-      }
-    }
-  });
+  // ==================== DASHBOARD ====================
+  let mainChart = null;
 
-  // Gráfico de Evolução de Lucro
-  const profitEvolutionCtx = document.getElementById('profit-evolution-chart').getContext('2d');
-  const profitEvolutionChart = new Chart(profitEvolutionCtx, {
-    type: 'line',
-    data: {
-      labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-      datasets: [{
-        label: 'Lucro (R$)',
-        data: [1200, 1900, 1500, 2500, 2200, 3000],
-        borderColor: 'rgba(102, 126, 234, 1)',
-        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-        borderWidth: 3,
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: true } },
-      scales: {
-        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-        x: { grid: { display: false } }
+  function updateDashboard() {
+    const posts = JSON.parse(localStorage.getItem('posts')||'[]');
+    const calcs = JSON.parse(localStorage.getItem('calcs')||'[]');
+    const pdfs = JSON.parse(localStorage.getItem('pdfs')||'[]');
+    const rois = JSON.parse(localStorage.getItem('rois')||'[]');
+    
+    document.getElementById('total-posts').textContent = posts.length;
+    document.getElementById('total-calcs').textContent = calcs.length;
+    document.getElementById('total-pdfs').textContent = pdfs.length;
+    
+    const avgRoi = rois.length > 0 
+      ? (rois.reduce((sum, r) => sum + parseFloat(r.roi), 0) / rois.length).toFixed(1)
+      : '0';
+    document.getElementById('avg-roi').textContent = avgRoi + '%';
+    
+    // Main Chart - Candlestick com dados reais
+    const ctx = document.getElementById('main-chart').getContext('2d');
+    
+    if(mainChart) mainChart.destroy();
+    
+    const chartData = calcs.length > 0 
+      ? calcs.slice(-10).map((c, i) => ({
+          x: new Date(c.date).toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' }),
+          o: parseFloat(c.cost),
+          h: Math.max(parseFloat(c.cost), parseFloat(c.netProfit) + parseFloat(c.cost)),
+          l: Math.min(parseFloat(c.cost), parseFloat(c.netProfit)),
+          c: parseFloat(c.netProfit) + parseFloat(c.cost)
+        }))
+      : [
+          { x: 'Sem dados', o: 0, h: 0, l: 0, c: 0 }
+        ];
+    
+    mainChart = new Chart(ctx, {
+      type: 'candlestick',
+      data: {
+        datasets: [{
+          label: 'Lucro',
+          data: chartData,
+          color: {
+            up: '#00d4aa',
+            down: '#ff5370',
+            unchanged: '#8b93a7'
+          }
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1a1f3a',
+            titleColor: '#ffffff',
+            bodyColor: '#e0e6ed',
+            borderColor: '#00d4aa',
+            borderWidth: 1
+          }
+        },
+        scales: {
+          x: { 
+            ticks: { color: '#8b93a7' },
+            grid: { color: '#1a1f3a' }
+          },
+          y: { 
+            ticks: { color: '#8b93a7' },
+            grid: { color: '#1a1f3a' }
+          }
+        }
       }
-    }
-  });
+    });
+  }
 
-  // LocalStorage Posts
+  // ==================== POSTS ====================
   function savePost() {
+    const title = document.getElementById('post-title').value.trim();
     const text = document.getElementById('post-text').value.trim();
-    if(!text) return alert('⚠️ Digite algo!');
+    const category = document.getElementById('post-category').value;
+    
+    if(!title || !text) return alert('⚠️ Preencha título e conteúdo!');
+    
     let posts = JSON.parse(localStorage.getItem('posts')||'[]');
-    posts.push({text, date: new Date()});
+    posts.push({ title, text, category, date: new Date().toISOString() });
     localStorage.setItem('posts', JSON.stringify(posts));
+    
     loadPosts();
-    document.getElementById('post-text').value='';
-    updateDashboard();
+    clearPostForm();
+    alert('✅ Post salvo com sucesso!');
   }
 
   function loadPosts() {
     const list = document.getElementById('post-list');
-    list.innerHTML='';
+    list.innerHTML = '';
     let posts = JSON.parse(localStorage.getItem('posts')||'[]');
+    
     if(posts.length === 0) {
-      list.innerHTML = '<li style="text-align:center; color:#94a3b8;">Nenhum post salvo ainda</li>';
+      list.innerHTML = '<li><div class="content">Nenhum post criado ainda.</div></li>';
       return;
     }
-    posts.reverse().forEach(p=>{
-      const li=document.createElement('li');
-      li.innerHTML = `<strong>${new Date(p.date).toLocaleString('pt-BR')}</strong><br>${p.text}`;
+    
+    posts.reverse().forEach((p, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div class="date">${new Date(p.date).toLocaleString('pt-BR')} • ${p.category}</div>
+        <div class="content"><strong>${p.title}</strong></div>
+        <div class="content" style="margin-top: 8px; color: #8b93a7;">${p.text}</div>
+      `;
       list.appendChild(li);
     });
   }
+
+  function clearPostForm() {
+    document.getElementById('post-title').value = '';
+    document.getElementById('post-text').value = '';
+    document.getElementById('post-category').value = 'marketing';
+  }
+
   loadPosts();
 
-  // Calculadora e gráficos
-  const profitCtx = document.getElementById('profit-chart').getContext('2d');
-  const profitChart = new Chart(profitCtx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Lucro',
-        data: [],
-        borderColor: 'rgba(102, 126, 234, 1)',
-        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-        borderWidth: 2,
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-        x: { grid: { display: false } }
-      }
-    }
-  });
-
-  const marginDistCtx = document.getElementById('margin-distribution-chart').getContext('2d');
-  const marginDistChart = new Chart(marginDistCtx, {
-    type: 'pie',
-    data: {
-      labels: ['0-20%', '20-40%', '40-60%', '60-80%', '80-100%'],
-      datasets: [{
-        data: [0, 0, 0, 0, 0],
-        backgroundColor: [
-          'rgba(239, 68, 68, 0.8)',
-          'rgba(251, 146, 60, 0.8)',
-          'rgba(250, 204, 21, 0.8)',
-          'rgba(34, 197, 94, 0.8)',
-          'rgba(59, 130, 246, 0.8)'
-        ],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { position: 'bottom' } }
-    }
-  });
+  // ==================== CALCULATOR ====================
+  let profitChart = null;
 
   function calculateMargin() {
-    const cost=parseFloat(document.getElementById('cost').value);
-    const price=parseFloat(document.getElementById('price').value);
-    if(isNaN(cost)||isNaN(price)) return alert('⚠️ Digite valores válidos');
+    const cost = parseFloat(document.getElementById('cost').value);
+    const price = parseFloat(document.getElementById('price').value);
+    const extraCosts = parseFloat(document.getElementById('extra-costs').value) || 0;
+    const tax = parseFloat(document.getElementById('tax').value) || 0;
     
-    const profit = price - cost;
-    const margin = ((profit/price)*100).toFixed(2);
+    if(isNaN(cost) || isNaN(price) || cost <= 0 || price <= 0) {
+      return alert('⚠️ Digite valores válidos para custo e preço!');
+    }
     
-    const resultDiv = document.getElementById('margin-result');
-    resultDiv.innerHTML = `
-      <div class="result-box" style="margin-top: 20px;">
-        <div class="result-label">Margem de Lucro</div>
-        <div class="result-value">${margin}%</div>
-        <div style="margin-top: 12px; font-size: 16px;">Lucro: R$ ${profit.toFixed(2)}</div>
-      </div>
-    `;
-
+    if(price <= cost) {
+      alert('⚠️ O preço de venda deve ser maior que o custo!');
+    }
+    
+    // Cálculos reais
+    const totalCost = cost + extraCosts;
+    const taxAmount = (price * tax) / 100;
+    const netProfit = price - totalCost - taxAmount;
+    const margin = ((netProfit / price) * 100).toFixed(2);
+    
+    document.getElementById('margin-result').style.display = 'block';
+    document.getElementById('margin-value').textContent = margin + '%';
+    document.getElementById('profit-value').textContent = 'R$ ' + netProfit.toFixed(2);
+    
     // Salvar cálculo
     let calcs = JSON.parse(localStorage.getItem('calcs')||'[]');
-    calcs.push({cost, price, profit, margin, date: new Date()});
+    calcs.push({
+      cost: cost.toFixed(2),
+      price: price.toFixed(2),
+      extraCosts: extraCosts.toFixed(2),
+      tax: tax.toFixed(2),
+      netProfit: netProfit.toFixed(2),
+      margin: margin,
+      date: new Date().toISOString()
+    });
     localStorage.setItem('calcs', JSON.stringify(calcs));
-
-    // Atualizar gráfico de histórico
-    const now = new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-    profitChart.data.labels.push(now);
-    profitChart.data.datasets[0].data.push(profit);
-    if(profitChart.data.labels.length > 10) {
-      profitChart.data.labels.shift();
-      profitChart.data.datasets[0].data.shift();
-    }
-    profitChart.update();
-
-    // Atualizar distribuição de margem
-    updateMarginDistribution(margin);
+    
+    updateProfitChart(calcs);
     updateDashboard();
   }
 
-  function updateMarginDistribution(margin) {
-    let index = 0;
-    if(margin > 20) index = 1;
-    if(margin > 40) index = 2;
-    if(margin > 60) index = 3;
-    if(margin > 80) index = 4;
+  function updateProfitChart(calcs) {
+    const ctx = document.getElementById('profit-chart').getContext('2d');
     
-    marginDistChart.data.datasets[0].data[index]++;
-    marginDistChart.update();
+    if(profitChart) profitChart.destroy();
+    
+    const last10 = calcs.slice(-10);
+    const chartData = last10.map((c, i) => ({
+      x: new Date(c.date).toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' }),
+      o: parseFloat(c.cost),
+      h: Math.max(parseFloat(c.cost), parseFloat(c.netProfit) + parseFloat(c.cost)),
+      l: Math.min(parseFloat(c.cost), parseFloat(c.netProfit)),
+      c: parseFloat(c.netProfit) + parseFloat(c.cost)
+    }));
+    
+    profitChart = new Chart(ctx, {
+      type: 'candlestick',
+      data: {
+        datasets: [{
+          label: 'Lucro',
+          data: chartData,
+          color: {
+            up: '#00d4aa',
+            down: '#ff5370',
+            unchanged: '#8b93a7'
+          }
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1a1f3a',
+            titleColor: '#ffffff',
+            bodyColor: '#e0e6ed',
+            borderColor: '#00d4aa',
+            borderWidth: 1
+          }
+        },
+        scales: {
+          x: { 
+            ticks: { color: '#8b93a7' },
+            grid: { color: '#1a1f3a' }
+          },
+          y: { 
+            ticks: { color: '#8b93a7' },
+            grid: { color: '#1a1f3a' }
+          }
+        }
+      }
+    });
   }
 
-  // Geração de PDF
+  // ==================== ROI CALCULATOR ====================
+  function calculateROI() {
+    const investment = parseFloat(document.getElementById('investment').value);
+    const returnValue = parseFloat(document.getElementById('return').value);
+    const period = parseInt(document.getElementById('period').value);
+    const type = document.getElementById('investment-type').value;
+    
+    if(isNaN(investment) || isNaN(returnValue) || isNaN(period) || investment <= 0 || period <= 0) {
+      return alert('⚠️ Preencha todos os campos com valores válidos!');
+    }
+    
+    const netGain = returnValue - investment;
+    const roi = ((netGain / investment) * 100).toFixed(2);
+    const roiMonthly = (roi / period).toFixed(2);
+    
+    document.getElementById('roi-result').style.display = 'block';
+    document.getElementById('roi-value').textContent = roi + '%';
+    document.getElementById('roi-monthly').textContent = roiMonthly + '%/mês';
+    document.getElementById('net-gain').textContent = 'R$ ' + netGain.toFixed(2);
+    
+    // Análise
+    let analysis = '';
+    if(roi > 50) analysis = '🚀 Excelente! ROI muito acima da média. Investimento altamente rentável.';
+    else if(roi > 20) analysis = '✅ Muito bom! ROI positivo e saudável para o negócio.';
+    else if(roi > 0) analysis = '👍 Positivo. O investimento está gerando retorno, mas pode melhorar.';
+    else analysis = '⚠️ Atenção! ROI negativo. Revise a estratégia de investimento.';
+    
+    document.getElementById('roi-analysis').textContent = analysis;
+    
+    // Salvar ROI
+    let rois = JSON.parse(localStorage.getItem('rois')||'[]');
+    rois.push({
+      investment: investment.toFixed(2),
+      return: returnValue.toFixed(2),
+      period,
+      type,
+      roi,
+      roiMonthly,
+      netGain: netGain.toFixed(2),
+      date: new Date().toISOString()
+    });
+    localStorage.setItem('rois', JSON.stringify(rois));
+    
+    loadROIs();
+    updateDashboard();
+  }
+
+  function loadROIs() {
+    const list = document.getElementById('roi-list');
+    list.innerHTML = '';
+    let rois = JSON.parse(localStorage.getItem('rois')||'[]');
+    
+    if(rois.length === 0) {
+      list.innerHTML = '<li><div class="content">Nenhum ROI calculado ainda.</div></li>';
+      return;
+    }
+    
+    rois.reverse().forEach(r => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div class="date">${new Date(r.date).toLocaleString('pt-BR')} • ${r.type}</div>
+        <div class="content"><strong>ROI: ${r.roi}%</strong> (${r.roiMonthly}%/mês)</div>
+        <div class="content" style="margin-top: 5px; color: #8b93a7;">
+          Investimento: R$ ${r.investment} → Retorno: R$ ${r.return} | Ganho: R$ ${r.netGain}
+        </div>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  loadROIs();
+
+  // ==================== PDF GENERATOR ====================
   async function generatePDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    const title = document.getElementById('pdf-title').value || 'Documento';
-    const text = document.getElementById('pdf-text').value;
-    if(!text) return alert('⚠️ Digite algum texto!');
+    const title = document.getElementById('pdf-title').value.trim();
+    const type = document.getElementById('pdf-type').value;
+    const author = document.getElementById('pdf-author').value.trim();
+    const text = document.getElementById('pdf-text').value.trim();
     
-    // Título
+    if(!title || !text) return alert('⚠️ Preencha título e conteúdo!');
+    
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 20;
+    const maxWidth = pageWidth - 2 * margin;
+    
+    // Header
+    doc.setFillColor(0, 212, 170);
+    doc.rect(0, 0, pageWidth, 30, 'F');
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
     doc.setFont(undefined, 'bold');
-    doc.text(title, 20, 20);
+    doc.text(title, margin, 20);
     
-    // Data
+    // Metadata
+    doc.setTextColor(10, 14, 39);
     doc.setFontSize(10);
     doc.setFont(undefined, 'normal');
-    doc.text(new Date().toLocaleString('pt-BR'), 20, 30);
-    
-    // Linha separadora
-    doc.setLineWidth(0.5);
-    doc.line(20, 35, 190, 35);
-    
-    // Conteúdo
-    doc.setFontSize(12);
-    const lines = doc.splitTextToSize(text, 170);
-    doc.text(lines, 20, 45);
-    
-    doc.save(`${title.replace(/\s+/g, '_')}.pdf`);
-    
-    // Salvar estatística
-    let pdfs = JSON.parse(localStorage.getItem('pdfs')||'0');
-    localStorage.setItem('pdfs', JSON.stringify(parseInt(pdfs) + 1));
-    updateDashboard();
-  }
-
-  // Atualizar métricas do dashboard
-  function updateDashboard() {
-    const posts = JSON.parse(localStorage.getItem('posts')||'[]');
-    const calcs = JSON.parse(localStorage.getItem('calcs')||'[]');
-    const pdfs = parseInt(localStorage.getItem('pdfs')||'0');
-    
-    document.getElementById('total-posts').textContent = posts.length;
-    document.getElementById('total-calcs').textContent = calcs.length;
-    document.getElementById('total-pdfs').textContent = pdfs;
-    
-    // Calcular lucro médio
-    if(calcs.length > 0) {
-      const avgProfit = calcs.reduce((sum, c) => sum + c.profit, 0) / calcs.length;
-      document.getElementById('avg-profit').textContent = `R$ ${avgProfit.toFixed(2)}`;
+    let yPos = 45;
+    doc.text(`Tipo: ${type.charAt(0).toUpperCase() + type.slice(1)}`, margin, yPos);
+    yPos += 6;
+    doc.text(`Data: ${new Date().toLocaleDateString('pt-BR')}`, margin, yPos);
+    yPos += 6;
+    if(author) {
+      doc.text(`Autor: ${author}`, margin, yPos);
+      yPos += 6;
     }
-  }
-
-  updateDashboard();
-</script>
-</body>
-</html>
+    
+    // Line separator
+    doc.setDrawColor(0, 212, 170);
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPos + 2, pageWidth - margin, yPos + 2);
+    yPos += 10;
+    
+    // Content
+    doc.setFontSize(12);
+    doc.setTextColor(50, 50, 50);
+    const lines = doc.splitTextToSize(text, maxWidth);
+    
+    lines.forEach(line => {
+      if(yPos > pageHeight - 30) {
+        doc.addPage();
+        yPos = 20;
+      }
+      doc.text(line, margin, yPos);
+      yPos += 7;
+    });
+    
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for(let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(
+        `Página ${i} de ${pageCount} | Gerado em ${new Date().toLocaleString('pt-BR')}`,
