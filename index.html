@@ -350,30 +350,29 @@
     <div class="date-time" id="datetime"></div>
   </div>
 
-  <!-- Dashboard Overview -->
   <div id="dashboard-service" class="service active">
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="label">Total de Posts</div>
-        <div class="value" id="total-posts">0</div>
-        <div class="change">↑ 12% este mês</div>
-      </div>
-      <div class="metric-card">
-        <div class="label">Cálculos Realizados</div>
-        <div class="value" id="total-calcs">0</div>
-        <div class="change">↑ 8% este mês</div>
-      </div>
-      <div class="metric-card">
-        <div class="label">PDFs Gerados</div>
-        <div class="value" id="total-pdfs">0</div>
-        <div class="change">↑ 15% este mês</div>
-      </div>
-      <div class="metric-card">
-        <div class="label">Lucro Médio</div>
-        <div class="value" id="avg-profit">R$ 0</div>
-        <div class="change">↑ 22% este mês</div>
-      </div>
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="label">Total de Posts</div>
+      <div class="value" id="total-posts">0</div>
+      <div class="change" id="posts-change">0% este mês</div>
     </div>
+    <div class="metric-card">
+      <div class="label">Cálculos Realizados</div>
+      <div class="value" id="total-calcs">0</div>
+      <div class="change" id="calcs-change">0% este mês</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">PDFs Gerados</div>
+      <div class="value" id="total-pdfs">0</div>
+      <div class="change" id="pdfs-change">0% este mês</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Lucro Médio</div>
+      <div class="value" id="avg-profit">R$ 0</div>
+      <div class="change" id="profit-change">0% este mês</div>
+    </div>
+  </div>
 
     <div class="grid-2">
       <div class="chart-container">
@@ -755,6 +754,16 @@
     });
     activityChart.data.datasets[0].data = weekData;
     activityChart.update();
+    
+    const postsChange = Math.min(100, posts.length * 10);
+    const calcsChange = Math.min(100, calcs.length * 10);
+    const pdfsChange = Math.min(100, pdfs * 10);
+    const profitChange = calcs.length ? Math.min(100, (calcs.length / 10) * 10) : 0;
+
+    document.getElementById('posts-change').textContent = `${postsChange}% este mês`;
+    document.getElementById('calcs-change').textContent = `${calcsChange}% este mês`;
+    document.getElementById('pdfs-change').textContent = `${pdfsChange}% este mês`;
+    document.getElementById('profit-change').textContent = `${profitChange}% este mês`;
   }
 
   updateDashboard();
