@@ -1,50 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kdefy Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="libs/jspdf.min.js"></script>
-  <script src="libs/html2canvas.min.js"></script>
-  <script src="libs/chart.min.js"></script>
-</head>
-<body>
-  <div id="app">
-    <aside class="sidebar">
-      <div class="logo"><img src="assets/logo.svg" alt="">Kdefy</div>
-      <nav>
-        <ul>
-          <li data-route="pdf"><img src="assets/icons/pdf.svg"> PDF Simples</li>
-          <li data-route="contratos"><img src="assets/icons/contrato.svg"> Contratos</li>
-          <li data-route="lucro"><img src="assets/icons/lucro.svg"> Lucro / ROI</li>
-          <li data-route="propostas"><img src="assets/icons/proposta.svg"> Propostas</li>
-          <li data-route="posts"><img src="assets/icons/post.svg"> Postagens</li>
-          <li data-route="admin"><img src="assets/icons/admin.svg"> Admin</li>
-        </ul>
-      </nav>
-    </aside>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Multi-Serviços</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { display: flex; height: 100vh; background: #f5f6fa; }
+      .sidebar { width: 70px; background: #2f3640; display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
+        .sidebar button { background: none; border: none; color: #dcdde1; font-size: 24px; margin: 20px 0; cursor: pointer; transition: 0.3s; }
+          .sidebar button.active, .sidebar button:hover { color: #00f0ff; transform: scale(1.2); }
+            .main { flex: 1; padding: 20px; overflow-y: auto; }
+              h2 { margin-bottom: 15px; color: #2f3640; }
+                .service { display: none; }
+                  .service.active { display: block; }
+                    input, textarea { padding: 10px; margin: 5px 0; width: 100%; border-radius: 6px; border: 1px solid #ccc; }
+                      button { cursor: pointer; background: #00f0ff; border: none; color: #2f3640; font-weight: bold; border-radius: 6px; padding: 10px 15px; transition: 0.2s; }
+                        button:hover { background: #0091a0; color: #fff; }
+                          .card { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+                            ul { list-style: none; margin-top: 10px; max-height: 200px; overflow-y: auto; }
+                              li { padding: 5px 0; border-bottom: 1px solid #eee; }
+                                canvas { width: 100% !important; height: 300px !important; }
+                                </style>
+                                </head>
+                                <body>
 
-    <main>
-      <header>
-        <div class="header-left">
-          <h1 id="page-title">Dashboard</h1>
-        </div>
-        <div class="header-right">
-          <span id="username">👤 Usuário</span>
-          <span id="date"></span>
-        </div>
-      </header>
+                                <div class="sidebar">
+                                  <button id="post-btn" class="active" title="Gerador de Posts">&#9998;</button>
+                                    <button id="calc-btn" title="Calculadora de Lucro">&#128178;</button>
+                                      <button id="pdf-btn" title="Gerador de PDF">&#128196;</button>
+                                      </div>
 
-      <section id="content">
-        <div class="welcome">
-          <h2>Bem-vindo à Plataforma Kdefy</h2>
-          <p>Escolha uma ferramenta no menu lateral.</p>
-        </div>
-      </section>
-    </main>
-  </div>
+                                      <div class="main">
+                                        <!-- Gerador de Posts -->
+                                          <div id="post-service" class="service active card">
+                                              <h2>Gerador de Posts</h2>
+                                                  <textarea id="post-text" rows="5" placeholder="Digite seu texto aqui..."></textarea>
+                                                      <button onclick="savePost()">Salvar Post</button>
+                                                          <h3>Posts Salvos</h3>
+                                                              <ul id="post-list"></ul>
+                                                                </div>
 
-  <script src="app.js"></script>
-</body>
-</html>
+                                                                  <!-- Calculadora de Margem/Lucro -->
+                                                                    <div id="calc-service" class="service card">
+                                                                        <h2>Calculadora de Margem e Lucro</h2>
+                                                                            <input type="number" id="cost" placeholder="Custo do Produto">
+                                                                                <input type="number" id="price" placeholder="Preço de Venda">
+                                                                                    <button onclick="calculateMargin()">Calcular</button>
+                                                                                        <p id="margin-result" style="font-weight:bold; margin-top:10px;"></p>
+                                                                                            <canvas id="profit-chart"></canvas>
+                                                                                              </div>
+
+                                                                                                <!-- Gerador de PDF -->
+                                                                                                  <div id="pdf-service" class="service card">
+                                                                                                      <h2>Gerador de PDF</h2>
+                                                                                                          <textarea id="pdf-text" rows="5" placeholder="Digite o conteúdo para o PDF"></textarea>
+                                                                                                              <button onclick="generatePDF()">Gerar PDF</button>
+                                                                                                                </div>
+                                                                                                                </div>
+
+                                                                                                                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                                                                                                                <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.0"></script>
+                                                                                                                <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+                                                                                                                <script>
+                                                                                                                  // Navegação sidebar
+                                                                                                                    const postBtn = document.getElementById('post-btn');
+                                                                                                                      const calcBtn = document.getElementById('calc-btn');
+                                                                                                                        const pdfBtn = document.getElementById('pdf-btn');
+                                                                                                                          const services = {
+                                                                                                                              post: document.getElementById('post-service'),
+                                                                                                                                  calc: document.getElementById('calc-service'),
+                                                                                                                                      pdf: document.getElementById('pdf-service')
+                                                                                                                                        };
+
+                                                                                                                                          function setActive(service) {
+                                                                                                                                              for(let key in services) services[key].classList.remove('active');
+                                                                                                                                                  services[service].classList.add('active');
+                                                                                                                                                      postBtn.classList.remove('active');
+                                                                                                                                                          calcBtn.classList.remove('active');
+                                                                                                                                                              pdfBtn.classList.remove('active');
+                                                                                                                                                                  if(service==='post') postBtn.classList.add('active');
+                                                                                                                                                                      if(service==='calc') calcBtn.classList.add('active');
+                                                                                                                                                                          if(service==='pdf') pdfBtn.classList.add('active');
+                                                                                                                                                                            }
+
+                                                                                                                                                                              postBtn.onclick = ()=>setActive('post');
+                                                                                                                                                                                calcBtn.onclick = ()=>setActive('calc');
+                                                                                                                                                                                  pdfBtn.onclick = ()=>setActive('pdf');
+
+                                                                                                                                                                                    // LocalStorage Posts
+                                                                                                                                                                                      function savePost() {
+                                                                                                                                                                                          const text = document.getElementById('post-text').value.trim();
+                                                                                                                                                                                              if(!text) return alert('Digite algo!');
+                                                                                                                                                                                                  let posts = JSON.parse(localStorage.getItem('posts')||'[]');
+                                                                                                                                                                                                      posts.push({text, date: new Date()});
+                                                                                                                                                                                                          localStorage.setItem('posts', JSON.stringify(posts));
+                                                                                                                                                                                                              loadPosts();
+                                                                                                                                                                                                                  document.getElementById('post-text').value='';
+                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                      function loadPosts() {
+                                                                                                                                                                                                                          const list = document.getElementById('post-list');
+                                                                                                                                                                                                                              list.innerHTML='';
+                                                                                                                                                                                                                                  let posts = JSON.parse(localStorage.getItem('posts')||'[]');
+                                                                                                                                                                                                                                      posts.forEach(p=>{
+                                                                                                                                                                                                                                            const li=document.createElement('li');
+                                                                                                                                                                                                                                                  li.textContent=`${new Date(p.date).toLocaleString()}: ${p.text}`;
+                                                                                                                                                                                                                                                        list.appendChild(li);
+                                                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                                                              }
+                                                                                                                                                                                                                                                                loadPosts();
+
+                                                                                                                                                                                                                                                                  // Calculadora e gráfico estilo velas
+                                                                                                                                                                                                                                                                    const ctx = document.getElementById('profit-chart').getContext('2d');
+                                                                                                                                                                                                                                                                      const profitChart = new Chart(ctx, {
+                                                                                                                                                                                                                                                                          type: 'candlestick',
+                                                                                                                                                                                                                                                                              data: { datasets:[{ label:'Lucro', data:[] }] },
+                                                                                                                                                                                                                                                                                  options: {
+                                                                                                                                                                                                                                                                                        plugins: { legend:{display:false} },
+                                                                                                                                                                                                                                                                                              scales:{ x:{ ticks:{color:'#2f3640'} }, y:{ ticks:{color:'#2f3640'} } }
+                                                                                                                                                                                                                                                                                                  }
+                                                                                                                                                                                                                                                                                                    });
+
+                                                                                                                                                                                                                                                                                                      function calculateMargin() {
+                                                                                                                                                                                                                                                                                                          const cost=parseFloat(document.getElementById('cost').value);
+                                                                                                                                                                                                                                                                                                              const price=parseFloat(document.getElementById('price').value);
+                                                                                                                                                                                                                                                                                                                  if(isNaN(cost)||isNaN(price)) return alert('Digite valores válidos');
+                                                                                                                                                                                                                                                                                                                      const margin = ((price-cost)/price*100).toFixed(2);
+                                                                                                                                                                                                                                                                                                                          document.getElementById('margin-result').textContent=`Margem de Lucro: ${margin}%`;
+
+                                                                                                                                                                                                                                                                                                                              // Atualiza gráfico estilo velas
+                                                                                                                                                                                                                                                                                                                                  const now = new Date().toLocaleTimeString();
+                                                                                                                                                                                                                                                                                                                                      profitChart.data.datasets[0].data.push({
+                                                                                                                                                                                                                                                                                                                                            x: now, o: cost, h: Math.max(cost, price), l: Math.min(cost, price), c: price
+                                                                                                                                                                                                                                                                                                                                                });
+                                                                                                                                                                                                                                                                                                                                                    profitChart.update();
+                                                                                                                                                                                                                                                                                                                                                      }
+
+                                                                                                                                                                                                                                                                                                                                                        // Geração de PDF
+                                                                                                                                                                                                                                                                                                                                                          async function generatePDF() {
+                                                                                                                                                                                                                                                                                                                                                              const { jsPDF } = window.jspdf;
+                                                                                                                                                                                                                                                                                                                                                                  const doc = new jsPDF();
+                                                                                                                                                                                                                                                                                                                                                                      const text = document.getElementById('pdf-text').value;
+                                                                                                                                                                                                                                                                                                                                                                          if(!text) return alert('Digite algum texto!');
+                                                                                                                                                                                                                                                                                                                                                                              doc.setFontSize(14);
+                                                                                                                                                                                                                                                                                                                                                                                  const lines = doc.splitTextToSize(text, 180);
+                                                                                                                                                                                                                                                                                                                                                                                      doc.text(lines, 10, 20);
+                                                                                                                                                                                                                                                                                                                                                                                          doc.save('documento.pdf');
+                                                                                                                                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                                                                                                                                            </script>
+                                                                                                                                                                                                                                                                                                                                                                                            </body>
+                                                                                                                                                                                                                                                                                                                                                                                            </html>
+                                                                                                                                                                                                                                                                                                                                                                                            
