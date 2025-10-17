@@ -377,43 +377,58 @@
 
   <div id="dashboard-service" class="service active">
   <div class="metrics-grid">
-    <div class="metric-card">
-      <div class="label">Total de Posts</div>
-      <div class="value" id="total-posts">0</div>
-      <div class="change" id="posts-change">0% este mês</div>
+    <div class="metric-card modern">
+      <div class="icon-box">📝</div>
+      <div class="metric-info">
+        <div class="label">Total de Posts</div>
+        <div class="value" id="total-posts">0</div>
+        <div class="change" id="posts-change">0% este mês</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="label">Cálculos Realizados</div>
-      <div class="value" id="total-calcs">0</div>
-      <div class="change" id="calcs-change">0% este mês</div>
+
+    <div class="metric-card modern">
+      <div class="icon-box">💰</div>
+      <div class="metric-info">
+        <div class="label">Cálculos Realizados</div>
+        <div class="value" id="total-calcs">0</div>
+        <div class="change" id="calcs-change">0% este mês</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="label">PDFs Gerados</div>
-      <div class="value" id="total-pdfs">0</div>
-      <div class="change" id="pdfs-change">0% este mês</div>
+
+    <div class="metric-card modern">
+      <div class="icon-box">📄</div>
+      <div class="metric-info">
+        <div class="label">PDFs Gerados</div>
+        <div class="value" id="total-pdfs">0</div>
+        <div class="change" id="pdfs-change">0% este mês</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="label">Lucro Médio</div>
-      <div class="value" id="avg-profit">R$ 0</div>
-      <div class="change" id="profit-change">0% este mês</div>
+
+    <div class="metric-card modern">
+      <div class="icon-box">📈</div>
+      <div class="metric-info">
+        <div class="label">Lucro Médio</div>
+        <div class="value" id="avg-profit">R$ 0</div>
+        <div class="change" id="profit-change">0% este mês</div>
+      </div>
     </div>
   </div>
 
-    <div class="grid-2">
-      <div class="chart-container">
-        <h3>Atividade Semanal</h3>
-        <canvas id="activity-chart"></canvas>
-      </div>
-      <div class="chart-container">
-        <h3>Performance</h3>
-        <canvas id="performance-chart"></canvas>
-      </div>
-    </div>
-
+  <div class="grid-2">
     <div class="chart-container">
-      <h3>Evolução de Lucro</h3>
-      <canvas id="profit-evolution-chart"></canvas>
+      <h3>📊 Atividade Semanal</h3>
+      <canvas id="activity-chart"></canvas>
     </div>
+    <div class="chart-container">
+      <h3>⚙️ Performance</h3>
+      <canvas id="performance-chart"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <h3>💹 Evolução de Lucro</h3>
+    <canvas id="profit-evolution-chart"></canvas>
+  </div>
   </div>
 
   <!-- Gerador de Posts -->
