@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kdefy Analisty</title>
+<title>Kdefy Analytics - Dashboard Profissional</title>
 <script>
   const canvas = document.createElement('canvas');
   canvas.width = 64;
@@ -21,7 +21,7 @@
   document.head.appendChild(link);
 </script>
 <link rel="apple-touch-icon" sizes="180x180" href="logoicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', sans-serif; }
@@ -34,92 +34,172 @@
   }
 
   .sidebar { 
-    width: 80px; 
-    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    width: 280px; 
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
     display: flex; 
     flex-direction: column; 
-    align-items: center; 
-    padding-top: 20px;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+    padding: 32px 24px;
+    box-shadow: 4px 0 30px rgba(0,0,0,0.15);
     position: relative;
     z-index: 10;
+    border-right: 1px solid rgba(102, 126, 234, 0.1);
+  }
+
+  .sidebar .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid #f1f5f9;
   }
 
   .sidebar .logo {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 40px;
+    width: 48px;
+    height: 48px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 12px;
-    font-size: 32px;
-    font-weight: bold;
+    border-radius: 14px;
+    font-size: 28px;
+    font-weight: 800;
     color: white;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+  }
+
+  .sidebar .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar .brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+
+  .sidebar .brand-tagline {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-section {
+    margin-bottom: 32px;
+  }
+
+  .nav-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding-left: 12px;
   }
 
   .sidebar button { 
-    background: rgba(255,255,255,0.05);
-    border: 2px solid transparent;
-    color: #94a3b8; 
-    font-size: 24px; 
-    width: 50px;
-    height: 50px;
+    background: transparent;
+    border: none;
+    color: #64748b; 
+    font-size: 15px; 
+    width: 100%;
+    padding: 14px 16px;
     border-radius: 12px;
-    margin: 12px 0; 
+    margin: 4px 0; 
     cursor: pointer; 
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-weight: 500;
   }
-  
-  .sidebar button::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    left: 70px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #1e293b;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
-  
-  .sidebar button:hover::after {
-    opacity: 1;
+
+  .sidebar button .icon {
+    font-size: 20px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .sidebar button.active, .sidebar button:hover { 
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: rgba(255,255,255,0.2);
     color: white;
+    transform: translateX(4px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  }
+
+  .sidebar button.active .icon, .sidebar button:hover .icon {
     transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 2px solid #f1f5f9;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 12px;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .user-details {
+    flex: 1;
+  }
+
+  .user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.2;
+  }
+
+  .user-role {
+    font-size: 12px;
+    color: #64748b;
   }
   
   .main { 
     flex: 1; 
-    padding: 30px; 
+    padding: 32px; 
     overflow-y: auto;
-    background: rgba(255,255,255,0.95);
-    margin: 20px;
-    border-radius: 24px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    background: #f8fafc;
   }
   
   .main::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
   }
   
   .main::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 10px;
+    background: transparent;
   }
   
   .main::-webkit-scrollbar-thumb {
@@ -128,41 +208,64 @@
   }
   
   .header {
-    margin-bottom: 30px;
+    margin-bottom: 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 2px solid #e2e8f0;
   }
-  
-  h1 { 
-    color: #1e293b;
+
+  .header-left h1 { 
+    color: #0f172a;
     font-size: 32px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
   }
-  
-  .date-time {
+
+  .header-subtitle {
     color: #64748b;
     font-size: 14px;
     font-weight: 500;
   }
   
-  h2 { 
-    margin-bottom: 20px; 
-    color: #1e293b;
-    font-size: 24px;
+  .date-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+  }
+
+  .date-time-icon {
+    font-size: 18px;
+  }
+
+  .date-time-text {
+    color: #475569;
+    font-size: 14px;
     font-weight: 600;
+  }
+  
+  h2 { 
+    margin-bottom: 24px; 
+    color: #0f172a;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
   }
   
   .service { 
     display: none;
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.4s ease-out;
   }
   
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
   
@@ -172,56 +275,106 @@
   
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
   }
   
   .metric-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 24px;
-    border-radius: 16px;
-    color: white;
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-    transition: transform 0.3s;
+    background: white;
+    padding: 28px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   }
   
   .metric-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+  }
+
+  .metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .metric-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
   }
   
   .metric-card .label {
-    font-size: 14px;
-    opacity: 0.9;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     margin-bottom: 8px;
   }
   
   .metric-card .value {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 4px;
+    font-size: 36px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
   }
   
   .metric-card .change {
-    font-size: 12px;
-    opacity: 0.8;
+    font-size: 13px;
+    font-weight: 600;
+    color: #10b981;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .change::before {
+    content: '↗';
+    font-size: 14px;
   }
   
   input, textarea { 
-    padding: 14px; 
+    padding: 16px; 
     margin: 8px 0; 
     width: 100%; 
-    border-radius: 12px; 
+    border-radius: 14px; 
     border: 2px solid #e2e8f0;
-    font-size: 14px;
+    font-size: 15px;
     transition: all 0.3s;
     background: white;
+    font-family: inherit;
   }
   
   input:focus, textarea:focus {
     outline: none;
     border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
   }
   
   button.btn { 
@@ -230,16 +383,19 @@
     border: none; 
     color: white;
     font-weight: 600;
-    border-radius: 12px; 
-    padding: 14px 28px; 
+    border-radius: 14px; 
+    padding: 16px 32px; 
     transition: all 0.3s;
-    font-size: 14px;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    font-size: 15px;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
   
   button.btn:hover { 
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
   }
   
   button.btn:active {
@@ -248,37 +404,43 @@
   
   .card { 
     background: white;
-    padding: 24px; 
+    padding: 28px; 
     margin-bottom: 24px; 
-    border-radius: 16px; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border: 1px solid #f1f5f9;
+    border-radius: 20px; 
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    border: 1px solid #e2e8f0;
   }
   
   .card h3 {
-    color: #475569;
-    font-size: 16px;
-    margin-bottom: 16px;
-    font-weight: 600;
+    color: #0f172a;
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   
   ul { 
     list-style: none; 
     margin-top: 12px; 
-    max-height: 300px; 
+    max-height: 350px; 
     overflow-y: auto;
   }
   
   li { 
-    padding: 12px; 
+    padding: 16px; 
     border-bottom: 1px solid #f1f5f9;
     color: #475569;
     font-size: 14px;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    border-radius: 8px;
+    margin-bottom: 4px;
   }
   
   li:hover {
     background: #f8fafc;
+    transform: translateX(4px);
   }
   
   li:last-child {
@@ -287,96 +449,192 @@
   
   canvas { 
     width: 100% !important; 
-    height: 350px !important;
+    height: 320px !important;
     border-radius: 12px;
   }
   
   .chart-container {
     position: relative;
     background: white;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.04);
     margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .chart-container h3 {
+    color: #0f172a;
+    font-size: 18px;
+    margin-bottom: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   
   .grid-2 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 24px;
   }
   
   .input-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 16px;
   }
   
   .result-box {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 24px;
-    border-radius: 12px;
-    margin: 20px 0;
+    padding: 32px;
+    border-radius: 20px;
+    margin: 24px 0;
     text-align: center;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
   }
   
   .result-box .result-label {
     font-size: 14px;
-    opacity: 0.9;
-    margin-bottom: 8px;
+    font-weight: 600;
+    opacity: 0.95;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
   
   .result-box .result-value {
-    font-size: 42px;
-    font-weight: 700;
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -2px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: #94a3b8;
+  }
+
+  .empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      flex-direction: column;
+    }
+    
+    .sidebar {
+      width: 100%;
+      padding: 20px;
+    }
+
+    .main {
+      padding: 20px;
+    }
+
+    .metrics-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 </head>
 <body>
 
 <div class="sidebar">
-  <div class="logo">K</div>
-  <button id="dashboard-btn" class="active" data-tooltip="Dashboard">🏠</button>
-  <button id="post-btn" data-tooltip="Posts">✍️</button>
-  <button id="calc-btn" data-tooltip="Calculadora">💰</button>
-  <button id="pdf-btn" data-tooltip="PDF">📄</button>
+  <div class="brand">
+    <div class="logo">K</div>
+    <div class="brand-text">
+      <div class="brand-name">Kdefy Analytics</div>
+      <div class="brand-tagline">SaaS Dashboard</div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Menu Principal</div>
+    <button id="dashboard-btn" class="active">
+      <span class="icon">📊</span>
+      <span>Dashboard</span>
+    </button>
+    <button id="post-btn">
+      <span class="icon">✍️</span>
+      <span>Posts</span>
+    </button>
+    <button id="calc-btn">
+      <span class="icon">💰</span>
+      <span>Calculadora</span>
+    </button>
+    <button id="pdf-btn">
+      <span class="icon">📄</span>
+      <span>Gerador PDF</span>
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar">U</div>
+      <div class="user-details">
+        <div class="user-name">Usuário Admin</div>
+        <div class="user-role">Administrador</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="main">
   <div class="header">
-    <h1 id="page-title">Dashboard</h1>
-    <div class="date-time" id="datetime"></div>
+    <div class="header-left">
+      <h1 id="page-title">Dashboard</h1>
+      <div class="header-subtitle">Visão geral das suas métricas</div>
+    </div>
+    <div class="date-time">
+      <span class="date-time-icon">🕐</span>
+      <span class="date-time-text" id="datetime"></span>
+    </div>
   </div>
 
   <div id="dashboard-service" class="service active">
-  <div class="metrics-grid">
-    <div class="metric-card">
-      <div class="label">Total de Posts</div>
-      <div class="value" id="total-posts">0</div>
-      <div class="change" id="posts-change">0% este mês</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-icon">✍️</div>
+        </div>
+        <div class="label">Total de Posts</div>
+        <div class="value" id="total-posts">0</div>
+        <div class="change" id="posts-change">0% este mês</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-icon">🧮</div>
+        </div>
+        <div class="label">Cálculos Realizados</div>
+        <div class="value" id="total-calcs">0</div>
+        <div class="change" id="calcs-change">0% este mês</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-icon">📄</div>
+        </div>
+        <div class="label">PDFs Gerados</div>
+        <div class="value" id="total-pdfs">0</div>
+        <div class="change" id="pdfs-change">0% este mês</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-header">
+          <div class="metric-icon">💹</div>
+        </div>
+        <div class="label">Lucro Médio</div>
+        <div class="value" id="avg-profit">R$ 0</div>
+        <div class="change" id="profit-change">0% este mês</div>
+      </div>
     </div>
-    <div class="metric-card">
-      <div class="label">Cálculos Realizados</div>
-      <div class="value" id="total-calcs">0</div>
-      <div class="change" id="calcs-change">0% este mês</div>
-    </div>
-    <div class="metric-card">
-      <div class="label">PDFs Gerados</div>
-      <div class="value" id="total-pdfs">0</div>
-      <div class="change" id="pdfs-change">0% este mês</div>
-    </div>
-    <div class="metric-card">
-      <div class="label">Lucro Médio</div>
-      <div class="value" id="avg-profit">R$ 0</div>
-      <div class="change" id="profit-change">0% este mês</div>
-    </div>
-  </div>
 
     <div class="grid-2">
       <div class="chart-container">
-        <h3>📄 Atividade Semanal</h3>
+        <h3>📊 Atividade Semanal</h3>
         <canvas id="activity-chart"></canvas>
       </div>
       <div class="chart-container">
@@ -391,18 +649,19 @@
     </div>
   </div>
 
-  <!-- Gerador de Posts -->
   <div id="post-service" class="service card">
     <h2>📝 Gerador de Posts</h2>
     <textarea id="post-text" rows="6" placeholder="Digite seu texto aqui..."></textarea>
-    <button class="btn" onclick="savePost()">💾 Salvar Post</button>
+    <button class="btn" onclick="savePost()">
+      <span>💾</span>
+      <span>Salvar Post</span>
+    </button>
     <div class="card" style="margin-top: 24px;">
-      <h3>Posts Salvos</h3>
+      <h3>📋 Posts Salvos</h3>
       <ul id="post-list"></ul>
     </div>
   </div>
 
-  <!-- Calculadora de Margem/Lucro -->
   <div id="calc-service" class="service">
     <h2>💰 Calculadora de Margem e Lucro</h2>
     <div class="card">
@@ -410,35 +669,39 @@
         <input type="number" id="cost" placeholder="💵 Custo do Produto">
         <input type="number" id="price" placeholder="💲 Preço de Venda">
       </div>
-      <button class="btn" onclick="calculateMargin()" style="width: 100%; margin-top: 12px;">🧮 Calcular</button>
+      <button class="btn" onclick="calculateMargin()" style="width: 100%; margin-top: 12px; justify-content: center;">
+        <span>🧮</span>
+        <span>Calcular</span>
+      </button>
       <div id="margin-result"></div>
     </div>
     
     <div class="grid-2">
       <div class="chart-container">
-        <h3>Histórico de Cálculos</h3>
+        <h3>📈 Histórico de Cálculos</h3>
         <canvas id="profit-chart"></canvas>
       </div>
       <div class="chart-container">
-        <h3>Distribuição de Margem</h3>
+        <h3>🎯 Distribuição de Margem</h3>
         <canvas id="margin-distribution-chart"></canvas>
       </div>
     </div>
   </div>
 
-  <!-- Gerador de PDF -->
   <div id="pdf-service" class="service card">
     <h2>📄 Gerador de PDF</h2>
     <input type="text" id="pdf-title" placeholder="📋 Título do documento">
     <textarea id="pdf-text" rows="10" placeholder="Digite o conteúdo para o PDF..."></textarea>
-    <button class="btn" onclick="generatePDF()">⬇️ Gerar e Baixar PDF</button>
+    <button class="btn" onclick="generatePDF()">
+      <span>⬇️</span>
+      <span>Gerar e Baixar PDF</span>
+    </button>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  // Atualizar data/hora
   function updateDateTime() {
     const now = new Date();
     document.getElementById('datetime').textContent = now.toLocaleString('pt-BR');
@@ -446,7 +709,6 @@
   updateDateTime();
   setInterval(updateDateTime, 1000);
 
-  // Navegação sidebar
   const dashboardBtn = document.getElementById('dashboard-btn');
   const postBtn = document.getElementById('post-btn');
   const calcBtn = document.getElementById('calc-btn');
@@ -465,10 +727,18 @@
     pdf: 'Gerador de PDF'
   };
 
+  const subtitles = {
+    dashboard: 'Visão geral das suas métricas',
+    post: 'Crie e gerencie seus posts',
+    calc: 'Calcule margens e lucros',
+    pdf: 'Gere documentos em PDF'
+  };
+
   function setActive(service) {
     for (let key in services) services[key].classList.remove('active');
     services[service].classList.add('active');
     document.getElementById('page-title').textContent = titles[service];
+    document.querySelector('.header-subtitle').textContent = subtitles[service];
 
     dashboardBtn.classList.remove('active');
     postBtn.classList.remove('active');
@@ -488,7 +758,6 @@
   calcBtn.onclick = () => setActive('calc');
   pdfBtn.onclick = () => setActive('pdf');
 
-  // Gráfico de Atividade Semanal
   const activityCtx = document.getElementById('activity-chart').getContext('2d');
   const activityChart = new Chart(activityCtx, {
     type: 'bar',
@@ -496,11 +765,11 @@
       labels: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
       datasets: [{
         label: 'Atividades',
-        data: [0, 0, 0, 0, 0, 0, 0], // começa zerado
+        data: [0, 0, 0, 0, 0, 0, 0],
         backgroundColor: 'rgba(102, 126, 234, 0.8)',
         borderColor: 'rgba(102, 126, 234, 1)',
         borderWidth: 2,
-        borderRadius: 8
+        borderRadius: 10
       }]
     },
     options: {
@@ -514,14 +783,13 @@
     }
   });
 
-  // Gráfico de Performance (Doughnut) dinâmico
   const performanceCtx = document.getElementById('performance-chart').getContext('2d');
   const performanceChart = new Chart(performanceCtx, {
     type: 'doughnut',
     data: {
       labels: ['Posts', 'Cálculos', 'PDFs'],
       datasets: [{
-        data: [0, 0, 0], // começa zerado
+        data: [0, 0, 0],
         backgroundColor: [
           'rgba(102, 126, 234, 0.8)',
           'rgba(118, 75, 162, 0.8)',
@@ -537,12 +805,11 @@
     }
   });
 
-  // Gráfico de Evolução de Lucro
   const profitEvolutionCtx = document.getElementById('profit-evolution-chart').getContext('2d');
   const profitEvolutionChart = new Chart(profitEvolutionCtx, {
     type: 'line',
     data: {
-      labels: [], // começa vazio
+      labels: [],
       datasets: [{
         label: 'Lucro (R$)',
         data: [],
@@ -564,7 +831,6 @@
     }
   });
 
-    // LocalStorage Posts
   function savePost() {
     const text = document.getElementById('post-text').value.trim();
     if (!text) return alert('⚠️ Digite algo!');
@@ -581,7 +847,7 @@
     list.innerHTML = '';
     let posts = JSON.parse(localStorage.getItem('posts') || '[]');
     if (posts.length === 0) {
-      list.innerHTML = '<li style="text-align:center; color:#94a3b8;">Nenhum post salvo ainda</li>';
+      list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div>Nenhum post salvo ainda</div></div>';
       return;
     }
     posts.reverse().forEach(p => {
@@ -592,7 +858,6 @@
   }
   loadPosts();
 
-  // Calculadora e gráficos
   const profitCtx = document.getElementById('profit-chart').getContext('2d');
   const profitChart = new Chart(profitCtx, {
     type: 'line',
@@ -653,10 +918,10 @@
 
     const resultDiv = document.getElementById('margin-result');
     resultDiv.innerHTML = `
-      <div class="result-box" style="margin-top: 20px;">
+      <div class="result-box" style="margin-top: 24px;">
         <div class="result-label">Margem de Lucro</div>
         <div class="result-value">${margin}%</div>
-        <div style="margin-top: 12px; font-size: 16px;">Lucro: R$ ${profit.toFixed(2)}</div>
+        <div style="margin-top: 16px; font-size: 18px; font-weight: 600;">Lucro: R$ ${profit.toFixed(2)}</div>
       </div>
     `;
 
@@ -717,7 +982,6 @@
     updateDashboard();
   }
 
-    // Atualizar métricas do dashboard
   function updateDashboard() {
     const posts = JSON.parse(localStorage.getItem('posts') || '[]');
     const calcs = JSON.parse(localStorage.getItem('calcs') || '[]');
@@ -727,26 +991,22 @@
     document.getElementById('total-calcs').textContent = calcs.length;
     document.getElementById('total-pdfs').textContent = pdfs;
 
-    // Calcular lucro médio
     if (calcs.length > 0) {
       const avgProfit = calcs.reduce((sum, c) => sum + c.profit, 0) / calcs.length;
       document.getElementById('avg-profit').textContent = `R$ ${avgProfit.toFixed(2)}`;
     } else {
-      document.getElementById('avg-profit').textContent = '—';
+      document.getElementById('avg-profit').textContent = 'R$ 0';
     }
 
-    // Atualizar gráfico de performance
     performanceChart.data.datasets[0].data = [posts.length, calcs.length, pdfs];
     performanceChart.update();
 
-    // Atualizar gráfico de evolução de lucro
     profitEvolutionChart.data.labels = calcs.map(c =>
       new Date(c.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
     );
     profitEvolutionChart.data.datasets[0].data = calcs.map(c => c.profit);
     profitEvolutionChart.update();
 
-    // Atualizar gráfico de atividade semanal (quantidade total de ações por dia da semana)
     const weekData = [0, 0, 0, 0, 0, 0, 0];
     [...posts, ...calcs, ...Array(pdfs).fill({ date: new Date() })].forEach(item => {
       const d = new Date(item.date).getDay();
