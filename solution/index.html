@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kdefy Solution - Dashboard Empresarial</title>
+
+<!-- Favicon dinâmico -->
+<script>
+  const canvas = document.createElement('canvas');
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  
+  const gradient = ctx.createLinearGradient(0, 0, 64, 64);
+  gradient.addColorStop(0, '#3b82f6');
+  gradient.addColorStop(1, '#1d4ed8');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 64, 64);
+  
+  ctx.font = 'bold 38px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText('K', 32, 32);
+  
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.type = 'image/png';
+  link.href = canvas.toDataURL('image/png');
+  document.head.appendChild(link);
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #1d4ed8;
+  --secondary: #64748b;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg: #ffffff;
+  --bg-secondary: #f8fafc;
+  --card-bg: #ffffff;
+  --text: #0f172a;
+  --text-secondary: #64748b;
+  --border: #e2e8f0;
+  --sidebar-bg: #0f172a;
+  --sidebar-text: #94a3b8;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-secondary: #1e293b;
+  --card-bg: #1e293b;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --sidebar-bg: #020617;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.sidebar {
+  width: 280px;
+  background: var(--sidebar-bg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 24px var(--shadow);
+  position: relative;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.sidebar.mobile-hidden {
+  transform: translateX(-100%);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-text .title {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+}
+
+.logo-text .subtitle {
+  font-size: 12px;
+  color: var(--sidebar-text);
+}
+
+.nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  color: var(--sidebar-text);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  background: transparent;
+}
+
+.nav-item:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.nav-item .icon {
+  width: 24px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  padding: 24px 32px;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.header-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.theme-toggle {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border);
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.content-area {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+  background: var(--bg-secondary);
+}
+
+.content-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content-area::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+.content-area::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+.service {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.service.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.metric-card {
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px var(--shadow);
+  border: 1px solid var(--border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.metric-card .icon-bg {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.metric-card.primary .icon-bg {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+}
+
+.metric-card.success .icon-bg {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.metric-card.warning .icon-bg {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.metric-card.danger .icon-bg {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+}
+
+.metric-card .label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.metric-card .value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.card {
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+}
+
+.result-box {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 32px;
+  border-radius: 16px;
+  margin: 24px 0;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+}
+
+.result-box .result-label {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
+.result-box .result-value {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.result-box .result-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.list-item {
+  background: var(--bg);
+  padding: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.list-item:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.list-item .info {
+  flex: 1;
+}
+
+.list-item .title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.list-item .details {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.badge-danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  margin: 24px 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-secondary);
+}
+
+.empty-state .icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+  }
+  
+  .mobile-menu-btn {
+    display: block;
+  }
+  
+  .header-title {
+    font-size: 20px;
+  }
+  
+  .content-area {
+    padding: 16px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="logo-container">
+    <div class="logo">K</div>
+    <div class="logo-text">
+      <div class="title">Kdefy</div>
+      <div class="subtitle">Solution</div>
+    </div>
+  </div>
+  
+  <div class="nav-menu">
+    <div class="nav-item active" data-section="dashboard">
+      <i class="fas fa-home icon"></i>
+      <span>Dashboard Geral</span>
+    </div>
+    <div class="nav-item" data-section="roi">
+      <i class="fas fa-chart-line icon"></i>
+      <span>Calculadora de ROI</span>
+    </div>
+    <div class="nav-item" data-section="pricing">
+      <i class="fas fa-tag icon"></i>
+      <span>Simulador de Preço</span>
+    </div>
+    <div class="nav-item" data-section="finance">
+      <i class="fas fa-wallet icon"></i>
+      <span>Controle Financeiro</span>
+    </div>
+    <div class="nav-item" data-section="campaign">
+      <i class="fas fa-bullhorn icon"></i>
+      <span>Calculadora de Campanha</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="main-content">
+  <div class="header">
+    <button class="mobile-menu-btn" id="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+    <h1 class="header-title" id="page-title">Dashboard Geral</h1>
+    <div class="header-actions">
+      <button class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </div>
+  
+  <div class="content-area">
+    <!-- Dashboard Geral -->
+    <div class="service active" id="dashboard">
+      <div class="metrics-grid">
+        <div class="metric-card primary">
+          <div class="icon-bg">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="label">Cálculos de ROI</div>
+          <div class="value" id="total-roi">0</div>
+        </div>
+        <div class="metric-card success">
+          <div class="icon-bg">
+            <i class="fas fa-box"></i>
+          </div>
+          <div class="label">Produtos Simulados</div>
+          <div class="value" id="total-products">0</div>
+        </div>
+        <div class="metric-card warning">
+          <div class="icon-bg">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <div class="label">Transações</div>
+          <div class="value" id="total-transactions">0</div>
+        </div>
+        <div class="metric-card danger">
+          <div class="icon-bg">
+            <i class="fas fa-bullhorn"></i>
+          </div>
+          <div class="label">Campanhas</div>
+          <div class="value" id="total-campaigns">0</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Evolução de Lucro Mensal</h3>
+        </div>
+        <div class="chart-container">
+          <canvas id="profit-chart"></canvas>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">ROI Médio por Categoria</h3>
+        </div>
+        <div class="chart-container">
+          <canvas id="roi-chart"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Calculadora de ROI -->
+    <div class="service" id="roi">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Nova Análise de ROI</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Investimento (R$)</label>
+            <input type="number" class="form-input" id="roi-investment" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Receita (R$)</label>
+            <input type="number" class="form-input" id="roi-revenue" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Custos Fixos (R$)</label>
+            <input type="number" class="form-input" id="roi-fixed" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Custos Variáveis (R$)</label>
+            <input type="number" class="form-input" id="roi-variable" placeholder="0.00">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calculateROI()">
+          <i class="fas fa-calculator"></i>
+          Calcular ROI
+        </button>
+        <div id="roi-result"></div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Histórico de ROI</h3>
+        </div>
+        <div class="chart-container">
+          <canvas id="roi-history-chart"></canvas>
+        </div>
+        <div id="roi-list"></div>
+      </div>
+    </div>
+    
+    <!-- Simulador de Preço -->
+    <div class="service" id="pricing">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Novo Produto</h3>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nome do Produto</label>
+          <input type="text" class="form-input" id="product-name" placeholder="Ex: Produto X">
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Custo do Produto (R$)</label>
+            <input type="number" class="form-input" id="product-cost" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Frete (R$)</label>
+            <input type="number" class="form-input" id="product-shipping" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Taxas (%)</label>
+            <input type="number" class="form-input" id="product-fees" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Margem Desejada (%)</label>
+            <input type="number" class="form-input" id="product-margin" placeholder="0">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calculatePrice()">
+          <i class="fas fa-tag"></i>
+          Calcular Preço
+        </button>
+        <div id="price-result"></div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Produtos Cadastrados</h3>
+        </div>
+        <div id="products-list"></div>
+      </div>
+    </div>
+    
+    <!-- Controle Financeiro -->
+    <div class="service" id="finance">
+      <div class="metrics-grid">
+        <div class="metric-card success">
+          <div class="icon-bg">
+            <i class="fas fa-arrow-up"></i>
+          </div>
+          <div class="label">Total Entradas</div>
+          <div class="value" id="total-income">R$ 0</div>
+        </div>
+        <div class="metric-card danger">
+          <div class="icon-bg">
+            <i class="fas fa-arrow-down"></i>
+          </div>
+          <div class="label">Total Saídas</div>
+          <div class="value" id="total-expenses">R$ 0</div>
+        </div>
+        <div class="metric-card primary">
+          <div class="icon-bg">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <div class="label">Saldo Atual</div>
+          <div class="value" id="balance">R$ 0</div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Nova Transação</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Tipo</label>
+            <select class="form-input" id="transaction-type">
+              <option value="income">Entrada</option>
+              <option value="expense">Saída</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descrição</label>
+            <input type="text" class="form-input" id="transaction-desc" placeholder="Ex: Venda de produto">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Valor (R$)</label>
+            <input type="number" class="form-input" id="transaction-value" placeholder="0.00">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="addTransaction()">
+          <i class="fas fa-plus"></i>
+          Adicionar Transação
+        </button>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Evolução Financeira</h3>
+        </div>
+        <div class="chart-container">
+          <canvas id="finance-chart"></canvas>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Últimas Transações</h3>
+        </div>
+        <div id="transactions-list"></div>
+      </div>
+    </div>
+    
+    <!-- Calculadora de Campanha -->
+    <div class="service" id="campaign">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Nova Campanha</h3>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Orçamento Total (R$)</label>
+            <input type="number" class="form-input" id="campaign-budget" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CPC Médio (R$)</label>
+            <input type="number" class="form-input" id="campaign-cpc" placeholder="0.00">
+          </div>
+          <div class="form-group">
+            <label class="form-label">CTR (%)</label>
+            <input type="number" class="form-input" id="campaign-ctr" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Taxa de Conversão (%)</label>
+            <input type="number" class="form-input" id="campaign-conversion" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ticket Médio (R$)</label>
+            <input type="number" class="form-input" id="campaign-ticket" placeholder="0.00">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calculateCampaign()">
+          <i class="fas fa-bullhorn"></i>
+          Calcular Campanha
+        </button>
+        <div id="campaign-result"></div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Histórico de Campanhas</h3>
+        </div>
+        <div id="campaigns-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// IndexedDB Setup
+let db;
+const DB_NAME = 'KdefySolutionDB';
+const DB_VERSION = 1;
+
+const initDB = () => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      db = request.result;
+      resolve(db);
+    };
+    
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+      
+      if (!db.objectStoreNames.contains('roi')) {
+        db.createObjectStore('roi', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('products')) {
+        db.createObjectStore('products', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('transactions')) {
+        db.createObjectStore('transactions', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('campaigns')) {
+        db.createObjectStore('campaigns', { keyPath: 'id', autoIncrement: true });
+      }
+    };
+  });
+};
+
+const addData = (storeName, data) => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([storeName], 'readwrite');
+    const store = transaction.objectStore(storeName);
+    const request = store.add(data);
+    
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+};
+
+const getAllData = (storeName) => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([storeName], 'readonly');
+    const store = transaction.objectStore(storeName);
+    const request = store.getAll();
+    
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+};
+
+// Theme Toggle
+const themeToggle = document.getElementById('theme-toggle');
+const html = document.documentElement;
+
+themeToggle.addEventListener('click', () => {
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  
+  themeToggle.innerHTML = newTheme === 'dark' 
+    ? '<i class="fas fa-sun"></i>' 
+    : '<i class="fas fa-moon"></i>';
+});
+
+// Load saved theme
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+themeToggle.innerHTML = savedTheme === 'dark' 
+  ? '<i class="fas fa-sun"></i>' 
+  : '<i class="fas fa-moon"></i>';
+
+// Navigation
+const navItems = document.querySelectorAll('.nav-item');
+const services = document.querySelectorAll('.service');
+const pageTitle = document.getElementById('page-title');
+
+const titles = {
+  dashboard: 'Dashboard Geral',
+  roi: 'Calculadora de ROI',
+  pricing: 'Simulador de Preço',
+  finance: 'Controle Financeiro',
+  campaign: 'Calculadora de Campanha'
+};
+
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const section = item.dataset.section;
+    
+    navItems.forEach(nav => nav.classList.remove('active'));
+    item.classList.add('active');
+    
+    services.forEach(service => service.classList.remove('active'));
+    document.getElementById(section).classList.add('active');
+    
+    pageTitle.textContent = titles[section];
+    
+    if (section === 'dashboard') {
+      updateDashboard();
+    }
+    
+    // Close mobile menu
+    if (window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.add('mobile-hidden');
+      document.getElementById('overlay').classList.remove('active');
+    }
+  });
+});
+
+// Mobile Menu
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('overlay');
+
+mobileMenuBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('mobile-hidden');
+  overlay.classList.toggle('active');
+});
+
+overlay.addEventListener('click', () => {
+  sidebar.classList.add('mobile-hidden');
+  overlay.classList.remove('active');
+});
+
+// Charts
+let profitChart, roiChart, roiHistoryChart, financeChart;
+
+const initCharts = () => {
+  // Profit Chart
+  const profitCtx = document.getElementById('profit-chart').getContext('2d');
+  profitChart = new Chart(profitCtx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Lucro (R$)',
+        data: [],
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+  
+  // ROI Chart
+  const roiCtx = document.getElementById('roi-chart').getContext('2d');
+  roiChart = new Chart(roiCtx, {
+    type: 'bar',
+    data: {
+      labels: ['ROI', 'Produtos', 'Campanhas'],
+      datasets: [{
+        label: 'ROI Médio (%)',
+        data: [0, 0, 0],
+        backgroundColor: [
+          '#3b82f6',
+          '#10b981',
+          '#f59e0b'
+        ],
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+  
+  // ROI History Chart
+  const roiHistoryCtx = document.getElementById('roi-history-chart').getContext('2d');
+  roiHistoryChart = new Chart(roiHistoryCtx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'ROI (%)',
+        data: [],
+        borderColor: '#10b981',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+  
+  // Finance Chart
+  const financeCtx = document.getElementById('finance-chart').getContext('2d');
+  financeChart = new Chart(financeCtx, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Entradas',
+        data: [],
+        backgroundColor: '#10b981',
+        borderRadius: 8
+      }, {
+        label: 'Saídas',
+        data: [],
+        backgroundColor: '#ef4444',
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+};
+
+// ROI Calculator
+async function calculateROI() {
+  const investment = parseFloat(document.getElementById('roi-investment').value) || 0;
+  const revenue = parseFloat(document.getElementById('roi-revenue').value) || 0;
+  const fixed = parseFloat(document.getElementById('roi-fixed').value) || 0;
+  const variable = parseFloat(document.getElementById('roi-variable').value) || 0;
+  
+  if (investment === 0) {
+    alert('⚠️ Digite o valor do investimento');
+    return;
+  }
+  
+  const totalCosts = fixed + variable;
+  const profit = revenue - totalCosts - investment;
+  const roi = ((profit / investment) * 100).toFixed(2);
+  
+  const resultDiv = document.getElementById('roi-result');
+  resultDiv.innerHTML = `
+    <div class="result-box" style="margin-top: 24px;">
+      <div class="result-label">ROI Calculado</div>
+      <div class="result-value">${roi}%</div>
+      <div class="result-subtitle">Lucro: R$ ${profit.toFixed(2)}</div>
+    </div>
+  `;
+  
+  const data = {
+    investment,
+    revenue,
+    fixed,
+    variable,
+    profit,
+    roi: parseFloat(roi),
+    date: new Date().toISOString()
+  };
+  
+  await addData('roi', data);
+  loadROIHistory();
+  updateDashboard();
+  
+  // Clear inputs
+  document.getElementById('roi-investment').value = '';
+  document.getElementById('roi-revenue').value = '';
+  document.getElementById('roi-fixed').value = '';
+  document.getElementById('roi-variable').value = '';
+}
+
+async function loadROIHistory() {
+  const data = await getAllData('roi');
+  const list = document.getElementById('roi-list');
+  
+  if (data.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-chart-line"></i></div><p>Nenhum cálculo de ROI ainda</p></div>';
+    return;
+  }
+  
+  list.innerHTML = data.reverse().map(item => `
+    <div class="list-item">
+      <div class="info">
+        <div class="title">ROI: ${item.roi.toFixed(2)}%</div>
+        <div class="details">
+          Investimento: R$ ${item.investment.toFixed(2)} | 
+          Lucro: R$ ${item.profit.toFixed(2)} | 
+          ${new Date(item.date).toLocaleDateString('pt-BR')}
+        </div>
+      </div>
+      <span class="badge ${item.roi >= 0 ? 'badge-success' : 'badge-danger'}">
+        ${item.roi >= 0 ? 'Positivo' : 'Negativo'}
+      </span>
+    </div>
+  `).join('');
+  
+  // Update chart
+  roiHistoryChart.data.labels = data.slice(-10).map(item => 
+    new Date(item.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
+  );
+  roiHistoryChart.data.datasets[0].data = data.slice(-10).map(item => item.roi);
+  roiHistoryChart.update();
+}
+
+// Price Calculator
+async function calculatePrice() {
+  const name = document.getElementById('product-name').value.trim();
+  const cost = parseFloat(document.getElementById('product-cost').value) || 0;
+  const shipping = parseFloat(document.getElementById('product-shipping').value) || 0;
+  const fees = parseFloat(document.getElementById('product-fees').value) || 0;
+  const margin = parseFloat(document.getElementById('product-margin').value) || 0;
+  
+  if (!name || cost === 0) {
+    alert('⚠️ Preencha todos os campos obrigatórios');
+    return;
+  }
+  
+  const totalCost = cost + shipping;
+  const price = totalCost / (1 - (fees + margin) / 100);
+  const profit = price - totalCost - (price * fees / 100);
+  
+  const resultDiv = document.getElementById('price-result');
+  resultDiv.innerHTML = `
+    <div class="result-box" style="margin-top: 24px;">
+      <div class="result-label">Preço de Venda Ideal</div>
+      <div class="result-value">R$ ${price.toFixed(2)}</div>
+      <div class="result-subtitle">Lucro: R$ ${profit.toFixed(2)}</div>
+    </div>
+  `;
+  
+  const data = {
+    name,
+    cost,
+    shipping,
+    fees,
+    margin,
+    price,
+    profit,
+    date: new Date().toISOString()
+  };
+  
+  await addData('products', data);
+  loadProducts();
+  updateDashboard();
+  
+  // Clear inputs
+  document.getElementById('product-name').value = '';
+  document.getElementById('product-cost').value = '';
+  document.getElementById('product-shipping').value = '';
+  document.getElementById('product-fees').value = '';
+  document.getElementById('product-margin').value = '';
+}
+
+async function loadProducts() {
+  const data = await getAllData('products');
+  const list = document.getElementById('products-list');
+  
+  if (data.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-box"></i></div><p>Nenhum produto cadastrado</p></div>';
+    return;
+  }
+  
+  list.innerHTML = data.reverse().map(item => `
+    <div class="list-item">
+      <div class="info">
+        <div class="title">${item.name}</div>
+        <div class="details">
+          Preço: R$ ${item.price.toFixed(2)} | 
+          Lucro: R$ ${item.profit.toFixed(2)} | 
+          Margem: ${item.margin}%
+        </div>
+      </div>
+      <span class="badge badge-success">R$ ${item.price.toFixed(2)}</span>
+    </div>
+  `).join('');
+}
+
+// Finance
+async function addTransaction() {
+  const type = document.getElementById('transaction-type').value;
+  const desc = document.getElementById('transaction-desc').value.trim();
+  const value = parseFloat(document.getElementById('transaction-value').value) || 0;
+  
+  if (!desc || value === 0) {
+    alert('⚠️ Preencha todos os campos');
+    return;
+  }
+  
+  const data = {
+    type,
+    description: desc,
+    value,
+    date: new Date().toISOString()
+  };
+  
+  await addData('transactions', data);
+  loadTransactions();
+  updateFinanceMetrics();
+  updateDashboard();
+  
+  // Clear inputs
+  document.getElementById('transaction-desc').value = '';
+  document.getElementById('transaction-value').value = '';
+}
+
+async function loadTransactions() {
+  const data = await getAllData('transactions');
+  const list = document.getElementById('transactions-list');
+  
+  if (data.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-wallet"></i></div><p>Nenhuma transação registrada</p></div>';
+    return;
+  }
+  
+  list.innerHTML = data.reverse().slice(0, 20).map(item => `
+    <div class="list-item">
+      <div class="info">
+        <div class="title">${item.description}</div>
+        <div class="details">${new Date(item.date).toLocaleDateString('pt-BR')}</div>
+      </div>
+      <span class="badge ${item.type === 'income' ? 'badge-success' : 'badge-danger'}">
+        ${item.type === 'income' ? '+' : '-'} R$ ${item.value.toFixed(2)}
+      </span>
+    </div>
+  `).join('');
+}
+
+async function updateFinanceMetrics() {
+  const data = await getAllData('transactions');
+  
+  const income = data.filter(t => t.type === 'income').reduce((sum, t) => sum + t.value, 0);
+  const expenses = data.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.value, 0);
+  const balance = income - expenses;
+  
+  document.getElementById('total-income').textContent = `R$ ${income.toFixed(2)}`;
+  document.getElementById('total-expenses').textContent = `R$ ${expenses.toFixed(2)}`;
+  document.getElementById('balance').textContent = `R$ ${balance.toFixed(2)}`;
+  
+  // Update chart - group by month
+  const months = {};
+  data.forEach(item => {
+    const month = new Date(item.date).toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' });
+    if (!months[month]) months[month] = { income: 0, expenses: 0 };
+    if (item.type === 'income') months[month].income += item.value;
+    else months[month].expenses += item.value;
+  });
+  
+  financeChart.data.labels = Object.keys(months);
+  financeChart.data.datasets[0].data = Object.values(months).map(m => m.income);
+  financeChart.data.datasets[1].data = Object.values(months).map(m => m.expenses);
+  financeChart.update();
+}
+
+// Campaign Calculator
+async function calculateCampaign() {
+  const budget = parseFloat(document.getElementById('campaign-budget').value) || 0;
+  const cpc = parseFloat(document.getElementById('campaign-cpc').value) || 0;
+  const ctr = parseFloat(document.getElementById('campaign-ctr').value) || 0;
+  const conversion = parseFloat(document.getElementById('campaign-conversion').value) || 0;
+  const ticket = parseFloat(document.getElementById('campaign-ticket').value) || 0;
+  
+  if (budget === 0 || cpc === 0 || ctr === 0 || conversion === 0 || ticket === 0) {
+    alert('⚠️ Preencha todos os campos');
+    return;
+  }
+  
+  const clicks = Math.floor(budget / cpc);
+  const leads = Math.floor(clicks * (ctr / 100));
+  const sales = Math.floor(leads * (conversion / 100));
+  const revenue = sales * ticket;
+  const profit = revenue - budget;
+  const roi = ((profit / budget) * 100).toFixed(2);
+  
+  const resultDiv = document.getElementById('campaign-result');
+  resultDiv.innerHTML = `
+    <div class="metrics-grid" style="margin-top: 24px;">
+      <div class="metric-card primary">
+        <div class="icon-bg"><i class="fas fa-mouse-pointer"></i></div>
+        <div class="label">Cliques Estimados</div>
+        <div class="value">${clicks}</div>
+      </div>
+      <div class="metric-card success">
+        <div class="icon-bg"><i class="fas fa-users"></i></div>
+        <div class="label">Leads Gerados</div>
+        <div class="value">${leads}</div>
+      </div>
+      <div class="metric-card warning">
+        <div class="icon-bg"><i class="fas fa-shopping-cart"></i></div>
+        <div class="label">Vendas Esperadas</div>
+        <div class="value">${sales}</div>
+      </div>
+      <div class="metric-card ${roi >= 0 ? 'success' : 'danger'}">
+        <div class="icon-bg"><i class="fas fa-chart-line"></i></div>
+        <div class="label">ROI da Campanha</div>
+        <div class="value">${roi}%</div>
+      </div>
+    </div>
+    <div class="result-box" style="margin-top: 24px;">
+      <div class="result-label">Lucro Estimado</div>
+      <div class="result-value">R$ ${profit.toFixed(2)}</div>
+      <div class="result-subtitle">Receita: R$ ${revenue.toFixed(2)}</div>
+    </div>
+  `;
+  
+  const data = {
+    budget,
+    cpc,
+    ctr,
+    conversion,
+    ticket,
+    clicks,
+    leads,
+    sales,
+    revenue,
+    profit,
+    roi: parseFloat(roi),
+    date: new Date().toISOString()
+  };
+  
+  await addData('campaigns', data);
+  loadCampaigns();
+  updateDashboard();
+  
+  // Clear inputs
+  document.getElementById('campaign-budget').value = '';
+  document.getElementById('campaign-cpc').value = '';
+  document.getElementById('campaign-ctr').value = '';
+  document.getElementById('campaign-conversion').value = '';
+  document.getElementById('campaign-ticket').value = '';
+}
+
+async function loadCampaigns() {
+  const data = await getAllData('campaigns');
+  const list = document.getElementById('campaigns-list');
+  
+  if (data.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-bullhorn"></i></div><p>Nenhuma campanha calculada</p></div>';
+    return;
+  }
+  
+  list.innerHTML = data.reverse().map(item => `
+    <div class="list-item">
+      <div class="info">
+        <div class="title">ROI: ${item.roi.toFixed(2)}% | Vendas: ${item.sales}</div>
+        <div class="details">
+          Orçamento: R$ ${item.budget.toFixed(2)} | 
+          Lucro: R$ ${item.profit.toFixed(2)} | 
+          ${new Date(item.date).toLocaleDateString('pt-BR')}
+        </div>
+      </div>
+      <span class="badge ${item.roi >= 0 ? 'badge-success' : 'badge-danger'}">
+        ${item.roi >= 0 ? 'Lucrativo' : 'Prejuízo'}
+      </span>
+    </div>
+  `).join('');
+}
+
+// Dashboard Update
+async function updateDashboard() {
+  const roiData = await getAllData('roi');
+  const productsData = await getAllData('products');
+  const transactionsData = await getAllData('transactions');
+  const campaignsData = await getAllData('campaigns');
+  
+  document.getElementById('total-roi').textContent = roiData.length;
+  document.getElementById('total-products').textContent = productsData.length;
+  document.getElementById('total-transactions').textContent = transactionsData.length;
+  document.getElementById('total-campaigns').textContent = campaignsData.length;
+  
+  // Update profit chart - combine all profit sources
+  const months = {};
+  
+  [...roiData, ...productsData, ...campaignsData].forEach(item => {
+    const month = new Date(item.date).toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' });
+    if (!months[month]) months[month] = 0;
+    months[month] += item.profit || 0;
+  });
+  
+  profitChart.data.labels = Object.keys(months);
+  profitChart.data.datasets[0].data = Object.values(months);
+  profitChart.update();
+  
+  // Update ROI chart
+  const avgROI = roiData.length > 0 
+    ? roiData.reduce((sum, item) => sum + item.roi, 0) / roiData.length 
+    : 0;
+  const avgProductMargin = productsData.length > 0
+    ? productsData.reduce((sum, item) => sum + item.margin, 0) / productsData.length
+    : 0;
+  const avgCampaignROI = campaignsData.length > 0
+    ? campaignsData.reduce((sum, item) => sum + item.roi, 0) / campaignsData.length
+    : 0;
+  
+  roiChart.data.datasets[0].data = [avgROI, avgProductMargin, avgCampaignROI];
+  roiChart.update();
+}
+
+// Initialize
+(async () => {
+  await initDB();
+  initCharts();
+  
+  // Load all data
+  await loadROIHistory();
+  await loadProducts();
+  await loadTransactions();
+  await updateFinanceMetrics();
+  await loadCampaigns();
+  await updateDashboard();
+})();
+</script>
+
+</body>
+</html>
