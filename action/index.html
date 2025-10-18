@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Mercado - Trading Pro</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: #2d3748;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-mode {
+            --bg-primary: #f7fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: none;
+            color: var(--text-primary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 1.25rem;
+            width: 24px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .refresh-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent-blue);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.green {
+            border-left-color: var(--accent-green);
+        }
+
+        .card.red {
+            border-left-color: var(--accent-red);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .card-icon.blue { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        .card-icon.green { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
+        .card-icon.red { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .card-change.positive { color: var(--accent-green); }
+        .card-change.negative { color: var(--accent-red); }
+
+        /* CHARTS */
+        .chart-container {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                height: 100vh;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Trading Pro</span>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item active" onclick="showSection('dashboard')">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard Geral</span>
+                </div>
+                <div class="nav-item" onclick="showSection('stocks')">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Bolsa de Valores</span>
+                </div>
+                <div class="nav-item" onclick="showSection('crypto')">
+                    <i class="fab fa-bitcoin"></i>
+                    <span>Criptomoedas</span>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <header class="header">
+                <h1 id="page-title">Dashboard Geral</h1>
+                <div class="refresh-status">
+                    <div class="pulse"></div>
+                    <span>Atualizando em tempo real</span>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- DASHBOARD GERAL -->
+                <section id="dashboard" class="section active">
+                    <div class="cards-grid">
+                        <div class="card green">
+                            <div class="card-header">
+                                <span class="card-title">Bolsa de Valores</span>
+                                <div class="card-icon green">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="stock-avg">+0.00%</div>
+                            <div class="card-change positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Tendência Alta</span>
+                            </div>
+                        </div>
+
+                        <div class="card blue">
+                            <div class="card-header">
+                                <span class="card-title">Criptomoedas</span>
+                                <div class="card-icon blue">
+                                    <i class="fab fa-bitcoin"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="crypto-avg">+0.00%</div>
+                            <div class="card-change positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Tendência Alta</span>
+                            </div>
+                        </div>
+
+                        <div class="card green">
+                            <div class="card-header">
+                                <span class="card-title">Mercado Global</span>
+                                <div class="card-icon green">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="global-trend">Alta</div>
+                            <div class="card-change positive">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>Mercado em alta</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Visão Geral do Mercado</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="dashboard-chart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- BOLSA DE VALORES -->
+                <section id="stocks" class="section">
+                    <div class="cards-grid">
+                        <div class="card blue">
+                            <div class="card-header">
+                                <span class="card-title">Preço Atual</span>
+                                <div class="card-icon blue">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="stock-price">$0.00</div>
+                            <div class="card-change" id="stock-change">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+0.00%</span>
+                            </div>
+                        </div>
+
+                        <div class="card green">
+                            <div class="card-header">
+                                <span class="card-title">Máxima do Dia</span>
+                                <div class="card-icon green">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="stock-high">$0.00</div>
+                        </div>
+
+                        <div class="card red">
+                            <div class="card-header">
+                                <span class="card-title">Mínima do Dia</span>
+                                <div class="card-icon red">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="stock-low">$0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3 class="chart-title">AAPL - Apple Inc.</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="stock-candlestick"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Histórico de Preços</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="stock-line"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CRIPTOMOEDAS -->
+                <section id="crypto" class="section">
+                    <div class="cards-grid">
+                        <div class="card blue">
+                            <div class="card-header">
+                                <span class="card-title">Bitcoin (BTC)</span>
+                                <div class="card-icon blue">
+                                    <i class="fab fa-bitcoin"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="btc-price">$0.00</div>
+                            <div class="card-change" id="btc-change">
+                                <i class="fas fa-arrow-up"></i>
+                                <span>+0.00%</span>
+                            </div>
+                        </div>
+
+                        <div class="card green">
+                            <div class="card-header">
+                                <span class="card-title">Máxima 24h</span>
+                                <div class="card-icon green">
+                                    <i class="fas fa-arrow-up"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="btc-high">$0.00</div>
+                        </div>
+
+                        <div class="card red">
+                            <div class="card-header">
+                                <span class="card-title">Mínima 24h</span>
+                                <div class="card-icon red">
+                                    <i class="fas fa-arrow-down"></i>
+                                </div>
+                            </div>
+                            <div class="card-value" id="btc-low">$0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3 class="chart-title">BTC/USD - Candlestick</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="crypto-candlestick"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Histórico de Preços (7 dias)</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="crypto-line"></canvas>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ============ CONFIGURAÇÃO GLOBAL ============
+        const FINNHUB_API_KEY = 'ctfrancuskb5oeuvr2q0gctervezb5oeuvr2q0h0'; // Demo key - substitua pela sua
+        const UPDATE_INTERVAL = 5000; // 5 segundos
+
+        let charts = {};
+        let updateIntervals = [];
+
+        // ============ NAVEGAÇÃO ============
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+            
+            const titles = {
+                'dashboard': 'Dashboard Geral',
+                'stocks': 'Bolsa de Valores',
+                'crypto': 'Criptomoedas'
+            };
+            document.getElementById('page-title').textContent = titles[sectionId];
+        }
+
+        // ============ TEMA ============
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.querySelector('.theme-toggle i');
+            icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // ============ DASHBOARD GERAL ============
+        async function initDashboard() {
+            const ctx = document.getElementById('dashboard-chart').getContext('2d');
+            
+            charts.dashboard = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Bolsa',
+                            data: [],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Cripto',
+                            data: [],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: getComputedStyle(document.body).getPropertyValue('--text-primary') }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            updateIntervals.push(setInterval(updateDashboard, UPDATE_INTERVAL));
+            updateDashboard();
+        }
+
+        async function updateDashboard() {
+            try {
+                // Simular dados (em produção, use APIs reais)
+                const stockChange = (Math.random() * 4 - 2).toFixed(2);
+                const cryptoChange = (Math.random() * 10 - 5).toFixed(2);
+                
+                document.getElementById('stock-avg').textContent = `${stockChange > 0 ? '+' : ''}${stockChange}%`;
+                document.getElementById('crypto-avg').textContent = `${cryptoChange > 0 ? '+' : ''}${cryptoChange}%`;
+                
+                const trend = (parseFloat(stockChange) + parseFloat(cryptoChange)) / 2 > 0 ? 'Alta' : 'Baixa';
+                document.getElementById('global-trend').textContent = trend;
+
+                // Atualizar gráfico
+                const now = new Date().toLocaleTimeString();
+                if (charts.dashboard.data.labels.length > 20) {
+                    charts.dashboard.data.labels.shift();
+                    charts.dashboard.data.datasets[0].data.shift();
+                    charts.dashboard.data.datasets[1].data.shift();
+                }
+                
+                charts.dashboard.data.labels.push(now);
+                charts.dashboard.data.datasets[0].data.push(100 + parseFloat(stockChange));
+                charts.dashboard.data.datasets[1].data.push(100 + parseFloat(cryptoChange));
+                charts.dashboard.update('none');
+            } catch (error) {
+                console.error('Erro ao atualizar dashboard:', error);
+            }
+        }
+
+        // ============ BOLSA DE VALORES ============
+        async function initStocks() {
+            // Candlestick Chart
+            const ctxCandle = document.getElementById('stock-candlestick').getContext('2d');
+            const candleData = generateCandlestickData(30);
+            
+            charts.stockCandle = new Chart(ctxCandle, {
+                type: 'candlestick',
+                data: {
+                    datasets: [{
+                        label: 'AAPL',
+                        data: candleData
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Line Chart
+            const ctxLine = document.getElementById('stock-line').getContext('2d');
+            charts.stockLine = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: candleData.map((d, i) => `Dia ${i + 1}`),
+                    datasets: [{
+                        label: 'Preço de Fechamento',
+                        data: candleData.map(d => d.c),
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: getComputedStyle(document.body).getPropertyValue('--text-primary') } }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            updateIntervals.push(setInterval(updateStocks, UPDATE_INTERVAL));
+            updateStocks();
+        }
+
+        async function updateStocks() {
+            try {
+                // Em produção, use Finnhub API
+                // const response = await fetch(`https://finnhub.io/api/v1/quote?symbol=AAPL&token=${FINNHUB_API_KEY}`);
+                // const data = await response.json();
+                
+                // Simulação
+                const price = 150 + Math.random() * 20;
+                const change = (Math.random() * 4 - 2).toFixed(2);
+                const high = price + Math.random() * 5;
+                const low = price - Math.random() * 5;
+
+                document.getElementById('stock-price').textContent = `$${price.toFixed(2)}`;
+                document.getElementById('stock-high').textContent = `$${high.toFixed(2)}`;
+                document.getElementById('stock-low').textContent = `$${low.toFixed(2)}`;
+                
+                const changeEl = document.getElementById('stock-change');
+                changeEl.innerHTML = `<i class="fas fa-arrow-${change > 0 ? 'up' : 'down'}"></i><span>${change > 0 ? '+' : ''}${change}%</span>`;
+                changeEl.className = `card-change ${change > 0 ? 'positive' : 'negative'}`;
+            } catch (error) {
+                console.error('Erro ao atualizar ações:', error);
+            }
+        }
+
+        // ============ CRIPTOMOEDAS ============
+        async function initCrypto() {
+            // Candlestick Chart
+            const ctxCandle = document.getElementById('crypto-candlestick').getContext('2d');
+            const candleData = generateCandlestickData(30, 40000);
+            
+            charts.cryptoCandle = new Chart(ctxCandle, {
+                type: 'candlestick',
+                data: {
+                    datasets: [{
+                        label: 'BTC/USD',
+                        data: candleData
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Line Chart
+            const ctxLine = document.getElementById('crypto-line').getContext('2d');
+            charts.cryptoLine = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: candleData.map((d, i) => `${i}h`),
+                    datasets: [{
+                        label: 'Preço BTC',
+                        data: candleData.map(d => d.c),
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: getComputedStyle(document.body).getPropertyValue('--text-primary') } }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+
+            updateIntervals.push(setInterval(updateCrypto, UPDATE_INTERVAL));
+            updateCrypto();
+        }
+
+        async function updateCrypto() {
+            try {
+                // Em produção, use CoinGecko API
+                // const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
+                // const data = await response.json();
+                
+                // Simulação
+                const price = 40000 + Math.random() * 5000;
+                const change = (Math.random() * 8 - 4).toFixed(2);
+                const high = price + Math.random() * 1000;
+                const low = price - Math.random() * 1000;
+
+                document.getElementById('btc-price').textContent = `$${price.toFixed(2)}`;
+                document.getElementById('btc-high').textContent = `$${high.toFixed(2)}`;
+                document.getElementById('btc-low').textContent = `$${low.toFixed(2)}`;
+                
+                const changeEl = document.getElementById('btc-change');
+                changeEl.innerHTML = `<i class="fas fa-arrow-${change > 0 ? 'up' : 'down'}"></i><span>${change > 0 ? '+' : ''}${change}%</span>`;
+                changeEl.className = `card-change ${change > 0 ? 'positive' : 'negative'}`;
+            } catch (error) {
+                console.error('Erro ao atualizar cripto:', error);
+            }
+        }
+
+        // ============ UTILIDADES ============
+        function generateCandlestickData(count, basePrice = 150) {
+            const data = [];
+            let price = basePrice;
+            
+            for (let i = 0; i < count; i++) {
+                const open = price;
+                const close = price + (Math.random() * 10 - 5);
+                const high = Math.max(open, close) + Math.random() * 3;
+                const low = Math.min(open, close) - Math.random() * 3;
+                
+                data.push({
+                    x: new Date(Date.now() - (count - i) * 24 * 60 * 60 * 1000),
+                    o: open,
+                    h: high,
+                    l: low,
+                    c: close
+                });
+                
+                price = close;
+            }
+            
+            return data;
+        }
+
+        // ============ INICIALIZAÇÃO ============
+        window.addEventListener('load', () => {
+            initDashboard();
+            initStocks();
+            initCrypto();
+        });
+
+        // Limpar intervalos ao sair
+        window.addEventListener('beforeunload', () => {
+            updateIntervals.forEach(interval => clearInterval(interval));
+        });
+    </script>
+</body>
+</html>
