@@ -6,7 +6,7 @@
 <title>Kdefy — Termos, Privacidade & Reembolso</title>
 <style>
 :root{
-  --bg:#0b0b0b;--panel:#0f0f0f;--muted:#bdbdbd;--text:#f6f6f6;--accent:#ffffff;
+  --bg:#0b0b0b;--panel:#0f0f0f;--muted:#bdbdbd;--text:#f6f6f6;--accent:#00ffea;--success:#00ff6a;
 }
 html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var(--text)}
 a{color:inherit;text-decoration:none}
@@ -16,7 +16,7 @@ a{color:inherit;text-decoration:none}
 }
 .brand{display:flex;align-items:center;gap:12px}
 .brand .logo-canvas{width:56px;height:56px;border-radius:8px;background:#000;flex:0 0 56px}
-.brand h1{font-size:18px;margin:0;font-weight:700;letter-spacing:0.6px}
+.brand h1{font-size:18px;margin:0;font-weight:700;letter-spacing:0.6px;color:var(--accent);}
 .meta{font-size:12px;color:var(--muted);margin-top:4px}
 nav{display:flex;flex-direction:column;gap:10px;margin-top:6px}
 nav a{padding:10px 12px;border-radius:8px;color:var(--muted);font-weight:600;transition:all .12s}
@@ -35,10 +35,13 @@ footer{position:fixed;right:20px;bottom:18px;background:#0c0c0c;padding:12px 14p
 html{scroll-behavior:smooth}
 form{display:flex;flex-direction:column;gap:10px;background:#111;padding:18px;border-radius:8px;max-width:480px}
 label{font-weight:600;color:#fff}
-input,textarea{background:#0d0d0d;border:1px solid #222;color:#fff;padding:10px;border-radius:6px;width:100%;box-sizing:border-box}
-button{background:#fff;color:#000;font-weight:700;border:none;border-radius:6px;padding:12px;cursor:pointer;transition:.2s}
-button:hover{background:#ddd}
+input,textarea{background:#0d0d0d;border:1px solid #222;color:#fff;padding:10px;border-radius:6px;width:100%;box-sizing:border-box;font-family:Inter,Arial,sans-serif;}
+button{background:var(--accent);color:#000;font-weight:700;border:none;border-radius:6px;padding:12px;cursor:pointer;transition:.2s}
+button:hover{background:#00ffaa}
 .preview img{max-width:100%;margin-top:10px;border-radius:6px;border:1px solid #222}
+.success-box{display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;border:2px solid var(--success);border-radius:8px;background:#0d0d0d;margin-top:20px;color:var(--success);}
+.success-box h3{margin:0 0 10px 0;color:var(--success);}
+.success-box p{color:var(--muted);}
 @media (max-width:900px){
   .sidebar{position:static;width:100%;height:auto;padding:18px;display:flex;flex-direction:row;gap:12px;align-items:center}
   .content{margin-left:0;padding:20px}
@@ -55,7 +58,7 @@ button:hover{background:#ddd}
       <canvas class="logo-canvas" id="logoCanvas" width="128" height="128"></canvas>
       <div>
         <h1>Kdefy</h1>
-        <div class="meta">Terms - suporte</div>
+        <div class="meta">Soluções de bots para WhatsApp — venda e suporte</div>
       </div>
     </div>
     <nav>
@@ -66,7 +69,7 @@ button:hover{background:#ddd}
       <a href="#contato">Contato</a>
     </nav>
     <div class="small">
-      suporte@kdefy.exemplo<br>
+      suporte@kdefy.com<br>
       Última atualização: <span id="lastUpdateSmall"></span>
     </div>
   </aside>
@@ -92,7 +95,7 @@ button:hover{background:#ddd}
 
     <section id="privacidade">
       <h3>Política de Privacidade</h3>
-      <p>Coletamos apenas dados essenciais (nome, e-mail, comprovante de pagamento). Não há compartilhamento com terceiros, salvo exigência legal.</p>
+      <p>Coletamos apenas dados essenciais (nome, e-mail, número e comprovante de pagamento). Não há compartilhamento com terceiros, salvo exigência legal.</p>
     </section>
 
     <section id="termos">
@@ -105,16 +108,25 @@ button:hover{background:#ddd}
     </section>
 
     <section id="contato">
-      <h3>Solicitar Reembolso</h3>
-      <form id="refundForm">
+      <h3>Solicitar Reembolso / Contato</h3>
+      <form id="contactForm">
         <label for="name">Nome</label>
-        <input type="text" id="name" placeholder="Seu nome" name="name" required>
-        <label for="reason">Motivo</label>
-        <textarea id="reason" rows="4" placeholder="Explique o motivo da solicitação..." name="reason" required></textarea>
+        <input type="text" id="name" name="name" placeholder="Seu nome" required>
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
+        <label for="phone">Número</label>
+        <input type="text" id="phone" name="phone" placeholder="Seu número (opcional)">
+        <label for="message">Mensagem</label>
+        <textarea id="message" name="message" rows="4" placeholder="Digite sua mensagem..." required></textarea>
         <label for="file">Anexar imagem (opcional)</label>
         <input type="file" id="file" name="file" accept="image/*">
         <div class="preview" id="preview"></div>
-        <button type="submit">Enviar para Kdefy</button>
+        <button type="submit">Enviar</button>
+        <div class="success-box" id="successBox">
+          <canvas id="successLogo" width="80" height="80"></canvas>
+          <h3>Mensagem enviada com sucesso!</h3>
+          <p>Seu pedido foi recebido e será analisado. Para mais informações acesse <a href="https://kdefy.com/terms-privacy" target="_blank">kdefy.com/terms-privacy</a></p>
+        </div>
       </form>
     </section>
   </main>
@@ -131,6 +143,7 @@ ctx.beginPath();ctx.moveTo(c.width/2+6,28);ctx.lineTo(c.width-28,c.height/2);ctx
 const f=document.createElement('canvas');f.width=64;f.height=64;const fx=f.getContext('2d');
 fx.fillStyle='#000';fx.fillRect(0,0,64,64);fx.drawImage(c,0,0,64,64);
 const link=document.createElement('link');link.rel='icon';link.href=f.toDataURL('image/png');document.head.appendChild(link);
+
 const d=new Date();const formatted=d.toLocaleDateString('pt-BR',{year:'numeric',month:'long',day:'2-digit'});
 document.getElementById('lastUpdate').textContent='Última atualização: '+formatted;
 const s=document.getElementById('lastUpdateSmall');if(s)s.textContent=formatted;
@@ -140,27 +153,23 @@ document.getElementById('file').addEventListener('change',e=>{
   if(file){const img=document.createElement('img');img.src=URL.createObjectURL(file);prev.appendChild(img);}
 });
 
-document.getElementById('refundForm').addEventListener('submit', async e=>{
+document.getElementById('contactForm').addEventListener('submit', async e=>{
   e.preventDefault();
-  const form = document.getElementById('refundForm');
-  const data = new FormData(form);
-  try {
-    const res = await fetch('http://localhost:3000/send', {
-      method: 'POST',
-      body: data
-    });
+  const form=document.getElementById('contactForm');
+  const data=new FormData(form);
+  try{
+    const res=await fetch('http://localhost:3000/send',{method:'POST',body:data});
     if(res.ok){
-      const text = await res.text();
-      document.open();
-      document.write(text);
-      document.close();
-    } else {
-      alert('Erro ao enviar o pedido. Tente novamente.');
-    }
-  } catch(err){
-    alert('Erro ao conectar com o servidor.');
-    console.error(err);
-  }
+      document.getElementById('successBox').style.display='flex';
+      form.reset();
+      document.getElementById('preview').innerHTML='';
+      const sl=document.getElementById('successLogo'),sctx=sl.getContext('2d');
+      sctx.fillStyle='#000';sctx.fillRect(0,0,80,80);
+      sctx.fillStyle='#00ff6a';
+      sctx.font='bold 28px Arial';
+      sctx.fillText('✔',20,50);
+    } else alert('Erro ao enviar o pedido. Tente novamente.');
+  }catch(err){alert('Erro ao conectar com o servidor.');console.error(err);}
 });
 </script>
 </body>
