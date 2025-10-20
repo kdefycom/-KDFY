@@ -66,7 +66,7 @@ button:hover{background:#ddd}
       <a href="#contato">Contato</a>
     </nav>
     <div class="small">
-      kdefy.com/terms-privaty<br>
+      suporte@kdefy.exemplo<br>
       Última atualização: <span id="lastUpdateSmall"></span>
     </div>
   </aside>
@@ -108,11 +108,11 @@ button:hover{background:#ddd}
       <h3>Solicitar Reembolso</h3>
       <form id="refundForm">
         <label for="name">Nome</label>
-        <input type="text" id="name" placeholder="Seu nome" required>
+        <input type="text" id="name" placeholder="Seu nome" name="name" required>
         <label for="reason">Motivo</label>
-        <textarea id="reason" rows="4" placeholder="Explique o motivo da solicitação..." required></textarea>
+        <textarea id="reason" rows="4" placeholder="Explique o motivo da solicitação..." name="reason" required></textarea>
         <label for="file">Anexar imagem (opcional)</label>
-        <input type="file" id="file" accept="image/*">
+        <input type="file" id="file" name="file" accept="image/*">
         <div class="preview" id="preview"></div>
         <button type="submit">Enviar para Kdefy</button>
       </form>
@@ -140,13 +140,27 @@ document.getElementById('file').addEventListener('change',e=>{
   if(file){const img=document.createElement('img');img.src=URL.createObjectURL(file);prev.appendChild(img);}
 });
 
-document.getElementById('refundForm').addEventListener('submit',e=>{
+document.getElementById('refundForm').addEventListener('submit', async e=>{
   e.preventDefault();
-  const nome=document.getElementById('name').value.trim();
-  const motivo=document.getElementById('reason').value.trim();
-  const assunto=encodeURIComponent('Solicitação de reembolso - '+nome);
-  const corpo=encodeURIComponent('Nome: '+nome+'\nMotivo: '+motivo+'\n\n(Anexar imagem manualmente, se necessário)');
-  window.location.href='mailto:kdefycom@gmail.com?subject='+assunto+'&body='+corpo;
+  const form = document.getElementById('refundForm');
+  const data = new FormData(form);
+  try {
+    const res = await fetch('http://localhost:3000/send', {
+      method: 'POST',
+      body: data
+    });
+    if(res.ok){
+      const text = await res.text();
+      document.open();
+      document.write(text);
+      document.close();
+    } else {
+      alert('Erro ao enviar o pedido. Tente novamente.');
+    }
+  } catch(err){
+    alert('Erro ao conectar com o servidor.');
+    console.error(err);
+  }
 });
 </script>
 </body>
