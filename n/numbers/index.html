@@ -695,11 +695,16 @@
             function updateDisplay(countryCode) {
                 const country = countries[countryCode];
                 const quantity = quantities[countryCode];
-                const total = (country.price * quantity).toFixed(2);
+                const priceElement = document.querySelector(`[data-country="${countryCode}"]`);
                 
                 document.getElementById(`qty-${countryCode}`).textContent = quantity;
-                document.querySelector(`[data-country="${countryCode}"]`).textContent = 
-                    `R$ ${total} (${quantity}x R$ ${country.price.toFixed(2)})`;
+
+                if (quantity > 1) {
+                    const total = (country.price * quantity).toFixed(2);
+                    priceElement.textContent = `R$ ${total} (${quantity}x R$ ${country.price.toFixed(2)})`;
+                } else {
+                    priceElement.textContent = `R$ ${country.price.toFixed(2)}`;
+                }
             }
 
             window.orderNumber = function(countryCode) {
