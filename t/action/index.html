@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kdefy Action</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Parallax container */
+  .parallax {
+    height: 100vh;
+    background-image: url('https://images.unsplash.com/photo-1612831455541-21d7dfbdfd33?auto=format&fit=crop&w=1950&q=80');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 1px 1px 5px black;
+  }
+
+  .content {
+    background: rgba(0,0,0,0.5);
+    padding: 20px 30px;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  input[type="text"] {
+    padding: 10px;
+    width: 200px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 10px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    background-color: #00bcd4;
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #0097a7;
+  }
+
+  #idOutput {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="parallax">
+  <div class="content">
+    <h1>Kdefy Action</h1>
+    <p>Digite seu usuário para gerar ID:</p>
+    <input type="text" id="usuario_id" placeholder="usuario_id">
+    <button onclick="gerarId()">Gerar ID</button>
+    <div id="idOutput"></div>
+  </div>
+</div>
+
+<script>
+async function gerarId() {
+  const usuario_id = document.getElementById('usuario_id').value.trim();
+  if (!usuario_id) return alert('Digite um usuario_id');
+
+  try {
+    const res = await fetch('http://localhost:3000/uuid/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': 'f2c286b2a259ee0e0051883f63b85aae6ba5b8bb0e526fcb58834e92975bac54'
+      },
+      body: JSON.stringify({ usuario_id })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      const id = data.record.id;
+
+      // Atualiza a URL limpa: /t/action/<id>
+      window.history.replaceState(null, '', `/t/action/${id}`);
+
+      // Mostra o ID na tela
+      document.getElementById('idOutput').textContent = `Seu ID: ${id}`;
+    } else {
+      document.getElementById('idOutput').textContent = `Erro: ${data.error}`;
+    }
+
+  } catch (err) {
+    document.getElementById('idOutput').textContent = `Erro: ${err.message}`;
+  }
+}
+</script>
+
+</body>
+</html>
