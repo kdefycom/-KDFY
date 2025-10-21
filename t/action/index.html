@@ -3,224 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Como ser bom na cama por menos de 20</title>
+<title>Kdefy UUID Demo</title>
 <style>
-  body {
-    margin:0;
-    font-family: 'Arial', sans-serif;
-    background-color: #000;
-    color: #fff;
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+  }
+  .parallax {
+    background-image: url('https://images.unsplash.com/photo-1517817748493-7b1e314a2b6b?auto=format&fit=crop&w=1950&q=80');
+    height: 50vh;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    text-shadow: 2px 2px 6px #000;
   }
-  header {
-    padding: 20px;
-    text-align:center;
+  .content {
+    padding: 2rem;
+    background: #f0f0f0;
   }
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    text-shadow: 1px 1px 4px #ff4e50;
+  pre {
+    background: #222;
+    color: #0f0;
+    padding: 1rem;
+    overflow-x: auto;
   }
-  .container {
-    max-width: 900px;
-    padding:30px;
-    background: rgba(20,20,20,0.9);
-    border-radius: 15px;
-    box-shadow: 0 0 15px rgba(255,0,0,0.5);
-    margin-bottom:20px;
-  }
-  button {
-    background: #ff4e50;
-    color:#fff;
-    font-size: 1.2rem;
-    padding:12px 25px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    transition: 0.3s;
-  }
-  button:hover { background:#f9d423; color:#000; }
-  #overlay {
-    display:none;
-    position:fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.8);
-    z-index: 998;
-  }
-  .popup {
-    display:none;
-    position:fixed;
-    top:50%; left:50%;
-    transform:translate(-50%, -50%);
-    background:#111;
-    color:#fff;
-    padding:30px;
-    border-radius:15px;
-    width: 400px;
-    max-width: 90%;
-    z-index:999;
-    box-shadow:0 0 25px rgba(255,0,0,0.5);
-  }
-  .popup input, .popup select {
-    width: 90%;
-    padding:8px;
-    margin:8px 0;
-    border-radius:5px;
-    border:1px solid #555;
-    background:#222;
-    color:#fff;
-  }
-  .popup img { max-width:200px; margin-bottom:15px; }
-  #payload { width:100%; height:60px; background:#222; color:#fff; border:none; padding:5px; font-family:monospace; }
-  .status { font-weight:bold; margin-top:10px; }
-  .book-preview { margin-top:15px; background:#111; padding:15px; border-radius:10px; line-height:1.5; }
-  .download-btn {
-    display:none;
-    margin-top:15px;
-    background:#2196F3;
-    color:#fff;
-    padding:10px 20px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    text-decoration:none;
-  }
-  .download-btn:hover { background:#0b7dda; }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Como ser bom na cama por menos de 20</h1>
-</header>
+<div class="parallax">Kdefy UUID Demo</div>
 
-<div class="container">
-  <p>Escolha sua versão:</p>
-  <select id="versionSelect">
-    <option value="homem">Versão Homem</option>
-    <option value="mulher">Versão Mulher</option>
-  </select>
-
-  <div class="book-preview" id="previewText">
-    <strong>Trecho do livro:</strong><br>
-    Dicas para excitar sua parceira: toques leves e sussurros estratégicos podem aumentar muito a tensão...
-  </div>
-
-  <p>Preço: R$ 19,90</p>
-  <button id="buyBtn">Comprar Agora</button>
+<div class="content">
+  <h2>Informações do Usuário</h2>
+  <pre id="uuidInfo">Carregando...</pre>
 </div>
 
-<div id="overlay"></div>
-
-<!-- POPUP DE INFO -->
-<div class="popup" id="infoPopup">
-  <h2>Informações do Cliente</h2>
-  <input type="text" id="nome" placeholder="Nome" required><br>
-  <input type="email" id="email" placeholder="Email" required><br>
-  <input type="tel" id="telefone" placeholder="Telefone" required><br>
-  <button id="sendInfoBtn">Gerar Pagamento</button>
-  <button id="closeInfoBtn">Fechar</button>
-</div>
-
-<!-- POPUP DE PAGAMENTO -->
-<div class="popup" id="popup">
-  <h2>Pagamento PIX</h2>
-  <img id="qrcode" src="" alt="QR Code">
-  <p>Payload:</p>
-  <textarea id="payload" readonly></textarea>
-  <div class="status" id="statusText">Status: Aguardando...</div>
-  <a id="downloadBtn" class="download-btn" href="#" download="ebook.pdf">Baixar PDF</a>
-  <br><br>
-  <button id="closeBtn">Fechar</button>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
-const buyBtn = document.getElementById('buyBtn');
-const overlay = document.getElementById('overlay');
-const infoPopup = document.getElementById('infoPopup');
-const sendInfoBtn = document.getElementById('sendInfoBtn');
-const closeInfoBtn = document.getElementById('closeInfoBtn');
-const popup = document.getElementById('popup');
-const qrcodeImg = document.getElementById('qrcode');
-const payloadArea = document.getElementById('payload');
-const closeBtn = document.getElementById('closeBtn');
-const statusText = document.getElementById('statusText');
-const downloadBtn = document.getElementById('downloadBtn');
-const versionSelect = document.getElementById('versionSelect');
-const previewText = document.getElementById('previewText');
-
-let pagamentoId = null;
-let statusInterval = null;
-
-buyBtn.addEventListener('click', ()=>{
-  overlay.style.display='block';
-  infoPopup.style.display='block';
-});
-
-closeInfoBtn.addEventListener('click', ()=>{
-  infoPopup.style.display='none';
-  overlay.style.display='none';
-});
-
-versionSelect.addEventListener('change', ()=>{
-  if(versionSelect.value==='homem'){
-    previewText.innerHTML = "<strong>Trecho do livro:</strong><br>Dicas para excitar sua parceira: toques leves e sussurros estratégicos podem aumentar muito a tensão...";
-  } else {
-    previewText.innerHTML = "<strong>Trecho do livro:</strong><br>Dicas para excitar seu parceiro: observe os sinais corporais e use palavras de estímulo para aumentar o prazer...";
-  }
-});
-
-sendInfoBtn.addEventListener('click', async ()=>{
-  const nome = document.getElementById('nome').value;
-  const email = document.getElementById('email').value;
-  const telefone = document.getElementById('telefone').value;
-  if(!nome || !email || !telefone){ alert('Preencha todos os campos'); return; }
-
-  try{
-    const res = await fetch('http://localhost:3000/sunize/gerar_pagamento',{
-      method:'POST',
-      headers:{ 'Content-Type':'application/json', 'x-api-key':'f2c286b2a259ee0e0051883f63b85aae6ba5b8bb0e526fcb58834e92975bac54' },
-      body: JSON.stringify({ usuario_id: Date.now().toString(), nome, email, valor:19.9, ip:'127.0.0.1' })
+async function generateUUID() {
+  try {
+    const res = await fetch('http://localhost:3000/uuid/generate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': '<?=f2c286b2a259ee0e0051883f63b85aae6ba5b8bb0e526fcb58834e92975bac54?>'
+      },
+      body: JSON.stringify({
+        usuario_id: '12345',
+        setCookie: true,
+        meta: { plataforma: 'web' }
+      })
     });
     const data = await res.json();
-    if(data.success){
-      pagamentoId = data.pagamento.id;
-      payloadArea.value = data.pagamento.pix.payload;
-      QRCode.toDataURL(data.pagamento.pix.payload).then(url=>qrcodeImg.src=url);
-      infoPopup.style.display='none';
-      popup.style.display='block';
-      downloadBtn.style.display='none';
-      statusText.textContent = 'Status: Aguardando...';
+    document.getElementById('uuidInfo').textContent = JSON.stringify(data, null, 2);
+  } catch (err) {
+    document.getElementById('uuidInfo').textContent = 'Erro: ' + err;
+  }
+}
 
-      statusInterval = setInterval(async ()=>{
-        const st = await fetch(`http://localhost:3000/sunize/status/${pagamentoId}`,{
-          headers:{ 'x-api-key':'f2c286b2a259ee0e0051883f63b85aae6ba5b8bb0e526fcb58834e92975bac54' }
-        });
-        const stData = await st.json();
-        if(stData.status==='PAID'){
-          clearInterval(statusInterval);
-          statusText.textContent='Status: Pagamento Confirmado!';
-          // efeito notificação
-          statusText.style.color='#0f0';
-          downloadBtn.style.display='inline-block';
-        }
-      },3000);
-
-    } else { alert('Erro: '+data.error); }
-
-  } catch(e){ alert('Erro na requisição: '+e.message); }
-});
-
-closeBtn.addEventListener('click', ()=>{
-  popup.style.display='none';
-  overlay.style.display='none';
-  if(statusInterval) clearInterval(statusInterval);
-});
-
+generateUUID();
 </script>
+
 </body>
 </html>
