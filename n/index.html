@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kdefy Numbers</title>
+    <title>Kdefy Number Virtual - KNV</title>
     <style>
         :root {
             --primary-color: #fff;
             --background-color: #000;
             --card-background: #1a1a1a;
             --card-hover: #2a2a2a;
-            --purple: #7c3aed;
-            --purple-dark: #5b21b6;
+            --purple: #8b5cf6;
+            --purple-dark: #6d28d9;
+            --gradient-primary: linear-gradient(135deg, var(--purple), var(--purple-dark));
+            --shadow-elegant: 0 10px 30px -10px rgba(139, 92, 246, 0.3);
         }
 
         * {
@@ -37,16 +39,35 @@
         header {
             padding: 2rem 0;
             text-align: center;
+            background: var(--gradient-primary);
+            box-shadow: var(--shadow-elegant);
         }
 
         header h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 2rem;
+            box-shadow: var(--shadow-elegant);
         }
 
         header p {
             font-size: 1.2rem;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .hero {
@@ -68,16 +89,103 @@
             border-radius: 5px;
             font-size: 1.2rem;
             margin-top: 1rem;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
 
         .hero .btn:hover {
             background-color: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .updates-section {
+            background: var(--gradient-primary);
+            padding: 3rem 0;
+            margin: 2rem 0;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .updates-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .updates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .update-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .update-card h3 {
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .packages-section {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .packages-section h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .package-card {
+            background: var(--gradient-primary);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow-elegant);
+            transition: transform 0.3s ease;
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .package-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .package-card .old-price {
+            text-decoration: line-through;
+            opacity: 0.6;
+            font-size: 1rem;
+        }
+
+        .package-card .price {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .package-card .economy {
+            color: #25D366;
+            font-weight: bold;
+            margin-bottom: 1rem;
         }
 
         .countries-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             padding: 4rem 0;
         }
@@ -87,12 +195,15 @@
             border-radius: 10px;
             padding: 2rem;
             text-align: center;
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .country-card:hover {
             transform: translateY(-10px);
             background-color: var(--card-hover);
+            box-shadow: var(--shadow-elegant);
         }
 
         .country-card img {
@@ -101,6 +212,7 @@
             margin-bottom: 1rem;
             border-radius: 50%;
             object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         .country-card h3 {
@@ -112,55 +224,54 @@
             font-size: 1.2rem;
             margin-bottom: 1rem;
             font-weight: bold;
+            color: var(--purple);
         }
 
         .quantity-selector {
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             gap: 1rem;
             margin: 1rem 0;
         }
 
         .quantity-selector button {
-            background-color: var(--purple);
+            background: var(--gradient-primary);
             color: white;
             border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 5px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 1.5rem;
-            transition: background-color 0.3s ease;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
         }
 
         .quantity-selector button:hover {
-            background-color: var(--purple-dark);
+            transform: scale(1.1);
         }
 
         .quantity-selector span {
-            font-size: 1.5rem;
-            min-width: 40px;
+            font-size: 1.2rem;
+            min-width: 30px;
             text-align: center;
         }
 
         .country-card .btn {
             display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--background-color);
+            background-color: var(--purple);
+            color: white;
             padding: 0.8rem 1.5rem;
             text-decoration: none;
             border-radius: 5px;
             font-size: 1rem;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            border: none;
-            cursor: pointer;
-            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
         }
 
         .country-card .btn:hover {
-            background-color: #25D366;
-            color: #fff;
+            background-color: var(--purple-dark);
+            transform: scale(1.05);
         }
 
         .referral {
@@ -177,61 +288,82 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
             margin-top: 2rem;
+            gap: 1rem;
         }
 
         .referral-box textarea {
             padding: 1rem;
             font-size: 1rem;
-            border: 1px solid var(--primary-color);
-            background-color: transparent;
+            border: 1px solid var(--purple);
+            background-color: var(--card-background);
             color: var(--primary-color);
-            border-radius: 5px;
+            border-radius: 10px;
             width: 100%;
             max-width: 600px;
+            min-height: 200px;
             resize: vertical;
-            min-height: 150px;
+            font-family: inherit;
         }
 
         .referral-box button {
             padding: 1rem 2rem;
             font-size: 1rem;
-            border: 1px solid var(--primary-color);
-            background-color: var(--primary-color);
-            color: var(--background-color);
+            border: none;
+            background: var(--gradient-primary);
+            color: white;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-elegant);
         }
 
         .referral-box button:hover {
-            background-color: #25D366;
-            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
         }
 
-        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background-color: var(--card-background);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .sidebar.open {
+            right: 0;
+        }
+
         .sidebar-toggle {
             position: fixed;
             top: 20px;
-            left: 20px;
-            z-index: 1001;
-            background-color: var(--purple);
+            right: 20px;
+            background: var(--gradient-primary);
+            color: white;
             border: none;
             width: 50px;
             height: 50px;
-            border-radius: 10px;
+            border-radius: 50%;
             cursor: pointer;
+            z-index: 999;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            gap: 5px;
-            transition: background-color 0.3s ease;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: var(--shadow-elegant);
+            transition: all 0.3s ease;
         }
 
         .sidebar-toggle:hover {
-            background-color: var(--purple-dark);
+            transform: scale(1.1);
         }
 
         .sidebar-toggle span {
@@ -241,46 +373,16 @@
             border-radius: 2px;
         }
 
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -350px;
-            width: 350px;
-            height: 100vh;
-            background-color: var(--card-background);
-            z-index: 1000;
-            transition: left 0.3s ease;
-            overflow-y: auto;
-            padding: 2rem;
-        }
-
-        .sidebar.open {
-            left: 0;
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 999;
-            display: none;
-        }
-
-        .sidebar-overlay.open {
-            display: block;
-        }
-
         .sidebar h2 {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             color: var(--purple);
+            border-bottom: 2px solid var(--purple);
+            padding-bottom: 0.5rem;
         }
 
         .sidebar h3 {
-            margin-top: 2rem;
-            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
             color: var(--purple);
         }
 
@@ -297,12 +399,21 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Support Button */
+        .sidebar-close {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
         .support-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--purple);
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient-primary);
             color: white;
             border: none;
             width: 60px;
@@ -310,17 +421,15 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
-            transition: all 0.3s ease;
+            box-shadow: var(--shadow-elegant);
             z-index: 998;
+            transition: all 0.3s ease;
         }
 
         .support-btn:hover {
-            background-color: var(--purple-dark);
             transform: scale(1.1);
         }
 
-        /* Support Modal */
         .support-modal {
             display: none;
             position: fixed;
@@ -329,7 +438,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1002;
+            z-index: 1001;
             justify-content: center;
             align-items: center;
         }
@@ -340,8 +449,8 @@
 
         .support-content {
             background-color: var(--card-background);
-            border-radius: 10px;
             padding: 2rem;
+            border-radius: 15px;
             max-width: 500px;
             width: 90%;
             max-height: 90vh;
@@ -353,14 +462,11 @@
             color: var(--purple);
         }
 
-        .support-content .form-group {
-            margin-bottom: 1.5rem;
-        }
-
         .support-content label {
             display: block;
+            margin-top: 1rem;
             margin-bottom: 0.5rem;
-            font-weight: 500;
+            font-weight: bold;
         }
 
         .support-content input,
@@ -368,15 +474,16 @@
         .support-content textarea {
             width: 100%;
             padding: 0.8rem;
-            border: 1px solid var(--card-hover);
+            border: 1px solid var(--purple);
             background-color: var(--background-color);
             color: var(--primary-color);
             border-radius: 5px;
+            font-family: inherit;
             font-size: 1rem;
         }
 
         .support-content textarea {
-            min-height: 120px;
+            min-height: 100px;
             resize: vertical;
         }
 
@@ -397,45 +504,65 @@
         }
 
         .support-buttons .submit-btn {
-            background-color: var(--purple);
+            background: var(--gradient-primary);
             color: white;
-        }
-
-        .support-buttons .submit-btn:hover {
-            background-color: var(--purple-dark);
         }
 
         .support-buttons .cancel-btn {
             background-color: var(--card-hover);
-            color: var(--primary-color);
+            color: white;
         }
 
-        .support-buttons .cancel-btn:hover {
-            background-color: #3a3a3a;
+        .support-buttons button:hover {
+            transform: translateY(-2px);
         }
 
-        .support-quick-links {
+        .support-links {
             margin-top: 1.5rem;
             padding-top: 1.5rem;
             border-top: 1px solid var(--card-hover);
         }
 
-        .support-quick-links h3 {
-            margin-bottom: 1rem;
-            color: var(--purple);
-            font-size: 1.1rem;
-        }
-
-        .support-quick-links a {
+        .support-links a {
             display: block;
-            color: var(--primary-color);
+            color: var(--purple);
             text-decoration: none;
-            padding: 0.5rem 0;
-            transition: color 0.3s ease;
+            margin-bottom: 0.5rem;
         }
 
-        .support-quick-links a:hover {
-            color: var(--purple);
+        .support-links a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.5);
+            z-index: 1002;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
         }
 
         footer {
@@ -446,7 +573,7 @@
         }
 
         footer a {
-            color: var(--primary-color);
+            color: var(--purple);
             text-decoration: none;
         }
 
@@ -467,122 +594,75 @@
 
         @media (max-width: 768px) {
             .sidebar {
-                width: 300px;
-                left: -300px;
+                width: 100%;
+                right: -100%;
             }
 
-            .support-content {
-                padding: 1.5rem;
+            .countries-grid,
+            .packages-grid,
+            .updates-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Toggle -->
     <button class="sidebar-toggle" id="sidebar-toggle">
         <span></span>
         <span></span>
         <span></span>
     </button>
 
-    <!-- Sidebar -->
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-    <aside class="sidebar" id="sidebar">
-        <h2>📋 Informações Importantes</h2>
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-close" id="sidebar-close">Fechar</button>
         
-        <h3>Termos de Uso</h3>
+        <h2>Termos de Uso</h2>
+        
+        <h3>1. Sobre os Pacotes</h3>
+        <p>Oferecemos números virtuais em diversos países. Os valores podem variar sem aviso prévio. Consulte sempre os preços atualizados em nosso site.</p>
+        
+        <h3>2. Compra e Pagamento</h3>
         <ul>
-            <li>✅ Vendemos pacotes de números virtuais internacionais</li>
-            <li>✅ Escolha o país desejado e defina a quantidade</li>
-            <li>✅ O sistema calcula automaticamente o valor total</li>
-            <li>❌ Não é possível escolher DDD específico do número</li>
-            <li>❌ Não há reembolso em caso de mal uso do número</li>
-            <li>❌ Se o número for banido, não fornecemos substituição</li>
+            <li>Vendemos números virtuais individualmente ou em pacotes promocionais</li>
+            <li>Para comprar, escolha o país desejado e clique no botão "+" para selecionar a quantidade</li>
+            <li>O site calculará automaticamente o valor total</li>
+            <li>Você será direcionado para o WhatsApp com todas as informações</li>
         </ul>
-
-        <h3>Política de Privacidade</h3>
-        <p>Seus dados são tratados com segurança e não são compartilhados com terceiros. Utilizamos suas informações apenas para processamento de pedidos e suporte.</p>
-
-        <h3>⚠️ Uso Responsável</h3>
+        
+        <h3>3. Política de DDD</h3>
+        <p>Não é possível escolher o DDD (código de área) do número virtual. Os números são fornecidos de acordo com a disponibilidade.</p>
+        
+        <h3>4. Reembolso</h3>
+        <p>Não oferecemos reembolso por mal uso do número. Antes de adquirir, certifique-se de que compreende as limitações e o uso adequado dos números virtuais.</p>
+        
+        <h3>5. Banimento de Números</h3>
+        <p>Se o seu número for banido por qualquer plataforma, não nos responsabilizamos por fornecer um novo número gratuitamente. É responsabilidade do cliente usar o número de acordo com os termos de serviço das plataformas.</p>
+        
+        <h2>Política de Privacidade</h2>
+        <p>Seus dados são tratados com segurança e confidencialidade. Não compartilhamos informações pessoais com terceiros.</p>
+        
+        <h2>Uso Responsável</h2>
         <p><strong>IMPORTANTE:</strong> É estritamente proibido usar os números para:</p>
         <ul>
-            <li>🚫 Ataques ou ameaças a terceiros</li>
-            <li>🚫 Spam ou envio de mensagens não solicitadas</li>
-            <li>🚫 Atividades ilegais ou fraudulentas</li>
-            <li>🚫 Causar danos ou prejuízos a outras pessoas</li>
+            <li>Ataques, spam ou assédio</li>
+            <li>Causar danos a terceiros</li>
+            <li>Atividades ilegais ou fraudulentas</li>
+            <li>Violação de termos de serviço de plataformas</li>
         </ul>
-        <p>⚠️ Se você presenciar uso indevido de nossos números, denuncie imediatamente ao suporte.</p>
-
-        <h3>📞 Suporte</h3>
-        <p>Em caso de dúvidas ou problemas, entre em contato:</p>
-        <ul>
-            <li>🌐 Site: <a href="https://support.kdefy.com" target="_blank" style="color: var(--purple);">support.kdefy.com</a></li>
-            <li>📧 Email: kdefycom@gmail.com</li>
-            <li>💬 WhatsApp: +55 34 9763-7882</li>
-        </ul>
-    </aside>
-
-    <!-- Support Button -->
-    <button class="support-btn" id="support-btn">💬</button>
-
-    <!-- Support Modal -->
-    <div class="support-modal" id="support-modal">
-        <div class="support-content">
-            <h2>📞 Suporte KDEFY</h2>
-            
-            <form id="support-form">
-                <div class="form-group">
-                    <label for="support-reason">Motivo do contato *</label>
-                    <select id="support-reason" required>
-                        <option value="">Selecione um motivo</option>
-                        <option value="duvida">Dúvida sobre números</option>
-                        <option value="compra">Problemas com compra</option>
-                        <option value="tecnico">Problema técnico</option>
-                        <option value="denuncia">Denunciar uso indevido</option>
-                        <option value="outro">Outro assunto</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="support-name">Nome completo *</label>
-                    <input type="text" id="support-name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="support-phone">Telefone (WhatsApp) *</label>
-                    <input type="tel" id="support-phone" placeholder="+55 34 9 0000-0000" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="support-email">Email *</label>
-                    <input type="email" id="support-email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="support-message">Mensagem *</label>
-                    <textarea id="support-message" required></textarea>
-                </div>
-
-                <div class="support-buttons">
-                    <button type="submit" class="submit-btn">Enviar</button>
-                    <button type="button" class="cancel-btn" id="close-support">Cancelar</button>
-                </div>
-            </form>
-
-            <div class="support-quick-links">
-                <h3>Acesso Rápido</h3>
-                <a href="https://support.kdefy.com" target="_blank">🌐 Portal de Suporte</a>
-                <a href="mailto:kdefycom@gmail.com">📧 Email: kdefycom@gmail.com</a>
-                <a href="https://wa.me/5534976378882" target="_blank">💬 WhatsApp: +55 34 9763-7882</a>
-            </div>
-        </div>
+        <p><strong>Se você identificar mal uso, denuncie imediatamente:</strong></p>
+        <p>Suporte: <a href="https://support.kdefy.com" target="_blank">support.kdefy.com</a></p>
+        <p>Email: kdefycom@gmail.com</p>
+        <p>WhatsApp: +55 34 9763-7882</p>
     </div>
 
     <header>
         <div class="container">
-            <h1 id="logo">KDEFY Numbers</h1>
-            <p>Revenda números do mundo todo</p>
+            <h1>
+                <span class="logo-icon" id="logo-icon">K</span>
+                Kdefy Number Virtual - KNV
+            </h1>
+            <p>Números virtuais internacionais com segurança e privacidade</p>
         </div>
     </header>
 
@@ -590,7 +670,53 @@
         <section class="hero fade-in">
             <h2>Adquira números virtuais de qualquer lugar do mundo</h2>
             <p>Ative seus aplicativos e serviços com privacidade e segurança.</p>
-            <a href="https://wa.me/5534976378882?text=Olá%2C%20quero%20adquirir%20um%20número%20internacional!" target="_blank" class="btn">Fale no WhatsApp</a>
+            <a href="wa.me/553497637882?text=Ol%C3%A1%2C%20quero%20adquirir%20um%20n%C3%BAmero%20internacional!" target="_blank" class="btn">Fale no WhatsApp</a>
+        </section>
+
+        <section class="updates-section fade-in">
+            <h2>Atualizações Constantes</h2>
+            <p>Fique atento às novidades! Sempre estamos adicionando novos países e melhorando nossos serviços.</p>
+            <div class="updates-grid">
+                <div class="update-card">
+                    <h3>Novos Países</h3>
+                    <p>Expandimos constantemente nossa cobertura para mais países.</p>
+                </div>
+                <div class="update-card">
+                    <h3>Preços Competitivos</h3>
+                    <p>Ofertas e pacotes promocionais regularmente atualizados.</p>
+                </div>
+                <div class="update-card">
+                    <h3>Suporte 24/7</h3>
+                    <p>Estamos sempre disponíveis para ajudar você.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="packages-section fade-in">
+            <h2>Pacotes Promocionais</h2>
+            <p>Economize comprando em pacotes!</p>
+            <div class="packages-grid">
+                <div class="package-card">
+                    <h3>Pacote Filipinas</h3>
+                    <p class="old-price">10x R$ 7,00 = R$ 70,00</p>
+                    <p class="price">R$ 26,00 - R$ 33,00</p>
+                    <p class="economy">Economia de até R$ 44,00!</p>
+                    <a href="https://wa.me/553497637882?text=Ol%C3%A1%2C%20quero%20o%20Pacote%20Filipinas%20(10%20n%C3%BAmeros)!" target="_blank" class="btn">Quero este pacote</a>
+                </div>
+                <div class="package-card">
+                    <h3>Pacote Brasil</h3>
+                    <p class="old-price">10x R$ 14,00 = R$ 140,00</p>
+                    <p class="price">R$ 110,00 - R$ 120,00</p>
+                    <p class="economy">Economia de até R$ 30,00!</p>
+                    <a href="https://wa.me/553497637882?text=Ol%C3%A1%2C%20quero%20o%20Pacote%20Brasil%20(10%20n%C3%BAmeros)!" target="_blank" class="btn">Quero este pacote</a>
+                </div>
+                <div class="package-card">
+                    <h3>Pacotes Customizados</h3>
+                    <p>Monte seu próprio pacote com os países que você precisa!</p>
+                    <a href="https://wa.me/553497637882?text=Ol%C3%A1%2C%20quero%20montar%20um%20pacote%20customizado!" target="_blank" class="btn">Consultar</a>
+                </div>
+            </div>
+            <p style="margin-top: 2rem; opacity: 0.8;">* Os valores dos números podem aumentar sem aviso prévio. Aproveite as promoções!</p>
         </section>
 
         <section class="countries-grid fade-in" id="countries-grid">
@@ -598,129 +724,180 @@
         </section>
 
         <section class="referral fade-in">
-            <h2>🎁 Indique um amigo e ganhe!</h2>
-            <p>Compartilhe nossa mensagem de divulgação e ganhe descontos em seus próximos números!</p>
+            <h2>Divulgue e Ganhe!</h2>
+            <p>Compartilhe nossa mensagem de divulgação e ganhe descontos especiais.</p>
             <div class="referral-box">
                 <textarea id="referral-message" readonly></textarea>
-                <button id="copy-referral-btn">📋 Copiar Mensagem de Divulgação</button>
+                <button id="copy-message-btn">Copiar Mensagem de Divulgação</button>
             </div>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p><a href="https://support.kdefy.com" target="_blank">Termos de uso e suporte</a></p>
-            <p>&copy; 2025 KDEFY. Todos os direitos reservados.</p>
+            <p><a href="https://support.kdefy.com" target="_blank">Suporte KDEFY</a></p>
+            <p>&copy; 2025 KDEFY - Kdefy Number Virtual. Todos os direitos reservados.</p>
         </div>
     </footer>
 
+    <button class="support-btn" id="support-btn">💬</button>
+
+    <div class="support-modal" id="support-modal">
+        <div class="support-content">
+            <h2>Suporte KDEFY</h2>
+            
+            <label for="support-reason">Motivo do contato:</label>
+            <select id="support-reason">
+                <option value="Dúvida sobre números">Dúvida sobre números</option>
+                <option value="Problema técnico">Problema técnico</option>
+                <option value="Solicitação de reembolso">Solicitação de reembolso</option>
+                <option value="Denúncia de mal uso">Denúncia de mal uso</option>
+                <option value="Pacotes e promoções">Pacotes e promoções</option>
+                <option value="Outro">Outro</option>
+            </select>
+
+            <label for="support-name">Nome:</label>
+            <input type="text" id="support-name" placeholder="Seu nome">
+
+            <label for="support-phone">Telefone (WhatsApp):</label>
+            <input type="tel" id="support-phone" placeholder="+55 34 9XXXX-XXXX">
+
+            <label for="support-email">Email:</label>
+            <input type="email" id="support-email" placeholder="seu@email.com">
+
+            <label for="support-message">Mensagem:</label>
+            <textarea id="support-message" placeholder="Descreva sua solicitação..."></textarea>
+
+            <div class="support-buttons">
+                <button class="submit-btn" id="submit-support">Enviar</button>
+                <button class="cancel-btn" id="cancel-support">Cancelar</button>
+            </div>
+
+            <div class="support-links">
+                <p><strong>Outras formas de contato:</strong></p>
+                <a href="https://support.kdefy.com" target="_blank">Portal de Suporte</a>
+                <a href="mailto:kdefycom@gmail.com">Email: kdefycom@gmail.com</a>
+                <a href="https://wa.me/553497637882" target="_blank">WhatsApp: +55 34 9763-7882</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-message" id="success-message">
+        <h2>✓ Mensagem Enviada!</h2>
+        <p>Sua solicitação foi enviada com sucesso.</p>
+        <p>Aguarde nossa resposta em breve.</p>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Favicon with dark purple K (transparent background)
+            // Favicon with dark purple K
             const canvas = document.createElement('canvas');
             canvas.width = 64;
             canvas.height = 64;
             const ctx = canvas.getContext('2d');
             
-            // Dark purple gradient
             const gradient = ctx.createLinearGradient(0, 0, 64, 64);
-            gradient.addColorStop(0, '#5b21b6');
+            gradient.addColorStop(0, '#6d28d9');
             gradient.addColorStop(1, '#4c1d95');
             
-            ctx.font = 'bold 48px Arial';
             ctx.fillStyle = gradient;
+            ctx.font = 'bold 48px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('K', 32, 36);
+            ctx.fillText('K', 32, 34);
             
             const favicon = document.createElement('link');
             favicon.rel = 'icon';
             favicon.href = canvas.toDataURL();
             document.head.appendChild(favicon);
 
-            // Country data with quantities
+            // Country data
             const countries = {
-                "br": { name: "Brasil", code: "+55", price: 14 },
-                "ph": { name: "Filipinas", code: "+63", price: 5 },
-                "fr": { name: "França", code: "+33", price: 33 },
-                "gb": { name: "Reino Unido", code: "+44", price: 43 },
-                "us": { name: "Estados Unidos", code: "+1", price: 27 },
-                "pt": { name: "Portugal", code: "+351", price: 18 },
-                "id": { name: "Indonésia", code: "+62", price: 4 },
+                "br": { name: "Brasil", code: "55", price: 14 },
+                "ph": { name: "Filipinas", code: "63", price: 7 },
+                "fr": { name: "França", code: "33", price: 33 },
+                "gb": { name: "Reino Unido", code: "44", price: 43 },
+                "us": { name: "EUA", code: "1", price: 27 },
+                "pt": { name: "Portugal", code: "351", price: 21 },
+                "id": { name: "Indonésia", code: "62", price: 4 },
             };
 
-            const quantities = {};
-            
             const countriesGrid = document.getElementById('countries-grid');
 
             for (const countryCode in countries) {
                 const country = countries[countryCode];
-                quantities[countryCode] = 1;
-                
                 const flagUrl = `https://flagcdn.com/w80/${countryCode}.png`;
 
                 const card = document.createElement('div');
                 card.classList.add('country-card', 'fade-in');
 
                 card.innerHTML = `
-                    <img src="${flagUrl}" alt="Bandeira ${country.name}" loading="lazy">
+                    <img src="${flagUrl}" alt="Bandeira de ${country.name}" loading="lazy">
                     <h3>${country.name}</h3>
-                    <p class="price" data-country="${countryCode}">R$ ${country.price.toFixed(2)}</p>
-                    
+                    <p class="price" data-base-price="${country.price}">R$ ${country.price.toFixed(2)}</p>
                     <div class="quantity-selector">
-                        <button onclick="decreaseQuantity('${countryCode}')">-</button>
-                        <span id="qty-${countryCode}">1</span>
-                        <button onclick="increaseQuantity('${countryCode}')">+</button>
+                        <button class="decrease">−</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
                     </div>
-                    
-                    <button class="btn" onclick="orderNumber('${countryCode}')">Quero este número</button>
+                    <a href="#" class="btn buy-btn">Quero este número</a>
                 `;
+
+                const decreaseBtn = card.querySelector('.decrease');
+                const increaseBtn = card.querySelector('.increase');
+                const quantitySpan = card.querySelector('.quantity');
+                const priceElement = card.querySelector('.price');
+                const buyBtn = card.querySelector('.buy-btn');
+                const basePrice = country.price;
+
+                let quantity = 0;
+
+                const updatePrice = () => {
+                    if (quantity === 0) {
+                        priceElement.textContent = `R$ ${basePrice.toFixed(2)}`;
+                    } else {
+                        const total = basePrice * quantity;
+                        priceElement.textContent = `R$ ${total.toFixed(2)} (${quantity}x)`;
+                    }
+                };
+
+                decreaseBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (quantity > 0) {
+                        quantity--;
+                        quantitySpan.textContent = quantity;
+                        updatePrice();
+                    }
+                });
+
+                increaseBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    quantity++;
+                    quantitySpan.textContent = quantity;
+                    updatePrice();
+                });
+
+                buyBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const qty = quantity || 1;
+                    const total = basePrice * qty;
+                    const message = encodeURIComponent(
+                        `Olá, quero comprar ${qty} número(s) de ${country.name} pelo valor de R$ ${total.toFixed(2)}!`
+                    );
+                    window.open(`wa.me/553497637882?text=${message}`, '_blank');
+                });
 
                 countriesGrid.appendChild(card);
             }
 
-            // Quantity functions
-            window.increaseQuantity = function(countryCode) {
-                quantities[countryCode]++;
-                updateDisplay(countryCode);
-            };
-
-            window.decreaseQuantity = function(countryCode) {
-                if (quantities[countryCode] > 1) {
-                    quantities[countryCode]--;
-                    updateDisplay(countryCode);
-                }
-            };
-
-            function updateDisplay(countryCode) {
-                const country = countries[countryCode];
-                const quantity = quantities[countryCode];
-                const total = (country.price * quantity).toFixed(2);
-                
-                document.getElementById(`qty-${countryCode}`).textContent = quantity;
-                document.querySelector(`[data-country="${countryCode}"]`).textContent = 
-                    `R$ ${total} (${quantity}x R$ ${country.price.toFixed(2)})`;
-            }
-
-            window.orderNumber = function(countryCode) {
-                const country = countries[countryCode];
-                const quantity = quantities[countryCode];
-                const total = (country.price * quantity).toFixed(2);
-                
-                const message = `Olá! Quero comprar ${quantity} número(s) virtual(is) de *${country.name}* ${country.code}\n\n💰 Valor total: R$ ${total}\n\n📱 Vi no site da KDEFY Numbers`;
-                
-                const whatsappUrl = `https://wa.me/5534976378882?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
-            };
-
             // Referral message
-            const referralMessage = `*KDEFY Numbers - Números Virtuais do Mundo Todo!* 📱
+            const referralMessage = `*Kdefy Number Virtual - KNV* 📱
 
-✨ Precisa de números internacionais para ativar apps e serviços?
+Precisa de números internacionais para ativar apps e serviços?
 até mesmo revenda? 
 
 🎯 A KDEFY oferece números de diversos países:
-🇧🇷 Brasil | 🇺🇸 EUA | 🇬🇧 Reino Unido | 🇫🇷 França | 🇵🇹 Portugal | 🇵🇭 Filipinas | 🇮🇩 Indonésia | entre outros.
+🇧🇷 Brasil | 🇺🇸 EUA | 🇬🇧 Reino Unido | 🇫🇷 França | 🇵🇹 Portugal | 🇵🇭 Filipinas | 🇮🇩 Indonésia | entre outros
 
 💎 *Vantagens:*
 ✅ Processo rápido e seguro
@@ -735,54 +912,57 @@ até mesmo revenda?
 4️⃣ O sistema calcula automaticamente
 5️⃣ Faça seu pedido no WhatsApp
 
-🔗 *Acesse agora:* ${window.location.href}
+💰 *PACOTES COM DESCONTO:*
+• 10 números Filipinas: R$ 26-33 (economize até R$ 44!)
+• 10 números Brasil: R$ 110-120 (economize até R$ 30!)
 
-💬 *WhatsApp:* +55 34 9763-7882
+⚡ Atualizações constantes de países e promoções!
+
+🌟 Acesse agora: ${window.location.href}
+
+💬 *WhatsApp:* 553497637882
 🌐 *Suporte:* https://support.kdefy.com
 
-⚠️ *Uso responsável e seguro!*
+⚠️ *Uso responsável e seguro!*`;
 
-#KDEFYNumbers #NumerosVirtuais #NumeroInternacional`;
+            const referralMessageTextarea = document.getElementById('referral-message');
+            referralMessageTextarea.value = referralMessage;
 
-            const referralMessageBox = document.getElementById('referral-message');
-            referralMessageBox.value = referralMessage;
-
-            const copyReferralBtn = document.getElementById('copy-referral-btn');
-            copyReferralBtn.addEventListener('click', () => {
-                referralMessageBox.select();
+            const copyMessageBtn = document.getElementById('copy-message-btn');
+            copyMessageBtn.addEventListener('click', () => {
+                referralMessageTextarea.select();
                 document.execCommand('copy');
-                copyReferralBtn.textContent = '✅ Mensagem Copiada!';
+                copyMessageBtn.textContent = 'Copiado!';
                 setTimeout(() => {
-                    copyReferralBtn.textContent = 'Copiar Mensagem de Divulgação';
-                }, 3000);
+                    copyMessageBtn.textContent = 'Copiar Mensagem de Divulgação';
+                }, 2000);
             });
 
-            // Sidebar toggle
-            const sidebarToggle = document.getElementById('sidebar-toggle');
+            // Sidebar
             const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebarClose = document.getElementById('sidebar-close');
 
             sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-                sidebarOverlay.classList.toggle('open');
+                sidebar.classList.add('open');
             });
 
-            sidebarOverlay.addEventListener('click', () => {
+            sidebarClose.addEventListener('click', () => {
                 sidebar.classList.remove('open');
-                sidebarOverlay.classList.remove('open');
             });
 
             // Support modal
             const supportBtn = document.getElementById('support-btn');
             const supportModal = document.getElementById('support-modal');
-            const closeSupportBtn = document.getElementById('close-support');
-            const supportForm = document.getElementById('support-form');
+            const cancelSupport = document.getElementById('cancel-support');
+            const submitSupport = document.getElementById('submit-support');
+            const successMessage = document.getElementById('success-message');
 
             supportBtn.addEventListener('click', () => {
                 supportModal.classList.add('open');
             });
 
-            closeSupportBtn.addEventListener('click', () => {
+            cancelSupport.addEventListener('click', () => {
                 supportModal.classList.remove('open');
             });
 
@@ -792,37 +972,45 @@ até mesmo revenda?
                 }
             });
 
-            supportForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
+            submitSupport.addEventListener('click', () => {
                 const reason = document.getElementById('support-reason').value;
                 const name = document.getElementById('support-name').value;
                 const phone = document.getElementById('support-phone').value;
                 const email = document.getElementById('support-email').value;
                 const message = document.getElementById('support-message').value;
 
-                const reasonLabels = {
-                    'duvida': 'Dúvida sobre números',
-                    'compra': 'Problemas com compra',
-                    'tecnico': 'Problema técnico',
-                    'denuncia': 'Denunciar uso indevido',
-                    'outro': 'Outro assunto'
-                };
+                if (!name || !phone || !email || !message) {
+                    alert('Por favor, preencha todos os campos!');
+                    return;
+                }
 
-                const supportMessage = `🆘 *SUPORTE KDEFY*\n\n📋 *Motivo:* ${reasonLabels[reason]}\n👤 *Nome:* ${name}\n📞 *Telefone:* ${phone}\n📧 *Email:* ${email}\n\n💬 *Mensagem:*\n${message}`;
+                const whatsappMessage = encodeURIComponent(
+                    `*Solicitação de Suporte KDEFY*\n\n` +
+                    `*Motivo:* ${reason}\n` +
+                    `*Nome:* ${name}\n` +
+                    `*Telefone:* ${phone}\n` +
+                    `*Email:* ${email}\n\n` +
+                    `*Mensagem:*\n${message}`
+                );
 
-                const whatsappUrl = `https://wa.me/5534976378882?text=${encodeURIComponent(supportMessage)}`;
-                window.open(whatsappUrl, '_blank');
+                window.open(`wa.me/553497637882?text=${whatsappMessage}`, '_blank');
 
                 supportModal.classList.remove('open');
-                supportForm.reset();
-                
-                alert('✅ Sua mensagem está sendo direcionada ao WhatsApp do suporte!');
+                successMessage.classList.add('show');
+
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+
+                // Clear form
+                document.getElementById('support-name').value = '';
+                document.getElementById('support-phone').value = '';
+                document.getElementById('support-email').value = '';
+                document.getElementById('support-message').value = '';
             });
 
             // Scroll animations
             const faders = document.querySelectorAll('.fade-in');
-
             const appearOptions = {
                 threshold: 0,
                 rootMargin: "0px 0px -100px 0px"
