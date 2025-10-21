@@ -1,76 +1,152 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kdefy Trader</title>
-    <link rel="icon" id="favicon" href="">
-    <style>
-        body {
-            font-family: sans-serif;
-            background-color: #1a1a1a;
-            color: #fff;
-            margin: 0;
-            display: flex;
-        }
-        .sidebar {
-            width: 200px;
-            background-color: #2a2a2a;
-            padding: 20px;
-            height: 100vh;
-        }
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4CAF50;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .coin-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .coin-list li {
-            padding: 10px;
-            cursor: pointer;
-            border-bottom: 1px solid #3a3a3a;
-        }
-        .coin-list li:hover {
-            background-color: #3a3a3a;
-        }
-        .main-content {
-            flex-grow: 1;
-            padding: 20px;
-        }
-        .chart-container {
-            width: 100%;
-            height: 500px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Como ser bom na cama por menos de 20</title>
+<style>
+  body { margin:0; font-family: Arial, sans-serif; background: linear-gradient(135deg, #ff4e50, #f9d423); color: #fff; display: flex; flex-direction: column; align-items:center; }
+  header { padding: 20px; text-align:center; }
+  h1 { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 2px 2px 4px #000; }
+  .container { max-width: 800px; padding:20px; background: rgba(0,0,0,0.5); border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+  button { background: #fff; color:#ff4e50; font-size: 1.2rem; padding:10px 20px; border:none; border-radius:10px; cursor:pointer; transition: 0.3s; }
+  button:hover { background:#ff4e50; color:#fff; }
+  #overlay, #popup, #infoPopup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); padding:20px; border-radius:15px; box-shadow: 0 0 20px rgba(0,0,0,0.7); text-align:center; z-index:999; }
+  #overlay { top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:998; }
+  #popup, #infoPopup { background:#fff; color:#000; max-width:90%; }
+  #popup img { max-width:200px; margin-bottom:15px; }
+  input { width: 80%; padding:8px; margin:5px 0; border-radius:5px; border:1px solid #ccc; }
+</style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">Kdefy Trader</div>
-        <ul class="coin-list">
-            <li data-coin="bitcoin">Bitcoin (BTC)</li>
-            <li data-coin="ethereum">Ethereum (ETH)</li>
-            <li data-coin="dogecoin">Dogecoin (DOGE)</li>
-        </ul>
-    </div>
-    <div class="main-content">
-        <h1>Trading Chart</h1>
-        <div class="chart-container">
-            <canvas id="trading-chart"></canvas>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-    <script src="action.js"></script>
+
+<header>
+  <canvas id="logo" width="60" height="60"></canvas>
+  <h1>Como ser bom na cama por menos de 20</h1>
+</header>
+
+<div class="container">
+  <p>Aprenda todos os truques na hora H com nosso e-book exclusivo!</p>
+  <p>Preço: R$ 19,90</p>
+  <button id="buyBtn">Comprar Agora</button>
+</div>
+
+<div id="overlay"></div>
+
+<div id="infoPopup">
+  <h2>Informações do Cliente</h2>
+  <input type="text" id="nome" placeholder="Nome" required><br>
+  <input type="email" id="email" placeholder="Email" required><br>
+  <input type="tel" id="telefone" placeholder="Telefone" required><br>
+  <button id="sendInfoBtn">Gerar Pagamento</button>
+  <button id="closeInfoBtn">Fechar</button>
+</div>
+
+<div id="popup">
+  <h2>Pagamento PIX</h2>
+  <img id="qrcode" src="" alt="QR Code">
+  <p>Payload:</p>
+  <textarea id="payload" rows="4" style="width:100%;"></textarea>
+  <br><br>
+  <button id="copyBtn">Copiar Payload</button>
+  <p id="status">Status: PENDING</p>
+  <button id="closeBtn">Fechar</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+  // Favicon dinâmico
+  const favicon = document.createElement('link');
+  favicon.rel = 'icon';
+  favicon.href = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text y="14" font-size="16">📘</text></svg>';
+  document.head.appendChild(favicon);
+
+  // Logo simples em canvas
+  const canvas = document.getElementById('logo');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(30,30,25,0,2*Math.PI);
+  ctx.fill();
+  ctx.fillStyle = '#ff4e50';
+  ctx.font = 'bold 20px Arial';
+  ctx.fillText('E',18,37);
+
+  const buyBtn = document.getElementById('buyBtn');
+  const overlay = document.getElementById('overlay');
+  const infoPopup = document.getElementById('infoPopup');
+  const sendInfoBtn = document.getElementById('sendInfoBtn');
+  const closeInfoBtn = document.getElementById('closeInfoBtn');
+  const popup = document.getElementById('popup');
+  const qrcodeImg = document.getElementById('qrcode');
+  const payloadArea = document.getElementById('payload');
+  const copyBtn = document.getElementById('copyBtn');
+  const closeBtn = document.getElementById('closeBtn');
+  const statusText = document.getElementById('status');
+
+  let pagamentoId = null;
+  let statusInterval = null;
+
+  buyBtn.addEventListener('click',()=>{
+    overlay.style.display='block';
+    infoPopup.style.display='block';
+  });
+
+  closeInfoBtn.addEventListener('click',()=>{
+    infoPopup.style.display='none';
+    overlay.style.display='none';
+  });
+
+  sendInfoBtn.addEventListener('click', async ()=>{
+    const nome = document.getElementById('nome').value;
+    const email = document.getElementById('email').value;
+    const telefone = document.getElementById('telefone').value;
+    if(!nome || !email || !telefone){ alert('Preencha todos os campos'); return; }
+
+    try {
+      const res = await fetch('http://localhost:3000/sunize/gerar_pagamento',{
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'x-api-key':'f2c286b2a259ee0e0051883f63b85aae6ba5b8bb0e526fcb58834e92975bac54' },
+        body: JSON.stringify({ usuario_id: Date.now().toString(), nome, email, valor:19.9, ip:'127.0.0.1' })
+      });
+      const data = await res.json();
+      if(data.success){
+        pagamentoId = data.pagamento.id;
+        payloadArea.value = data.pagamento.pix.payload;
+        QRCode.toDataURL(data.pagamento.pix.payload).then(url=>qrcodeImg.src=url);
+        infoPopup.style.display='none';
+        popup.style.display='block';
+
+        // Checar status a cada 5 segundos
+        statusInterval = setInterval(async ()=>{
+          const st = await fetch(`http://localhost:3000/sunize/status/${pagamentoId}`,{
+            headers:{ 'x-api-key':'f2c286b2a259ee0e0051883f63b85aae6ba5b8bb0e526fcb58834e92975bac54' }
+          });
+          const stData = await st.json();
+          statusText.textContent = 'Status: ' + stData.status;
+          if(stData.status==='PAID'){
+            clearInterval(statusInterval);
+            alert('Pagamento concluído! O e-book será enviado para o email.');
+          }
+        },5000);
+
+      } else {
+        alert('Erro: '+data.error);
+      }
+    } catch(e){ alert('Erro na requisição: '+e.message); }
+  });
+
+  copyBtn.addEventListener('click',()=>{
+    payloadArea.select();
+    document.execCommand('copy');
+    alert('Payload copiado!');
+  });
+
+  closeBtn.addEventListener('click',()=>{
+    popup.style.display='none';
+    overlay.style.display='none';
+    if(statusInterval) clearInterval(statusInterval);
+  });
+</script>
 </body>
 </html>
