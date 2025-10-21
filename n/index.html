@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDEFY Numbers</title>
+    <style>
+        :root {
+            --primary-color: #fff;
+            --background-color: #000;
+            --card-background: #1a1a1a;
+            --card-hover: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero .btn {
+            display: inline-block;
+            background-color: #25D366;
+            color: #fff;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero .btn:hover {
+            background-color: #128C7E;
+        }
+
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 4rem 0;
+        }
+
+        .country-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .country-card:hover {
+            transform: translateY(-10px);
+            background-color: var(--card-hover);
+        }
+
+        .country-card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .country-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .country-card .price {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .country-card .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .country-card .btn:hover {
+            background-color: #25D366;
+            color: #fff;
+        }
+
+        .referral {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .referral h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .referral-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .referral-box input {
+            padding: 1rem;
+            font-size: 1rem;
+            border: 1px solid var(--primary-color);
+            background-color: transparent;
+            color: var(--primary-color);
+            border-radius: 5px 0 0 5px;
+            width: 300px;
+        }
+
+        .referral-box button {
+            padding: 1rem;
+            font-size: 1rem;
+            border: 1px solid var(--primary-color);
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .referral-box button:hover {
+            background-color: #25D366;
+            color: #fff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 1px solid var(--card-background);
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1 id="logo">KDEFY Numbers</h1>
+            <p>Revenda números do mundo todo</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero fade-in">
+            <h2>Adquira números virtuais de qualquer lugar do mundo</h2>
+            <p>Ative seus aplicativos e serviços com privacidade e segurança.</p>
+            <a href="https://wa.me/553465476084?text=Olá, quero adquirir um número internacional!" target="_blank" class="btn">Fale no WhatsApp</a>
+        </section>
+
+        <section class="countries-grid fade-in" id="countries-grid">
+            <!-- Country cards will be inserted here by JavaScript -->
+        </section>
+
+        <section class="referral fade-in">
+            <h2>Indique um amigo e ganhe!</h2>
+            <p>Compartilhe seu link de indicação e ganhe descontos.</p>
+            <div class="referral-box">
+                <input type="text" id="referral-link" readonly>
+                <button id="copy-link-btn">Copiar Link</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p><a href="https://support.kdefy.com" target="_blank">Termos de uso e suporte</a></p>
+            <p>&copy; 2025 KDEFY. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Favicon and Logo
+            const favicon = document.createElement('link');
+            favicon.rel = 'icon';
+            favicon.href = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📞</text></svg>`;
+            document.head.appendChild(favicon);
+
+            const logo = document.getElementById('logo');
+            logo.innerHTML = `📞 KDEFY Numbers`;
+
+
+            // Country data
+            const countries = {
+                "73": "Brazil",
+                "4": "Philippines",
+                "78": "France",
+                "16": "United Kingdom",
+                "1": "USA",
+                "351": "Portugal",
+                "6": "Indonesia",
+            };
+
+            const prices = {
+                "Brazil": 14,
+                "Philippines": 7,
+                "France": 33,
+                "United Kingdom": 43,
+                "USA": 10,
+                "Portugal": 12,
+                "Indonesia": 7,
+            }
+
+            const countriesGrid = document.getElementById('countries-grid');
+
+            for (const code in countries) {
+                const countryName = countries[code];
+                const price = prices[countryName];
+                const flagUrl = `https://flagcdn.com/w80/${code.toLowerCase()}.png`;
+
+                const card = document.createElement('div');
+                card.classList.add('country-card', 'fade-in');
+
+                card.innerHTML = `
+                    <img src="${flagUrl}" alt="Bandeira de ${countryName}">
+                    <h3>${countryName}</h3>
+                    <p class="price">R$ ${price.toFixed(2)}</p>
+                    <a href="https://wa.me/553465476084?text=Olá, quero comprar um número de ${countryName} pelo site!" target="_blank" class="btn">Quero este número</a>
+                `;
+
+                countriesGrid.appendChild(card);
+            }
+
+
+            // Referral link
+            const referralLinkInput = document.getElementById('referral-link');
+            referralLinkInput.value = window.location.href;
+
+            const copyLinkBtn = document.getElementById('copy-link-btn');
+            copyLinkBtn.addEventListener('click', () => {
+                referralLinkInput.select();
+                document.execCommand('copy');
+                copyLinkBtn.textContent = 'Copiado!';
+                setTimeout(() => {
+                    copyLinkBtn.textContent = 'Copiar Link';
+                }, 2000);
+            });
+
+
+            // Scroll animations
+            const faders = document.querySelectorAll('.fade-in');
+
+            const appearOptions = {
+                threshold: 0,
+                rootMargin: "0px 0px -100px 0px"
+            };
+
+            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('visible');
+                        appearOnScroll.unobserve(entry.target);
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+        });
+    </script>
+
+</body>
+</html>
