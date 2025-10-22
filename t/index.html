@@ -1,1 +1,124 @@
-k
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Test API Kdefy</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  input, select, button { margin: 5px 0; padding: 5px; }
+  .section { border: 1px solid #ccc; padding: 10px; margin-bottom: 20px; }
+  pre { background: #f4f4f4; padding: 10px; max-height: 200px; overflow: auto; }
+</style>
+</head>
+<body>
+
+<h1>Test Kdefy API</h1>
+
+<div class="section">
+  <h2>UUID</h2>
+  <input type="text" id="usuario_id" placeholder="usuario_id">
+  <button onclick="generateUUID()">Gerar UUID</button>
+  <button onclick="listUUIDs()">Listar UUIDs</button>
+  <input type="text" id="uuid_id" placeholder="UUID">
+  <input type="text" id="uuid_status" placeholder="Novo status">
+  <button onclick="updateUUIDStatus()">Atualizar Status</button>
+  <pre id="uuidResult"></pre>
+</div>
+
+<div class="section">
+  <h2>Logs</h2>
+  <button onclick="fetchLogs()">Ver Logs</button>
+  <pre id="logsResult"></pre>
+</div>
+
+<div class="section">
+  <h2>SMS-Activate</h2>
+  <button onclick="getCountries()">Get Countries</button>
+  <button onclick="getServices()">Get Services</button>
+  <input type="text" id="sms_service" placeholder="Service (ex: wa)">
+  <input type="text" id="sms_country" placeholder="Country ID (ex: 4)">
+  <button onclick="getNumber()">Get Number</button>
+  <input type="text" id="sms_activationId" placeholder="Activation ID">
+  <button onclick="getSMSStatus()">Get Status</button>
+  <input type="text" id="sms_setStatus" placeholder="Set Status">
+  <button onclick="setSMSStatus()">Set Status</button>
+  <button onclick="cancelSMS()">Cancel</button>
+  <button onclick="getBalance()">Get Balance</button>
+  <pre id="smsResult"></pre>
+</div>
+
+<script>
+const API_KEY = "f2c286b2a259ee0e0051883f63b85aae6ba5b8bb0e526fcb58834e92975bac54";
+const BASE_URL = "http://localhost:3000";
+
+async function request(endpoint, data = {}, method = "POST") {
+  const res = await fetch(BASE_URL + endpoint, {
+    method,
+    headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
+    body: method === "POST" ? JSON.stringify(data) : undefined
+  });
+  return res.json();
+}
+
+// UUID
+async function generateUUID() {
+  const usuario_id = document.getElementById("usuario_id").value;
+  const data = await request("/uuid/generate", { usuario_id });
+  document.getElementById("uuidResult").textContent = JSON.stringify(data, null, 2);
+}
+async function listUUIDs() {
+  const data = await request("/uuids", {}, "GET");
+  document.getElementById("uuidResult").textContent = JSON.stringify(data, null, 2);
+}
+async function updateUUIDStatus() {
+  const id = document.getElementById("uuid_id").value;
+  const status = document.getElementById("uuid_status").value;
+  const data = await request(`/uuid/${id}/status`, { status });
+  document.getElementById("uuidResult").textContent = JSON.stringify(data, null, 2);
+}
+
+// Logs
+async function fetchLogs() {
+  const res = await request("/logs", {}, "GET");
+  document.getElementById("logsResult").textContent = JSON.stringify(res, null, 2);
+}
+
+// SMS-Activate
+async function getCountries() {
+  const res = await request("/sms-activate/get-countries");
+  document.getElementById("smsResult").textContent = JSON.stringify(res, null, 2);
+}
+async function getServices() {
+  const res = await request("/sms-activate/get-services");
+  document.getElementById("smsResult").textContent = JSON.stringify(res, null, 2);
+}
+async function getNumber() {
+  const service = document.getElementById("sms_service").value;
+  const country = document.getElementById("sms_country").value;
+  const res = await request("/sms-activate/get-number", { service, country });
+  document.getElementById("smsResult").textContent = JSON.stringify(res, null, 2);
+}
+async function getSMSStatus() {
+  const activationId = document.getElementById("sms_activationId").value;
+  const res = await request("/sms-activate/get-status", { activationId });
+  document.getElementById("smsResult").textContent = JSON.stringify(res, null, 2);
+}
+async function setSMSStatus() {
+  const activationId = document.getElementById("sms_activationId").value;
+  const status = document.getElementById("sms_setStatus").value;
+  const res = await request("/sms-activate/set-status", { activationId, status });
+  document.getElementById("smsResult").textContent = JSON.stringify(res, null, 2);
+}
+async function cancelSMS() {
+  const activationId = document.getElementById("sms_activationId").value;
+  const res = await request("/sms-activate/cancel", { activationId });
+  document.getElementById("smsResult").textContent = JSON.stringify(res, null, 2);
+}
+async function getBalance() {
+  const res = await request("/sms-activate/get-balance");
+  document.getElementById("smsResult").textContent = JSON.stringify(res, null, 2);
+}
+</script>
+
+</body>
+</html>
