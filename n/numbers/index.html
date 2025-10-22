@@ -647,6 +647,7 @@
                 "us": { name: "Estados Unidos", code: "+1", price: 27 },
                 "pt": { name: "Portugal", code: "+351", price: 18 },
                 "id": { name: "Indonésia", code: "+62", price: 4 },
+                "au": { name: "Austrália", code: "+61", price: 55.88 },
             };
 
             const quantities = {};
@@ -664,7 +665,7 @@
 
                 card.innerHTML = `
                     <img src="${flagUrl}" alt="Bandeira ${country.name}" loading="lazy">
-                    <h3>${country.name}</h3>
+                    <h3>${country.name} ${country.code}</h3>
                     <p class="price" data-country="${countryCode}">R$ ${country.price.toFixed(2)}</p>
                     
                     <div class="quantity-selector">
@@ -725,7 +726,7 @@
 até mesmo revenda?
 
 🎯 A KDEFY oferece números de diversos países:
-🇧🇷 Brasil | 🇺🇸 EUA | 🇬🇧 Reino Unido | 🇫🇷 França | 🇵🇹 Portugal | 🇵🇭 Filipinas | 🇮🇩 Indonésia
+🇧🇷 Brasil | 🇺🇸 EUA | 🇬🇧 Reino Unido | 🇫🇷 França | 🇵🇹 Portugal | 🇵🇭 Filipinas | 🇮🇩 Indonésia | 🇦🇺 Austrália
 
 💎 *Vantagens:*
 ✅ Processo rápido e seguro
