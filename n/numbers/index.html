@@ -815,8 +815,8 @@ até mesmo revenda?
                     'outro': 'Outro assunto'
                 };
 
-                const supportMessage = `🆘 *SUPORTE KDEFY*\n\n📋 *Motivo:* ${reasonLabels[reason]}\n👤 *Nome:* ${name}\n📞 *Telefone:* ${phone}\n📧 *Email:* ${email}\n\n💬 *Mensagem:*\n${message}`;
-
+                const supportMessage = `🆘 *SUPORTE KDEFY*\n\n📋 *Motivo:* ${reasonLabels[reason] || reason}\n👤 *Nome:* ${name}\n📞 *Telefone:* ${phone}\n📧 *Email:* ${email}\n\n💬 *Mensagem:*\n${message}`;
+                
                 const whatsappUrl = `https://wa.me/553497637882?text=${encodeURIComponent(supportMessage)}`;
                 window.open(whatsappUrl, '_blank');
 
