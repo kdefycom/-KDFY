@@ -3,22 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KDEFY Numbers</title>
+    <title>kdefy numbers</title>
+    <meta name="description" content="Números virtuais internacionais para revenda" />
+    <meta name="author" content="KDEFY" />
+
+    <meta property="og:title" content="kdefy numbers" />
+    <meta property="og:description" content="Números virtuais internacionais para revenda" />
+    <meta property="og:type" content="website" />
+
     <style>
         :root {
-            --primary-color: #ff6b35;
-            --secondary-color: #f7931e;
-            --purple-dark: #6b2d5c;
-            --purple-light: #8b4789;
-            --green-toxic: #00ff41;
+            --primary-blue: #2563eb;
+            --primary-blue-dark: #1e40af;
+            --primary-blue-light: #3b82f6;
             --background-dark: #0a0a0a;
-            --background-card: #1a1a1a;
-            --background-card-hover: #252525;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --border-color: #333333;
-            --shadow-glow: 0 0 20px rgba(255, 107, 53, 0.3);
-            --shadow-purple: 0 0 20px rgba(107, 45, 92, 0.4);
+            --background-darker: #050505;
+            --card-background: #111111;
+            --card-hover: #1a1a1a;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --border-color: #2a2a2a;
+            --shadow-blue: 0 4px 20px rgba(37, 99, 235, 0.15);
+            --shadow-glow: 0 0 30px rgba(37, 99, 235, 0.2);
         }
 
         * {
@@ -27,13 +33,16 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, var(--background-dark) 0%, #1a0a1a 100%);
-            color: var(--text-primary);
+            background-color: var(--background-dark);
+            color: var(--text-white);
             line-height: 1.6;
             overflow-x: hidden;
-            min-height: 100vh;
         }
 
         .container {
@@ -46,22 +55,18 @@
             padding: 2rem 0;
             text-align: center;
             border-bottom: 1px solid var(--border-color);
-            background: rgba(26, 26, 26, 0.6);
-            backdrop-filter: blur(10px);
         }
 
         header h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--primary-blue);
+            font-weight: 600;
         }
 
         header p {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
+            font-size: 1rem;
+            color: var(--text-gray);
         }
 
         .hero {
@@ -70,67 +75,90 @@
         }
 
         .hero h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            font-weight: 500;
         }
 
         .hero .btn {
             display: inline-block;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: #fff;
-            padding: 1rem 2.5rem;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+            padding: 1rem 2rem;
             text-decoration: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
+            border-radius: 8px;
+            font-size: 1rem;
             margin-top: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            box-shadow: var(--shadow-blue);
         }
 
         .hero .btn:hover {
+            background-color: var(--primary-blue-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .reseller-section {
+            background: linear-gradient(135deg, var(--card-background) 0%, var(--background-darker) 100%);
+            border: 1px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .reseller-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        .reseller-section p {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .reseller-section .btn {
+            display: inline-block;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-blue);
+        }
+
+        .reseller-section .btn:hover {
+            background-color: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
         }
 
         .countries-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             padding: 4rem 0;
         }
 
         .country-card {
-            background: var(--background-card);
+            background-color: var(--card-background);
             border: 1px solid var(--border-color);
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 2rem;
             text-align: center;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .country-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .country-card:hover::before {
-            left: 100%;
         }
 
         .country-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary-color);
-            box-shadow: var(--shadow-glow);
-            background: var(--background-card-hover);
+            transform: translateY(-5px);
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-blue);
         }
 
         .country-card img {
@@ -139,21 +167,20 @@
             margin-bottom: 1rem;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--primary-color);
-            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.2);
+            border: 2px solid var(--border-color);
         }
 
         .country-card h3 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin-bottom: 0.5rem;
-            color: var(--text-primary);
+            font-weight: 500;
         }
 
         .country-card .price {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 1rem;
-            font-weight: bold;
-            color: var(--primary-color);
+            color: var(--primary-blue);
+            font-weight: 600;
         }
 
         .quantity-selector {
@@ -161,56 +188,47 @@
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            margin: 1.5rem 0;
-            background: rgba(255, 107, 53, 0.1);
-            padding: 0.8rem;
-            border-radius: 10px;
+            margin: 1rem 0;
         }
 
         .quantity-selector button {
-            background: linear-gradient(135deg, var(--purple-dark), var(--purple-light));
+            background-color: var(--primary-blue);
             color: white;
             border: none;
             width: 40px;
             height: 40px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             transition: all 0.3s ease;
-            font-weight: bold;
         }
 
         .quantity-selector button:hover {
-            transform: scale(1.1);
-            box-shadow: var(--shadow-purple);
+            background-color: var(--primary-blue-dark);
         }
 
         .quantity-selector span {
             font-size: 1.5rem;
-            min-width: 50px;
+            min-width: 40px;
             text-align: center;
-            font-weight: bold;
-            color: var(--primary-color);
         }
 
         .country-card .btn {
             display: inline-block;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 0.9rem 1.5rem;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+            padding: 0.8rem 1.5rem;
             text-decoration: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             width: 100%;
-            font-weight: 600;
         }
 
         .country-card .btn:hover {
-            transform: scale(1.02);
-            box-shadow: var(--shadow-glow);
+            background-color: var(--primary-blue-dark);
         }
 
         .referral {
@@ -219,9 +237,28 @@
         }
 
         .referral h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .referral-info {
+            background-color: var(--card-background);
+            border: 1px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .referral-info p {
+            color: var(--text-gray);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .referral-info strong {
+            color: var(--primary-blue);
         }
 
         .referral-box {
@@ -233,40 +270,35 @@
         }
 
         .referral-box textarea {
-            padding: 1.2rem;
-            font-size: 1rem;
+            padding: 1.5rem;
+            font-size: 0.95rem;
             border: 1px solid var(--border-color);
-            background: var(--background-card);
-            color: var(--text-primary);
-            border-radius: 10px;
+            background-color: var(--card-background);
+            color: var(--text-white);
+            border-radius: 12px;
             width: 100%;
-            max-width: 700px;
+            max-width: 800px;
             resize: vertical;
-            min-height: 180px;
-            transition: all 0.3s ease;
-        }
-
-        .referral-box textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: var(--shadow-glow);
+            min-height: 200px;
+            line-height: 1.8;
         }
 
         .referral-box button {
-            padding: 1rem 2.5rem;
+            padding: 1rem 2rem;
             font-size: 1rem;
             border: none;
-            background: linear-gradient(135deg, var(--purple-dark), var(--purple-light));
-            color: white;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 8px;
             transition: all 0.3s ease;
-            font-weight: 600;
+            box-shadow: var(--shadow-blue);
         }
 
         .referral-box button:hover {
+            background-color: var(--primary-blue-dark);
             transform: translateY(-2px);
-            box-shadow: var(--shadow-purple);
+            box-shadow: var(--shadow-glow);
         }
 
         /* Sidebar */
@@ -275,11 +307,11 @@
             top: 20px;
             left: 20px;
             z-index: 1001;
-            background: linear-gradient(135deg, var(--purple-dark), var(--purple-light));
-            border: none;
+            background-color: var(--card-background);
+            border: 1px solid var(--primary-blue);
             width: 50px;
             height: 50px;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -287,19 +319,18 @@
             align-items: center;
             gap: 5px;
             transition: all 0.3s ease;
-            box-shadow: var(--shadow-purple);
         }
 
         .sidebar-toggle:hover {
-            transform: scale(1.05);
+            background-color: var(--primary-blue);
+            box-shadow: var(--shadow-blue);
         }
 
         .sidebar-toggle span {
             width: 25px;
-            height: 3px;
-            background-color: white;
+            height: 2px;
+            background-color: var(--text-white);
             border-radius: 2px;
-            transition: all 0.3s ease;
         }
 
         .sidebar {
@@ -308,13 +339,12 @@
             left: -380px;
             width: 380px;
             height: 100vh;
-            background: linear-gradient(180deg, var(--background-card) 0%, #0a0a0a 100%);
+            background-color: var(--card-background);
             border-right: 1px solid var(--border-color);
             z-index: 1000;
             transition: left 0.3s ease;
             overflow-y: auto;
             padding: 2rem;
-            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.5);
         }
 
         .sidebar.open {
@@ -330,7 +360,6 @@
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 999;
             display: none;
-            backdrop-filter: blur(5px);
         }
 
         .sidebar-overlay.open {
@@ -339,21 +368,24 @@
 
         .sidebar h2 {
             margin-bottom: 1.5rem;
-            color: var(--primary-color);
+            color: var(--primary-blue);
             font-size: 1.5rem;
+            font-weight: 500;
         }
 
         .sidebar h3 {
             margin-top: 2rem;
             margin-bottom: 1rem;
-            color: var(--secondary-color);
+            color: var(--primary-blue);
             font-size: 1.2rem;
+            font-weight: 500;
         }
 
         .sidebar p, .sidebar ul {
             margin-bottom: 1rem;
             line-height: 1.8;
-            color: var(--text-secondary);
+            color: var(--text-gray);
+            font-size: 0.95rem;
         }
 
         .sidebar ul {
@@ -361,39 +393,40 @@
         }
 
         .sidebar li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
         }
 
-        .sidebar a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
+        .sidebar-email-form {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
         }
 
-        .sidebar a:hover {
-            color: var(--secondary-color);
+        .sidebar-email-form input,
+        .sidebar-email-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            background-color: var(--background-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-white);
+            font-size: 0.9rem;
         }
 
-        /* Support Button */
-        .support-btn {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            background: linear-gradient(135deg, var(--purple-dark), var(--purple-light));
-            color: white;
+        .sidebar-email-form button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
             border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.5rem;
-            box-shadow: var(--shadow-purple);
             transition: all 0.3s ease;
-            z-index: 998;
         }
 
-        .support-btn:hover {
-            transform: scale(1.1);
+        .sidebar-email-form button:hover {
+            background-color: var(--primary-blue-dark);
         }
 
         /* Chatbot */
@@ -401,37 +434,41 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-color: var(--primary-blue);
             color: white;
             border: none;
             width: 60px;
             height: 60px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.8rem;
-            box-shadow: var(--shadow-glow);
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-blue);
             transition: all 0.3s ease;
             z-index: 998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .chatbot-btn:hover {
-            transform: scale(1.1);
+            background-color: var(--primary-blue-dark);
+            transform: scale(1.05);
+            box-shadow: var(--shadow-glow);
         }
 
         .chatbot-container {
+            display: none;
             position: fixed;
             bottom: 90px;
             right: 20px;
-            width: 350px;
-            max-height: 500px;
-            background: var(--background-card);
+            width: 380px;
+            height: 550px;
+            background-color: var(--card-background);
             border: 1px solid var(--border-color);
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border-radius: 16px;
             z-index: 999;
-            display: none;
             flex-direction: column;
-            overflow: hidden;
+            box-shadow: var(--shadow-blue);
         }
 
         .chatbot-container.open {
@@ -439,241 +476,107 @@
         }
 
         .chatbot-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            padding: 1rem;
-            color: white;
-            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            padding: 1.2rem;
+            border-radius: 16px 16px 0 0;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 1rem;
         }
 
-        .chatbot-close {
-            background: none;
-            border: none;
-            color: white;
+        .chatbot-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--text-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.5rem;
-            cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .chatbot-header-text h3 {
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .chatbot-header-text p {
+            font-size: 0.85rem;
+            margin: 0;
+            opacity: 0.9;
         }
 
         .chatbot-messages {
             flex: 1;
-            padding: 1rem;
+            padding: 1.5rem;
             overflow-y: auto;
-            max-height: 350px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .chatbot-message {
-            margin-bottom: 1rem;
-            padding: 0.8rem;
-            border-radius: 10px;
-            max-width: 85%;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            max-width: 80%;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         .chatbot-message.bot {
-            background: rgba(255, 107, 53, 0.15);
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            margin-right: auto;
+            background-color: var(--background-darker);
+            border: 1px solid var(--border-color);
+            align-self: flex-start;
         }
 
         .chatbot-message.user {
-            background: rgba(107, 45, 92, 0.2);
-            border: 1px solid rgba(107, 45, 92, 0.4);
-            margin-left: auto;
-            text-align: right;
+            background-color: var(--primary-blue);
+            align-self: flex-end;
         }
 
-        .chatbot-options {
-            padding: 1rem;
+        .chatbot-quick-replies {
+            padding: 1rem 1.5rem;
             border-top: 1px solid var(--border-color);
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
 
-        .chatbot-option-btn {
-            background: rgba(255, 107, 53, 0.1);
-            border: 1px solid var(--primary-color);
-            color: var(--text-primary);
+        .quick-reply-btn {
+            background-color: var(--background-darker);
+            border: 1px solid var(--border-color);
+            color: var(--text-white);
             padding: 0.6rem 1rem;
-            border-radius: 8px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            flex: 1;
-            min-width: 140px;
-        }
-
-        .chatbot-option-btn:hover {
-            background: rgba(255, 107, 53, 0.2);
-            transform: translateY(-2px);
-        }
-
-        /* Support Modal */
-        .support-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(5px);
-            z-index: 1002;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .support-modal.open {
-            display: flex;
-        }
-
-        .support-content {
-            background: var(--background-card);
-            border: 1px solid var(--border-color);
-            border-radius: 15px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
-        }
-
-        .support-content h2 {
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .support-content .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .support-content label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-
-        .support-content input,
-        .support-content select,
-        .support-content textarea {
-            width: 100%;
-            padding: 0.9rem;
-            border: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--text-primary);
-            border-radius: 8px;
-            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
-        .support-content input:focus,
-        .support-content select:focus,
-        .support-content textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
-        }
-
-        .support-content textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .support-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .support-buttons button {
-            flex: 1;
-            padding: 1rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .support-buttons .submit-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-        }
-
-        .support-buttons .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .support-buttons .cancel-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .support-buttons .cancel-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .support-quick-links {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .support-quick-links h3 {
-            margin-bottom: 1rem;
-            color: var(--secondary-color);
-            font-size: 1.1rem;
-        }
-
-        .support-quick-links a {
-            display: block;
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 0.5rem 0;
-            transition: color 0.3s ease;
-        }
-
-        .support-quick-links a:hover {
-            color: var(--primary-color);
+        .quick-reply-btn:hover {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
         }
 
         footer {
             text-align: center;
-            padding: 2rem 0;
-            margin-top: 2rem;
+            padding: 3rem 0;
+            margin-top: 3rem;
             border-top: 1px solid var(--border-color);
-            color: var(--text-secondary);
+            color: var(--text-gray);
         }
 
         footer a {
-            color: var(--primary-color);
+            color: var(--primary-blue);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         footer a:hover {
-            color: var(--secondary-color);
+            color: var(--primary-blue-light);
         }
 
         .fade-in {
@@ -687,22 +590,22 @@
             transform: translateY(0);
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .info-box {
+            background-color: var(--card-background);
+            border: 1px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--background-dark);
+        .info-box p {
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-color);
+        .info-box strong {
+            color: var(--primary-blue);
         }
 
         @media (max-width: 768px) {
@@ -712,12 +615,17 @@
             }
 
             .chatbot-container {
-                width: 90%;
-                right: 5%;
+                width: calc(100vw - 40px);
+                right: 20px;
             }
 
-            .support-content {
-                padding: 1.5rem;
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+
+            .reseller-section h2,
+            .referral h2 {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -734,9 +642,9 @@
     <!-- Sidebar -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="sidebar" id="sidebar">
-        <h2>Informações Importantes</h2>
+        <h2>informações importantes</h2>
         
-        <h3>Termos de Uso</h3>
+        <h3>termos de uso</h3>
         <ul>
             <li>Vendemos pacotes de números virtuais internacionais</li>
             <li>Escolha o país desejado e defina a quantidade</li>
@@ -746,11 +654,11 @@
             <li>Se o número for banido, não fornecemos substituição</li>
         </ul>
 
-        <h3>Política de Privacidade</h3>
+        <h3>política de privacidade</h3>
         <p>Seus dados são tratados com segurança e não são compartilhados com terceiros. Utilizamos suas informações apenas para processamento de pedidos e suporte.</p>
 
-        <h3>Uso Responsável</h3>
-        <p><strong>IMPORTANTE:</strong> É estritamente proibido usar os números para:</p>
+        <h3>uso responsável</h3>
+        <p><strong>Importante:</strong> É estritamente proibido usar os números para:</p>
         <ul>
             <li>Ataques ou ameaças a terceiros</li>
             <li>Spam ou envio de mensagens não solicitadas</li>
@@ -759,107 +667,72 @@
         </ul>
         <p>Se você presenciar uso indevido de nossos números, denuncie imediatamente ao suporte.</p>
 
-        <h3>Suporte</h3>
-        <p>Em caso de dúvidas ou problemas, entre em contato:</p>
-        <ul>
-            <li>Site: <a href="https://support.kdefy.com" target="_blank">support.kdefy.com</a></li>
-            <li>Email: kdefycom@gmail.com</li>
-            <li>WhatsApp: 553497637882</li>
-        </ul>
+        <h3>atualizações futuras</h3>
+        <p>Em breve nosso site será totalmente automático com pagamento via PIX, compra instantânea e entrega automática dos números. Estamos trabalhando para tornar sua experiência ainda melhor!</p>
+
+        <div class="sidebar-email-form">
+            <h3>enviar email</h3>
+            <input type="text" id="email-name" placeholder="Seu nome" required>
+            <input type="email" id="email-address" placeholder="Seu email" required>
+            <textarea id="email-message" placeholder="Sua mensagem" rows="4" required></textarea>
+            <button id="send-email-btn">enviar</button>
+        </div>
     </aside>
 
-    <!-- Support Button -->
-    <button class="support-btn" id="support-btn" title="Suporte">💬</button>
-
     <!-- Chatbot Button -->
-    <button class="chatbot-btn" id="chatbot-btn" title="Assistente Virtual">🤖</button>
+    <button class="chatbot-btn" id="chatbot-btn">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </button>
 
     <!-- Chatbot Container -->
     <div class="chatbot-container" id="chatbot-container">
         <div class="chatbot-header">
-            <span>Assistente KDEFY</span>
-            <button class="chatbot-close" id="chatbot-close">×</button>
+            <div class="chatbot-avatar">K</div>
+            <div class="chatbot-header-text">
+                <h3>assistente kdefy</h3>
+                <p>online agora</p>
+            </div>
         </div>
         <div class="chatbot-messages" id="chatbot-messages">
             <div class="chatbot-message bot">
                 Olá! Sou o assistente virtual da KDEFY. Como posso ajudar você hoje?
             </div>
         </div>
-        <div class="chatbot-options" id="chatbot-options">
-            <button class="chatbot-option-btn" data-question="reembolso">Sobre reembolso</button>
-            <button class="chatbot-option-btn" data-question="ddd">Escolher DDD</button>
-            <button class="chatbot-option-btn" data-question="como-funciona">Como funciona</button>
-            <button class="chatbot-option-btn" data-question="prazos">Prazos de entrega</button>
-            <button class="chatbot-option-btn" data-question="pagamento">Formas de pagamento</button>
-            <button class="chatbot-option-btn" data-question="suporte">Falar com suporte</button>
-        </div>
-    </div>
-
-    <!-- Support Modal -->
-    <div class="support-modal" id="support-modal">
-        <div class="support-content">
-            <h2>Suporte KDEFY</h2>
-            
-            <form id="support-form">
-                <div class="form-group">
-                    <label for="support-reason">Motivo do contato *</label>
-                    <select id="support-reason" required>
-                        <option value="">Selecione um motivo</option>
-                        <option value="duvida">Dúvida sobre números</option>
-                        <option value="compra">Problemas com compra</option>
-                        <option value="tecnico">Problema técnico</option>
-                        <option value="denuncia">Denunciar uso indevido</option>
-                        <option value="outro">Outro assunto</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="support-name">Nome completo *</label>
-                    <input type="text" id="support-name" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="support-phone">Telefone (WhatsApp) *</label>
-                    <input type="tel" id="support-phone" placeholder="+55 34 9 0000-0000" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="support-email">Email *</label>
-                    <input type="email" id="support-email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="support-message">Mensagem *</label>
-                    <textarea id="support-message" required></textarea>
-                </div>
-
-                <div class="support-buttons">
-                    <button type="submit" class="submit-btn">Enviar</button>
-                    <button type="button" class="cancel-btn" id="close-support">Cancelar</button>
-                </div>
-            </form>
-
-            <div class="support-quick-links">
-                <h3>Acesso Rápido</h3>
-                <a href="https://support.kdefy.com" target="_blank">Portal de Suporte</a>
-                <a href="mailto:kdefycom@gmail.com">Email: kdefycom@gmail.com</a>
-                <a href="https://wa.me/553497637882" target="_blank">WhatsApp: +55 34 9763-7882</a>
-            </div>
+        <div class="chatbot-quick-replies">
+            <button class="quick-reply-btn" data-reply="reembolso">reembolso</button>
+            <button class="quick-reply-btn" data-reply="ddd">escolher ddd</button>
+            <button class="quick-reply-btn" data-reply="como-funciona">como funciona</button>
+            <button class="quick-reply-btn" data-reply="prazos">prazos de entrega</button>
+            <button class="quick-reply-btn" data-reply="pagamento">formas de pagamento</button>
+            <button class="quick-reply-btn" data-reply="revendedor">ser revendedor</button>
         </div>
     </div>
 
     <header>
         <div class="container">
-            <h1 id="logo">KDEFY Numbers</h1>
-            <p>Revenda números do mundo todo</p>
+            <h1>kdefy numbers</h1>
+            <p>números virtuais do mundo todo para revenda</p>
         </div>
     </header>
 
     <main class="container">
         <section class="hero fade-in">
-            <h2>Adquira números virtuais de qualquer lugar do mundo</h2>
+            <h2>adquira números virtuais de qualquer lugar do mundo</h2>
             <p>Ative seus aplicativos e serviços com privacidade e segurança.</p>
-            <a href="https://wa.me/553497637882?text=Olá%2C%20quero%20adquirir%20um%20número%20internacional!" target="_blank" class="btn">Fale no WhatsApp</a>
+            <a href="https://wa.me/553497637882?text=Olá%2C%20quero%20adquirir%20números%20internacionais!" target="_blank" class="btn">fale no whatsapp</a>
+        </section>
+
+        <div class="info-box fade-in">
+            <p><strong>Vendemos pacotes de números virtuais</strong> para diversos países. Em breve, nosso site será totalmente automático com <strong>pagamento via PIX</strong>, compra instantânea e entrega automática dos números!</p>
+        </div>
+
+        <section class="reseller-section fade-in">
+            <h2>torne-se revendedor</h2>
+            <p>Seja um parceiro KDEFY e ganhe descontos especiais em todos os números para revenda!</p>
+            <p>Como revendedor, você terá acesso a preços diferenciados e condições exclusivas para maximizar seus lucros.</p>
+            <a href="https://wa.me/553497637882?text=Olá%2C%20quero%20me%20tornar%20revendedor%20KDEFY!" target="_blank" class="btn">quero ser revendedor</a>
         </section>
 
         <section class="countries-grid fade-in" id="countries-grid">
@@ -867,34 +740,39 @@
         </section>
 
         <section class="referral fade-in">
-            <h2>Indique um amigo e ganhe!</h2>
-            <p>Compartilhe nossa mensagem de divulgação e ganhe descontos em seus próximos números!</p>
+            <h2>indique amigos e ganhe</h2>
+            
+            <div class="referral-info">
+                <p><strong>Programa de indicação:</strong></p>
+                <p>Indique um amigo usando sua mensagem personalizada. Se ele comprar através da sua indicação, você ganha <strong>1 número das Filipinas gratuitamente!</strong></p>
+                <p>Compartilhe a mensagem abaixo e comece a ganhar agora mesmo.</p>
+            </div>
+
             <div class="referral-box">
                 <textarea id="referral-message" readonly></textarea>
-                <button id="copy-referral-btn">Copiar Mensagem de Divulgação</button>
+                <button id="copy-referral-btn">copiar mensagem</button>
             </div>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p><a href="https://support.kdefy.com" target="_blank">Termos de uso e suporte</a></p>
-            <p>&copy; 2025 KDEFY. Todos os direitos reservados.</p>
+            <p><a href="https://support.kdefy.com" target="_blank">suporte e termos de uso</a></p>
+            <p>&copy; 2025 kdefy. todos os direitos reservados.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Favicon with dark purple K (transparent background)
+            // Favicon with K letter
             const canvas = document.createElement('canvas');
             canvas.width = 64;
             canvas.height = 64;
             const ctx = canvas.getContext('2d');
             
-            // Dark purple gradient
             const gradient = ctx.createLinearGradient(0, 0, 64, 64);
-            gradient.addColorStop(0, '#ff6b35');
-            gradient.addColorStop(1, '#f7931e');
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1e40af');
             
             ctx.font = 'bold 48px Arial';
             ctx.fillStyle = gradient;
@@ -907,20 +785,21 @@
             favicon.href = canvas.toDataURL();
             document.head.appendChild(favicon);
 
-            // Country data with quantities
+            // Country data
             const countries = {
-                "br": { name: "Brasil", code: "+55", price: 14 },
-                "ph": { name: "Filipinas", code: "+63", price: 8 },
-                "fr": { name: "França", code: "+33", price: 33 },
-                "gb": { name: "Reino Unido", code: "+44", price: 43 },
-                "us": { name: "Estados Unidos", code: "+1", price: 27 },
-                "pt": { name: "Portugal", code: "+351", price: 18 },
-                "id": { name: "Indonésia", code: "+62", price: 6 },
-                "au": { name: "Austrália", code: "+61", price: 55.88 },
+                "br": { name: "brasil", code: "+55", price: 14 },
+                "ph": { name: "filipinas", code: "+63", price: 8 },
+                "fr": { name: "frança", code: "+33", price: 33 },
+                "gb": { name: "reino unido", code: "+44", price: 43 },
+                "us": { name: "estados unidos", code: "+1", price: 27 },
+                "pt": { name: "portugal", code: "+351", price: 18 },
+                "id": { name: "indonésia", code: "+62", price: 6 },
+                "au": { name: "austrália", code: "+61", price: 55.88 },
+                "hk": { name: "hong kong", code: "+852", price: 38 },
+                "de": { name: "alemanha", code: "+49", price: 45 },
             };
 
             const quantities = {};
-            
             const countriesGrid = document.getElementById('countries-grid');
 
             for (const countryCode in countries) {
@@ -943,7 +822,7 @@
                         <button onclick="increaseQuantity('${countryCode}')">+</button>
                     </div>
                     
-                    <button class="btn" onclick="orderNumber('${countryCode}')">Quero este número</button>
+                    <button class="btn" onclick="orderNumber('${countryCode}')">quero este número</button>
                 `;
 
                 countriesGrid.appendChild(card);
@@ -989,7 +868,69 @@
             };
 
             // Referral message
-            const referralMessage = `🌍 KDEFY Numbers - Números Virtuais do Mundo Todo!\n\n✨ Precisa de números internacionais para ativar apps e serviços? Até mesmo revenda?\n\n🎯 A KDEFY oferece números de diversos países:\n🇧🇷 Brasil | 🇺🇸 EUA | 🇬🇧 Reino Unido | 🇫🇷 França | 🇵🇹 Portugal | 🇵🇭 Filipinas | 🇮🇩 Indonésia | 🇦🇺 Austrália\n\n💎 Vantagens:\n✅ Processo rápido e seguro\n✅ Preços competitivos\n✅ Suporte especializado\n✅ Compra de pacotes com desconto\n\n🛒 Como funciona:\n1. Acesse o site\n2. Escolha o país\n3. Defina a quantidade (+/-)\n4. O sistema calcula automaticamente\n5. Faça seu pedido no WhatsApp\n\n🔗 Acesse agora: ${window.location.href}\n\n💬 WhatsApp: 553497637882\n🌐 Suporte: https://support.kdefy.com\n\n⚠️ Uso responsável e seguro!`;
+            const referralMessage = `━━━━━━━━━━━━━━━━━━━━━
+🌍 KDEFY NUMBERS
+━━━━━━━━━━━━━━━━━━━━━
+
+📱 Números Virtuais Internacionais
+
+Precisa de números de outros países?
+A KDEFY oferece pacotes com os melhores preços!
+
+━━━━━━━━━━━━━━━━━━━━━
+🌎 PAÍSES DISPONÍVEIS:
+━━━━━━━━━━━━━━━━━━━━━
+
+🇧🇷 Brasil
+🇺🇸 Estados Unidos
+🇬🇧 Reino Unido
+🇫🇷 França
+🇵🇹 Portugal
+🇵🇭 Filipinas
+🇮🇩 Indonésia
+🇦🇺 Austrália
+🇭🇰 Hong Kong
+🇩🇪 Alemanha
+
+━━━━━━━━━━━━━━━━━━━━━
+✨ VANTAGENS:
+━━━━━━━━━━━━━━━━━━━━━
+
+✓ Processo rápido e seguro
+✓ Preços competitivos
+✓ Pacotes com desconto
+✓ Suporte especializado
+✓ Em breve: PIX automático
+
+━━━━━━━━━━━━━━━━━━━━━
+💎 COMO FUNCIONA:
+━━━━━━━━━━━━━━━━━━━━━
+
+1. Acesse o site
+2. Escolha o país
+3. Defina a quantidade
+4. Sistema calcula automaticamente
+5. Finalize no WhatsApp
+
+━━━━━━━━━━━━━━━━━━━━━
+🔗 ACESSE AGORA:
+━━━━━━━━━━━━━━━━━━━━━
+
+kdefy.com/n/numbers
+
+━━━━━━━━━━━━━━━━━━━━━
+📞 CONTATO:
+━━━━━━━━━━━━━━━━━━━━━
+
+💬 WhatsApp: +55 34 9763-7882
+🌐 Suporte: support.kdefy.com
+📧 Email: kdefycom@gmail.com
+
+━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ Uso responsável e seguro!
+
+#KDEFYNumbers #NumerosVirtuais`;
 
             const referralMessageBox = document.getElementById('referral-message');
             referralMessageBox.value = referralMessage;
@@ -998,13 +939,13 @@
             copyReferralBtn.addEventListener('click', () => {
                 referralMessageBox.select();
                 document.execCommand('copy');
-                copyReferralBtn.textContent = 'Mensagem Copiada!';
+                copyReferralBtn.textContent = 'mensagem copiada!';
                 setTimeout(() => {
-                    copyReferralBtn.textContent = 'Copiar Mensagem de Divulgação';
+                    copyReferralBtn.textContent = 'copiar mensagem';
                 }, 3000);
             });
 
-            // Sidebar toggle
+            // Sidebar
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const sidebar = document.getElementById('sidebar');
             const sidebarOverlay = document.getElementById('sidebar-overlay');
@@ -1019,106 +960,72 @@
                 sidebarOverlay.classList.remove('open');
             });
 
-            // Support modal
-            const supportBtn = document.getElementById('support-btn');
-            const supportModal = document.getElementById('support-modal');
-            const closeSupportBtn = document.getElementById('close-support');
-            const supportForm = document.getElementById('support-form');
+            // Email form
+            const sendEmailBtn = document.getElementById('send-email-btn');
+            sendEmailBtn.addEventListener('click', () => {
+                const name = document.getElementById('email-name').value;
+                const email = document.getElementById('email-address').value;
+                const message = document.getElementById('email-message').value;
 
-            supportBtn.addEventListener('click', () => {
-                supportModal.classList.add('open');
-            });
-
-            closeSupportBtn.addEventListener('click', () => {
-                supportModal.classList.remove('open');
-            });
-
-            supportModal.addEventListener('click', (e) => {
-                if (e.target === supportModal) {
-                    supportModal.classList.remove('open');
+                if (!name || !email || !message) {
+                    alert('Por favor, preencha todos os campos.');
+                    return;
                 }
-            });
 
-            supportForm.addEventListener('submit', (e) => {
-                e.preventDefault();
+                const subject = `Contato de ${name}`;
+                const body = `Nome: ${name}\nEmail: ${email}\n\nMensagem:\n${message}`;
                 
-                const reason = document.getElementById('support-reason').value;
-                const name = document.getElementById('support-name').value;
-                const phone = document.getElementById('support-phone').value;
-                const email = document.getElementById('support-email').value;
-                const message = document.getElementById('support-message').value;
-
-                const reasonLabels = {
-                    'duvida': 'Dúvida sobre números',
-                    'compra': 'Problemas com compra',
-                    'tecnico': 'Problema técnico',
-                    'denuncia': 'Denunciar uso indevido',
-                    'outro': 'Outro assunto'
-                };
-
-                const supportMessage = `🆘 SUPORTE KDEFY\n\n📋 Motivo: ${reasonLabels[reason] || reason}\n👤 Nome: ${name}\n📞 Telefone: ${phone}\n📧 Email: ${email}\n\n💬 Mensagem:\n${message}`;
+                window.location.href = `mailto:kdefycom@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                 
-                const whatsappUrl = `https://wa.me/553497637882?text=${encodeURIComponent(supportMessage)}`;
-                window.open(whatsappUrl, '_blank');
-
-                supportModal.classList.remove('open');
-                supportForm.reset();
+                document.getElementById('email-name').value = '';
+                document.getElementById('email-address').value = '';
+                document.getElementById('email-message').value = '';
                 
-                alert('Sua mensagem está sendo direcionada ao WhatsApp do suporte!');
+                alert('Seu cliente de email será aberto para enviar a mensagem.');
             });
 
             // Chatbot
             const chatbotBtn = document.getElementById('chatbot-btn');
             const chatbotContainer = document.getElementById('chatbot-container');
-            const chatbotClose = document.getElementById('chatbot-close');
             const chatbotMessages = document.getElementById('chatbot-messages');
-            const chatbotOptions = document.getElementById('chatbot-options');
 
             chatbotBtn.addEventListener('click', () => {
                 chatbotContainer.classList.toggle('open');
             });
 
-            chatbotClose.addEventListener('click', () => {
-                chatbotContainer.classList.remove('open');
-            });
-
-            // Chatbot responses
-            const chatbotResponses = {
-                'reembolso': 'Importante: NÃO oferecemos reembolso em caso de mal uso do número. Se o número for banido por uso inadequado, não fornecemos substituição. Certifique-se de usar os números de forma responsável e dentro dos termos de uso.',
-                'ddd': 'Não é possível escolher DDD específico do número. Os números são fornecidos automaticamente pelo sistema de acordo com a disponibilidade do país selecionado. Você escolhe apenas o país de origem.',
-                'como-funciona': 'É simples:\n1. Escolha o país desejado na nossa lista\n2. Defina a quantidade usando os botões +/-\n3. O sistema calcula o valor total automaticamente\n4. Clique em "Quero este número"\n5. Complete o pedido via WhatsApp\n\nReceba seus números rapidamente!',
-                'prazos': 'Os números são entregues rapidamente após a confirmação do pagamento. O prazo médio é de 15 minutos a 2 horas. Em casos excepcionais pode levar até 24 horas. Você receberá todas as informações via WhatsApp.',
-                'pagamento': 'Aceitamos pagamento via PIX para maior agilidade. Após fazer o pedido pelo WhatsApp, nossa equipe enviará os dados para pagamento e confirmará assim que o valor for identificado.',
-                'suporte': 'Para falar com nosso suporte humano:\n\n📧 Email: kdefycom@gmail.com\n💬 WhatsApp: +55 34 9763-7882\n🌐 Portal: support.kdefy.com\n\nEstamos prontos para ajudar!'
+            const responses = {
+                'reembolso': 'Não oferecemos reembolso em caso de mal uso do número. Certifique-se de usar os números de forma responsável e dentro dos termos de uso.',
+                'ddd': 'Não é possível escolher o DDD específico do número. Os números são fornecidos de acordo com a disponibilidade do país selecionado.',
+                'como-funciona': 'É simples: escolha o país desejado, defina a quantidade usando os botões +/-, o sistema calculará automaticamente o valor total, e então finalize seu pedido pelo WhatsApp.',
+                'prazos': 'Após a confirmação do pagamento, os números são entregues em até 24 horas. Em breve teremos entrega automática e instantânea!',
+                'pagamento': 'Atualmente aceitamos pagamento via transferência bancária ou PIX. Em breve teremos pagamento automático via PIX diretamente no site!',
+                'revendedor': 'Como revendedor KDEFY, você terá descontos especiais em todos os números para revenda. Clique no botão "torne-se revendedor" na página ou fale conosco no WhatsApp!'
             };
 
-            chatbotOptions.addEventListener('click', (e) => {
-                if (e.target.classList.contains('chatbot-option-btn')) {
-                    const question = e.target.getAttribute('data-question');
-                    const questionText = e.target.textContent;
+            document.querySelectorAll('.quick-reply-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const reply = e.target.dataset.reply;
+                    const replyText = e.target.textContent;
                     
-                    // Add user message
                     const userMessage = document.createElement('div');
                     userMessage.classList.add('chatbot-message', 'user');
-                    userMessage.textContent = questionText;
+                    userMessage.textContent = replyText;
                     chatbotMessages.appendChild(userMessage);
-                    
-                    // Add bot response
+
                     setTimeout(() => {
                         const botMessage = document.createElement('div');
                         botMessage.classList.add('chatbot-message', 'bot');
-                        botMessage.textContent = chatbotResponses[question];
+                        botMessage.textContent = responses[reply];
                         chatbotMessages.appendChild(botMessage);
-                        
-                        // Scroll to bottom
                         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
                     }, 500);
-                }
+
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                });
             });
 
             // Scroll animations
             const faders = document.querySelectorAll('.fade-in');
-
             const appearOptions = {
                 threshold: 0,
                 rootMargin: "0px 0px -100px 0px"
@@ -1142,4 +1049,4 @@
     </script>
 
 </body>
-</html>
+    </html>
