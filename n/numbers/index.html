@@ -449,37 +449,90 @@
             margin-bottom: 0.5rem;
         }
 
-        .sidebar-email-form {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-color);
+        /* Terms Modal */
+        .terms-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .sidebar-email-form input,
-        .sidebar-email-form textarea {
+        .terms-modal.open {
+            display: flex;
+        }
+
+        .terms-content {
+            background-color: var(--card-background);
+            border: 1px solid var(--primary-blue);
+            border-radius: 16px;
+            padding: 3rem 2.5rem;
+            max-width: 700px;
             width: 100%;
-            padding: 0.8rem;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .terms-content h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .terms-content h3 {
+            color: var(--primary-blue);
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .terms-content p, .terms-content ul {
+            color: var(--text-gray);
+            line-height: 1.8;
             margin-bottom: 1rem;
-            background-color: var(--background-dark);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-white);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
-        .sidebar-email-form button {
+        .terms-content ul {
+            padding-left: 1.5rem;
+        }
+
+        .terms-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .terms-content strong {
+            color: var(--primary-blue);
+        }
+
+        .terms-accept-btn {
+            display: block;
             width: 100%;
-            padding: 0.8rem;
+            padding: 1rem 2rem;
             background-color: var(--primary-blue);
             color: var(--text-white);
             border: none;
             border-radius: 8px;
+            font-size: 1rem;
             cursor: pointer;
+            margin-top: 2rem;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-blue);
         }
 
-        .sidebar-email-form button:hover {
+        .terms-accept-btn:hover {
             background-color: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
         }
 
         /* Chatbot */
@@ -613,6 +666,23 @@
 
         .chatbot-message.user a {
             color: var(--text-white);
+        }
+
+        .chatbot-copy-btn {
+            display: inline-block;
+            margin-top: 0.8rem;
+            padding: 0.6rem 1.2rem;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-copy-btn:hover {
+            background-color: var(--primary-blue-dark);
         }
 
         .typing-indicator {
@@ -787,10 +857,46 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .terms-content {
+                padding: 2rem 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Terms Modal -->
+    <div class="terms-modal" id="terms-modal">
+        <div class="terms-content">
+            <h2>termos de uso</h2>
+            
+            <h3>sobre nosso serviço</h3>
+            <ul>
+                <li>Vendemos pacotes de números virtuais internacionais</li>
+                <li>Escolha o país desejado e defina a quantidade</li>
+                <li>O sistema calcula automaticamente o valor total</li>
+                <li>Não é possível escolher DDD específico do número</li>
+                <li>Não há reembolso em caso de mal uso do número</li>
+                <li>Se o número for banido, não fornecemos substituição</li>
+            </ul>
+
+            <h3>política de privacidade</h3>
+            <p>Seus dados são tratados com segurança e não são compartilhados com terceiros. Utilizamos suas informações apenas para processamento de pedidos e suporte.</p>
+
+            <h3>uso responsável</h3>
+            <p><strong>Importante:</strong> É estritamente proibido usar os números para:</p>
+            <ul>
+                <li>Ataques ou ameaças a terceiros</li>
+                <li>Spam ou envio de mensagens não solicitadas</li>
+                <li>Atividades ilegais ou fraudulentas</li>
+                <li>Causar danos ou prejuízos a outras pessoas</li>
+            </ul>
+            <p>Se você presenciar uso indevido de nossos números, denuncie imediatamente ao suporte.</p>
+
+            <button class="terms-accept-btn" id="terms-accept-btn">ok, entendi</button>
+        </div>
+    </div>
 
     <!-- Sidebar Toggle -->
     <button class="sidebar-toggle" id="sidebar-toggle">
@@ -830,13 +936,10 @@
         <h3>atualizações futuras</h3>
         <p>Em breve nosso site será totalmente automático com pagamento via PIX, compra instantânea e entrega automática dos números. Estamos trabalhando para tornar sua experiência ainda melhor!</p>
 
-        <div class="sidebar-email-form">
-            <h3>enviar email</h3>
-            <input type="text" id="email-name" placeholder="Seu nome" required>
-            <input type="email" id="email-address" placeholder="Seu email" required>
-            <textarea id="email-message" placeholder="Sua mensagem" rows="4" required></textarea>
-            <button id="send-email-btn">enviar</button>
-        </div>
+        <h3>contato</h3>
+        <p>WhatsApp: +55 34 9763-7882</p>
+        <p>Email: kdefycom@gmail.com</p>
+        <p>Suporte: support.kdefy.com</p>
     </aside>
 
     <!-- Chatbot Button -->
@@ -873,6 +976,7 @@
             <button class="quick-reply-btn" data-reply="revendedor">ser revendedor</button>
             <button class="quick-reply-btn" data-reply="suporte">suporte</button>
             <button class="quick-reply-btn" data-reply="canais">canais sociais</button>
+            <button class="quick-reply-btn" data-reply="divulgar">vou divulgar</button>
         </div>
     </div>
 
@@ -949,6 +1053,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Check if user has seen terms before
+            const hasSeenTerms = localStorage.getItem('kdefy_terms_accepted');
+            if (!hasSeenTerms) {
+                document.getElementById('terms-modal').classList.add('open');
+            }
+
+            // Terms accept button
+            document.getElementById('terms-accept-btn').addEventListener('click', () => {
+                localStorage.setItem('kdefy_terms_accepted', 'true');
+                document.getElementById('terms-modal').classList.remove('open');
+            });
+
             // Favicon with K letter
             const canvas = document.createElement('canvas');
             canvas.width = 64;
@@ -1145,30 +1261,6 @@ kdefy.com/n/numbers
                 sidebarOverlay.classList.remove('open');
             });
 
-            // Email form
-            const sendEmailBtn = document.getElementById('send-email-btn');
-            sendEmailBtn.addEventListener('click', () => {
-                const name = document.getElementById('email-name').value;
-                const email = document.getElementById('email-address').value;
-                const message = document.getElementById('email-message').value;
-
-                if (!name || !email || !message) {
-                    alert('Por favor, preencha todos os campos.');
-                    return;
-                }
-
-                const subject = `Contato de ${name}`;
-                const body = `Nome: ${name}\nEmail: ${email}\n\nMensagem:\n${message}`;
-                
-                window.location.href = `mailto:kdefycom@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                
-                document.getElementById('email-name').value = '';
-                document.getElementById('email-address').value = '';
-                document.getElementById('email-message').value = '';
-                
-                alert('Seu cliente de email será aberto para enviar a mensagem.');
-            });
-
             // Chatbot
             const chatbotBtn = document.getElementById('chatbot-btn');
             const chatbotContainer = document.getElementById('chatbot-container');
@@ -1178,7 +1270,7 @@ kdefy.com/n/numbers
             const chatbotSend = document.getElementById('chatbot-send');
             const chatbotQuickReplies = document.getElementById('chatbot-quick-replies');
 
-            let chatState = 'default'; // default, suporte-choice, suporte-whats, suporte-email
+            let chatState = 'default';
             let supportData = {};
 
             chatbotBtn.addEventListener('click', () => {
@@ -1245,8 +1337,8 @@ kdefy.com/n/numbers
                 'como-funciona': 'É simples: escolha o país desejado, defina a quantidade usando os botões +/-, o sistema calculará automaticamente o valor total, e então finalize seu pedido pelo WhatsApp.',
                 'prazos': 'Após a confirmação do pagamento, os números são entregues em até 24 horas. Em breve teremos entrega automática e instantânea!',
                 'pagamento': 'Atualmente aceitamos pagamento via transferência bancária ou PIX. Em breve teremos pagamento automático via PIX diretamente no site!',
-                'revendedor': 'Como revendedor KDEFY, você terá descontos especiais em todos os números para revenda. Clique aqui abaixo para saber mais:<br><br><a href="https://wa.me/553497637882?text=Olá%2C%20quero%20me%20tornar%20revendedor%20KDEFY!" target="_blank" style="color: #3b82f6; text-decoration: underline;">💬 Falar com a equipe no WhatsApp</a>',
-                'canais': 'Siga nossos canais oficiais para novidades e promoções:<br><br>📱 <a href="https://whatsapp.com/channel/0029VbAzSaB4yltTEgRZvW0Y" target="_blank">Canal WhatsApp</a><br>📱 <a href="https://t.me/eyezsms" target="_blank">Canal Telegram</a>'
+                'revendedor': 'Que legal que você quer ser revendedor! Como parceiro KDEFY, você terá descontos especiais em todos os números para revenda.<br><br>Clique aqui abaixo para saber mais:<br><br><a href="https://wa.me/553497637882?text=Olá%2C%20quero%20me%20tornar%20revendedor%20KDEFY!" target="_blank" style="color: #3b82f6; text-decoration: underline;">💬 Falar com a equipe no WhatsApp</a>',
+                'canais': 'Siga nossos canais oficiais para novidades e promoções:<br><br>📱 <a href="https://whatsapp.com/channel/0029VbAzSaB4yltTEgRZvW0Y" target="_blank" style="color: #3b82f6; text-decoration: underline;">Canal WhatsApp</a><br>📱 <a href="https://t.me/eyezsms" target="_blank" style="color: #3b82f6; text-decoration: underline;">Canal Telegram</a>'
             };
 
             // Handle input send
@@ -1257,8 +1349,18 @@ kdefy.com/n/numbers
                 addUserMessage(message);
                 chatbotInput.value = '';
 
-                // Handle different states
-                if (chatState === 'suporte-whats-name') {
+                // Handle support flow
+                if (chatState === 'suporte-choice') {
+                    if (message === '1') {
+                        chatState = 'suporte-whats-name';
+                        addBotMessage('Ótimo! Qual é o seu nome?');
+                    } else if (message === '2') {
+                        chatState = 'suporte-email-name';
+                        addBotMessage('Ótimo! Qual é o seu nome?');
+                    } else {
+                        addBotMessage('Por favor, digite <strong>1</strong> para WhatsApp ou <strong>2</strong> para Email.');
+                    }
+                } else if (chatState === 'suporte-whats-name') {
                     supportData.name = message;
                     chatState = 'suporte-whats-phone';
                     addBotMessage('Qual é o seu telefone (WhatsApp)?');
@@ -1306,6 +1408,7 @@ kdefy.com/n/numbers
                 }
             });
 
+            // Quick reply handlers
             document.querySelectorAll('.quick-reply-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const reply = e.target.dataset.reply;
@@ -1315,33 +1418,33 @@ kdefy.com/n/numbers
 
                     if (reply === 'suporte') {
                         chatState = 'suporte-choice';
-                        addBotMessage('Como você prefere entrar em contato?<br><br>Digite:<br>1 - WhatsApp<br>2 - Email');
+                        addBotMessage('Como você prefere entrar em contato?<br><br>Digite:<br><strong>1</strong> - WhatsApp<br><strong>2</strong> - Email');
                         showInputArea();
-                        
-                        // Handle suporte choice
-                        const handleSuporteChoice = (e) => {
-                            if (e.key === 'Enter') {
-                                const choice = chatbotInput.value.trim();
-                                if (choice === '1') {
-                                    addUserMessage('WhatsApp');
-                                    chatState = 'suporte-whats-name';
-                                    addBotMessage('Ótimo! Qual é o seu nome?');
-                                } else if (choice === '2') {
-                                    addUserMessage('Email');
-                                    chatState = 'suporte-email-name';
-                                    addBotMessage('Ótimo! Qual é o seu nome?');
-                                } else {
-                                    addBotMessage('Por favor, digite 1 para WhatsApp ou 2 para Email.');
-                                }
-                                chatbotInput.removeEventListener('keypress', handleSuporteChoice);
-                            }
-                        };
-                        chatbotInput.addEventListener('keypress', handleSuporteChoice);
+                    } else if (reply === 'divulgar') {
+                        const divulgarMessage = `Que legal que você vai divulgar! 🎉<br><br>Aqui está uma mensagem personalizada para você compartilhar. Se alguém comprar através da sua indicação, você ganha <strong>1 número das Filipinas gratuitamente!</strong><br><br><textarea readonly style="width: 100%; min-height: 150px; padding: 0.8rem; border: 1px solid var(--border-color); background-color: var(--background-darker); color: var(--text-white); border-radius: 8px; margin-top: 0.8rem; font-size: 0.85rem; line-height: 1.6;">${referralMessage}</textarea><button class="chatbot-copy-btn" onclick="copyDivulgarMessage()">copiar mensagem</button>`;
+                        addBotMessage(divulgarMessage, 1500);
                     } else {
                         addBotMessage(responses[reply] || 'Desculpe, não entendi. Como posso ajudar?');
                     }
                 });
             });
+
+            // Copy divulgar message function
+            window.copyDivulgarMessage = function() {
+                const textarea = document.querySelector('.chatbot-message.bot:last-child textarea');
+                if (textarea) {
+                    textarea.select();
+                    document.execCommand('copy');
+                    
+                    const copyBtn = document.querySelector('.chatbot-message.bot:last-child .chatbot-copy-btn');
+                    if (copyBtn) {
+                        copyBtn.textContent = 'copiado!';
+                        setTimeout(() => {
+                            copyBtn.textContent = 'copiar mensagem';
+                        }, 2000);
+                    }
+                }
+            };
 
             // Scroll animations
             const faders = document.querySelectorAll('.fade-in');
@@ -1368,4 +1471,4 @@ kdefy.com/n/numbers
     </script>
 
 </body>
-</html>
+    </html>
