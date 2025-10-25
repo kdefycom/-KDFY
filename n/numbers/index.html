@@ -139,6 +139,59 @@
             box-shadow: var(--shadow-glow);
         }
 
+        .channels-section {
+            background: linear-gradient(135deg, var(--card-background) 0%, var(--background-darker) 100%);
+            border: 1px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .channels-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+            font-weight: 500;
+        }
+
+        .channels-section p {
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+        }
+
+        .channels-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .channel-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-blue);
+        }
+
+        .channel-btn:hover {
+            background-color: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .channel-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
         .countries-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -461,8 +514,8 @@
             position: fixed;
             bottom: 90px;
             right: 20px;
-            width: 380px;
-            height: 550px;
+            width: 400px;
+            height: 600px;
             background-color: var(--card-background);
             border: 1px solid var(--border-color);
             border-radius: 16px;
@@ -524,6 +577,18 @@
             border-radius: 12px;
             font-size: 0.9rem;
             line-height: 1.6;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .chatbot-message.bot {
@@ -537,12 +602,97 @@
             align-self: flex-end;
         }
 
+        .chatbot-message a {
+            color: var(--primary-blue-light);
+            text-decoration: underline;
+        }
+
+        .chatbot-message.bot a {
+            color: var(--primary-blue-light);
+        }
+
+        .chatbot-message.user a {
+            color: var(--text-white);
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 1rem;
+            background-color: var(--background-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            align-self: flex-start;
+            max-width: 70px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-gray);
+            animation: typingDot 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingDot {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-5px);
+            }
+        }
+
+        .chatbot-input-area {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input-area input {
+            flex: 1;
+            padding: 0.8rem;
+            background-color: var(--background-darker);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-white);
+            font-size: 0.9rem;
+        }
+
+        .chatbot-input-area button {
+            padding: 0.8rem 1.2rem;
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-input-area button:hover {
+            background-color: var(--primary-blue-dark);
+        }
+
         .chatbot-quick-replies {
             padding: 1rem 1.5rem;
             border-top: 1px solid var(--border-color);
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
+            max-height: 150px;
+            overflow-y: auto;
         }
 
         .quick-reply-btn {
@@ -624,8 +774,18 @@
             }
 
             .reseller-section h2,
-            .referral h2 {
+            .referral h2,
+            .channels-section h2 {
                 font-size: 1.5rem;
+            }
+
+            .channels-links {
+                flex-direction: column;
+            }
+
+            .channel-btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -700,13 +860,19 @@
                 Olá! Sou o assistente virtual da KDEFY. Como posso ajudar você hoje?
             </div>
         </div>
-        <div class="chatbot-quick-replies">
+        <div class="chatbot-input-area" id="chatbot-input-area" style="display: none;">
+            <input type="text" id="chatbot-input" placeholder="Digite sua resposta...">
+            <button id="chatbot-send">Enviar</button>
+        </div>
+        <div class="chatbot-quick-replies" id="chatbot-quick-replies">
             <button class="quick-reply-btn" data-reply="reembolso">reembolso</button>
             <button class="quick-reply-btn" data-reply="ddd">escolher ddd</button>
             <button class="quick-reply-btn" data-reply="como-funciona">como funciona</button>
             <button class="quick-reply-btn" data-reply="prazos">prazos de entrega</button>
             <button class="quick-reply-btn" data-reply="pagamento">formas de pagamento</button>
             <button class="quick-reply-btn" data-reply="revendedor">ser revendedor</button>
+            <button class="quick-reply-btn" data-reply="suporte">suporte</button>
+            <button class="quick-reply-btn" data-reply="canais">canais sociais</button>
         </div>
     </div>
 
@@ -727,6 +893,25 @@
         <div class="info-box fade-in">
             <p><strong>Vendemos pacotes de números virtuais</strong> para diversos países. Em breve, nosso site será totalmente automático com <strong>pagamento via PIX</strong>, compra instantânea e entrega automática dos números!</p>
         </div>
+
+        <section class="channels-section fade-in">
+            <h2>siga nossos canais</h2>
+            <p>Fique por dentro das novidades, promoções e atualizações através dos nossos canais oficiais!</p>
+            <div class="channels-links">
+                <a href="https://whatsapp.com/channel/0029VbAzSaB4yltTEgRZvW0Y" target="_blank" class="channel-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                    canal whatsapp
+                </a>
+                <a href="https://t.me/eyezsms" target="_blank" class="channel-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.781-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.14.121.098.154.23.169.324.015.094.034.308.019.474z"/>
+                    </svg>
+                    canal telegram
+                </a>
+            </div>
+        </section>
 
         <section class="reseller-section fade-in">
             <h2>torne-se revendedor</h2>
@@ -988,10 +1173,71 @@ kdefy.com/n/numbers
             const chatbotBtn = document.getElementById('chatbot-btn');
             const chatbotContainer = document.getElementById('chatbot-container');
             const chatbotMessages = document.getElementById('chatbot-messages');
+            const chatbotInputArea = document.getElementById('chatbot-input-area');
+            const chatbotInput = document.getElementById('chatbot-input');
+            const chatbotSend = document.getElementById('chatbot-send');
+            const chatbotQuickReplies = document.getElementById('chatbot-quick-replies');
+
+            let chatState = 'default'; // default, suporte-choice, suporte-whats, suporte-email
+            let supportData = {};
 
             chatbotBtn.addEventListener('click', () => {
                 chatbotContainer.classList.toggle('open');
             });
+
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('typing-indicator');
+                typingDiv.innerHTML = '<span></span><span></span><span></span>';
+                chatbotMessages.appendChild(typingDiv);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                return typingDiv;
+            }
+
+            function removeTypingIndicator(typingDiv) {
+                if (typingDiv && typingDiv.parentNode) {
+                    typingDiv.parentNode.removeChild(typingDiv);
+                }
+            }
+
+            function addBotMessage(text, delay = 1200) {
+                const typingIndicator = showTypingIndicator();
+                
+                setTimeout(() => {
+                    removeTypingIndicator(typingIndicator);
+                    const botMessage = document.createElement('div');
+                    botMessage.classList.add('chatbot-message', 'bot');
+                    botMessage.innerHTML = text;
+                    chatbotMessages.appendChild(botMessage);
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                }, delay);
+            }
+
+            function addUserMessage(text) {
+                const userMessage = document.createElement('div');
+                userMessage.classList.add('chatbot-message', 'user');
+                userMessage.textContent = text;
+                chatbotMessages.appendChild(userMessage);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+
+            function showInputArea() {
+                chatbotInputArea.style.display = 'flex';
+                chatbotQuickReplies.style.display = 'none';
+                chatbotInput.focus();
+            }
+
+            function hideInputArea() {
+                chatbotInputArea.style.display = 'none';
+                chatbotQuickReplies.style.display = 'flex';
+                chatbotInput.value = '';
+            }
+
+            function resetChatState() {
+                chatState = 'default';
+                supportData = {};
+                hideInputArea();
+            }
 
             const responses = {
                 'reembolso': 'Não oferecemos reembolso em caso de mal uso do número. Certifique-se de usar os números de forma responsável e dentro dos termos de uso.',
@@ -999,28 +1245,101 @@ kdefy.com/n/numbers
                 'como-funciona': 'É simples: escolha o país desejado, defina a quantidade usando os botões +/-, o sistema calculará automaticamente o valor total, e então finalize seu pedido pelo WhatsApp.',
                 'prazos': 'Após a confirmação do pagamento, os números são entregues em até 24 horas. Em breve teremos entrega automática e instantânea!',
                 'pagamento': 'Atualmente aceitamos pagamento via transferência bancária ou PIX. Em breve teremos pagamento automático via PIX diretamente no site!',
-                'revendedor': 'Como revendedor KDEFY, você terá descontos especiais em todos os números para revenda. Clique no botão "torne-se revendedor" na página ou fale conosco no WhatsApp!'
+                'revendedor': 'Como revendedor KDEFY, você terá descontos especiais em todos os números para revenda. Clique aqui abaixo para saber mais:<br><br><a href="https://wa.me/553497637882?text=Olá%2C%20quero%20me%20tornar%20revendedor%20KDEFY!" target="_blank" style="color: #3b82f6; text-decoration: underline;">💬 Falar com a equipe no WhatsApp</a>',
+                'canais': 'Siga nossos canais oficiais para novidades e promoções:<br><br>📱 <a href="https://whatsapp.com/channel/0029VbAzSaB4yltTEgRZvW0Y" target="_blank">Canal WhatsApp</a><br>📱 <a href="https://t.me/eyezsms" target="_blank">Canal Telegram</a>'
             };
+
+            // Handle input send
+            function handleInputSend() {
+                const message = chatbotInput.value.trim();
+                if (!message) return;
+
+                addUserMessage(message);
+                chatbotInput.value = '';
+
+                // Handle different states
+                if (chatState === 'suporte-whats-name') {
+                    supportData.name = message;
+                    chatState = 'suporte-whats-phone';
+                    addBotMessage('Qual é o seu telefone (WhatsApp)?');
+                } else if (chatState === 'suporte-whats-phone') {
+                    supportData.phone = message;
+                    chatState = 'suporte-whats-message';
+                    addBotMessage('Agora me conte, como posso ajudar você?');
+                } else if (chatState === 'suporte-whats-message') {
+                    supportData.message = message;
+                    addBotMessage('Calma aí, estou te direcionando para o WhatsApp...');
+                    
+                    const whatsMessage = `🆘 Suporte KDEFY\n\n👤 Nome: ${supportData.name}\n📞 Telefone: ${supportData.phone}\n\n💬 Mensagem:\n${supportData.message}`;
+                    const whatsUrl = `https://wa.me/553497637882?text=${encodeURIComponent(whatsMessage)}`;
+                    
+                    setTimeout(() => {
+                        window.open(whatsUrl, '_blank');
+                        resetChatState();
+                    }, 1500);
+                } else if (chatState === 'suporte-email-name') {
+                    supportData.name = message;
+                    chatState = 'suporte-email-email';
+                    addBotMessage('Qual é o seu email?');
+                } else if (chatState === 'suporte-email-email') {
+                    supportData.email = message;
+                    chatState = 'suporte-email-message';
+                    addBotMessage('Agora me conte, como posso ajudar você?');
+                } else if (chatState === 'suporte-email-message') {
+                    supportData.message = message;
+                    addBotMessage('Calma aí, estou te direcionando para o email...');
+                    
+                    const subject = `Suporte - ${supportData.name}`;
+                    const body = `Nome: ${supportData.name}\nEmail: ${supportData.email}\n\nMensagem:\n${supportData.message}`;
+                    
+                    setTimeout(() => {
+                        window.location.href = `mailto:kdefycom@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                        resetChatState();
+                    }, 1500);
+                }
+            }
+
+            chatbotSend.addEventListener('click', handleInputSend);
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    handleInputSend();
+                }
+            });
 
             document.querySelectorAll('.quick-reply-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const reply = e.target.dataset.reply;
                     const replyText = e.target.textContent;
                     
-                    const userMessage = document.createElement('div');
-                    userMessage.classList.add('chatbot-message', 'user');
-                    userMessage.textContent = replyText;
-                    chatbotMessages.appendChild(userMessage);
+                    addUserMessage(replyText);
 
-                    setTimeout(() => {
-                        const botMessage = document.createElement('div');
-                        botMessage.classList.add('chatbot-message', 'bot');
-                        botMessage.textContent = responses[reply];
-                        chatbotMessages.appendChild(botMessage);
-                        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-                    }, 500);
-
-                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                    if (reply === 'suporte') {
+                        chatState = 'suporte-choice';
+                        addBotMessage('Como você prefere entrar em contato?<br><br>Digite:<br>1 - WhatsApp<br>2 - Email');
+                        showInputArea();
+                        
+                        // Handle suporte choice
+                        const handleSuporteChoice = (e) => {
+                            if (e.key === 'Enter') {
+                                const choice = chatbotInput.value.trim();
+                                if (choice === '1') {
+                                    addUserMessage('WhatsApp');
+                                    chatState = 'suporte-whats-name';
+                                    addBotMessage('Ótimo! Qual é o seu nome?');
+                                } else if (choice === '2') {
+                                    addUserMessage('Email');
+                                    chatState = 'suporte-email-name';
+                                    addBotMessage('Ótimo! Qual é o seu nome?');
+                                } else {
+                                    addBotMessage('Por favor, digite 1 para WhatsApp ou 2 para Email.');
+                                }
+                                chatbotInput.removeEventListener('keypress', handleSuporteChoice);
+                            }
+                        };
+                        chatbotInput.addEventListener('keypress', handleSuporteChoice);
+                    } else {
+                        addBotMessage(responses[reply] || 'Desculpe, não entendi. Como posso ajudar?');
+                    }
                 });
             });
 
@@ -1049,4 +1368,4 @@ kdefy.com/n/numbers
     </script>
 
 </body>
-    </html>
+</html>
