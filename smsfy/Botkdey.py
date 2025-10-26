@@ -13,14 +13,9 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMe
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters
 from telegram.constants import ParseMode
 
-# Configurações diretas (editáveis)
-TOKEN = "83....."
-SMS_ACTIVATE_API_KEY = "....."
-ADMINS = [6939434522, 987654321]  # IDs dos admins
-PHOTO_MENU_FILE = "menu.jpg"
-
-# Obter diretório atual
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+from data import BotData
+from keyboards import get_main_keyboard, get_countries_keyboard, get_recharge_keyboard
+from sms_service import SMSActivateService
 
 # Logging
 logging.basicConfig(
@@ -29,284 +24,30 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-class BotData:
-    def __init__(self):
-        self.users = set()
-        self.bans = set()
-        self.vip = {}
-        self.coins = {}
-        self.recharges = []
-        self.gastos = []
-        self.config = {}
-        self.maintenance_mode = False
-        self.saldo = {}  # Saldo dos usuários
-        self.load_data()
+def load_config():
+    """Carrega configurações do config.json"""
+    config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+    with open(config_file, "r") as f:
+        config = json.load(f)
     
-    def load_data(self):
-        """Carrega dados dos arquivos"""
-        try:
-            # Users
-            users_file = os.path.join(CURRENT_DIR, "users.txt")
-            if os.path.exists(users_file):
-                with open(users_file, "r") as f:
-                    self.users = set(int(line.strip()) for line in f if line.strip())
-            
-            # Bans
-            bans_file = os.path.join(CURRENT_DIR, "bans.txt")
-            if os.path.exists(bans_file):
-                with open(bans_file, "r") as f:
-                    self.bans = set(int(line.strip()) for line in f if line.strip())
-            
-            # VIP
-            vip_file = os.path.join(CURRENT_DIR, "vip.json")
-            if os.path.exists(vip_file):
-                with open(vip_file, "r") as f:
-                    self.vip = json.load(f)
-            
-            # Coins
-            coins_file = os.path.join(CURRENT_DIR, "coins.json")
-            if os.path.exists(coins_file):
-                with open(coins_file, "r") as f:
-                    self.coins = json.load(f)
-            
-            # Saldo
-            saldo_file = os.path.join(CURRENT_DIR, "saldo.json")
-            if os.path.exists(saldo_file):
-                with open(saldo_file, "r") as f:
-                    self.saldo = json.load(f)
-            
-            # Config
-            config_file = os.path.join(CURRENT_DIR, "config-all.json")
-            if os.path.exists(config_file):
-                with open(config_file, "r") as f:
-                    self.config = json.load(f)
-            else:
-                self.create_default_config()
-                
-        except Exception as e:
-            logger.error(f"Erro ao carregar dados: {e}")
-    
-    def create_default_config(self):
-        """Cria configuração padrão"""
-        self.config = {
-            "countries": [
-                {"code": "BR", "name": "Brasil", "flag": "🇧🇷", "base_price": 12.0, "foreign": False},
-                {"code": "US", "name": "Estados Unidos", "flag": "🇺🇸", "base_price": 9.0, "foreign": True},
-                {"code": "UK", "name": "Reino Unido", "flag": "🇬🇧", "base_price": 10.0, "foreign": True},
-                {"code": "DE", "name": "Alemanha", "flag": "🇩🇪", "base_price": 8.5, "foreign": True},
-                {"code": "FR", "name": "França", "flag": "🇫🇷", "base_price": 9.5, "foreign": True}
-            ],
-            "pricing_rules": {
-                "min": 8.0,
-                "max": 15.0,
-                "update_interval_seconds": 600
-            },
-            "recharge_values": [10, 15, 20, 30, 50]
-        }
-        self.save_config()
-    
-    def save_config(self):
-        """Salva configuração"""
-        config_file = os.path.join(CURRENT_DIR, "config-all.json")
-        with open(config_file, "w") as f:
-            json.dump(self.config, f, indent=2)
-    
-    def save_users(self):
-        """Salva usuários"""
-        users_file = os.path.join(CURRENT_DIR, "users.txt")
-        with open(users_file, "w") as f:
-            for user_id in self.users:
-                f.write(f"{user_id}\n")
-    
-    def save_bans(self):
-        """Salva banidos"""
-        bans_file = os.path.join(CURRENT_DIR, "bans.txt")
-        with open(bans_file, "w") as f:
-            for user_id in self.bans:
-                f.write(f"{user_id}\n")
-    
-    def save_vip(self):
-        """Salva VIP"""
-        vip_file = os.path.join(CURRENT_DIR, "vip.json")
-        with open(vip_file, "w") as f:
-            json.dump(self.vip, f, indent=2)
-    
-    def save_coins(self):
-        """Salva coins"""
-        coins_file = os.path.join(CURRENT_DIR, "coins.json")
-        with open(coins_file, "w") as f:
-            json.dump(self.coins, f, indent=2)
-    
-    def save_saldo(self):
-        """Salva saldo"""
-        saldo_file = os.path.join(CURRENT_DIR, "saldo.json")
-        with open(saldo_file, "w") as f:
-            json.dump(self.saldo, f, indent=2)
-    
-    def add_gasto(self, user_id, nome, valor, order_id, pais):
-        """Adiciona gasto ao log"""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        gasto_line = f"{timestamp},{user_id},{nome},{valor},{order_id},{pais}\n"
-        gastos_file = os.path.join(CURRENT_DIR, "gastos.txt")
-        with open(coins_file, "a") as f:
-            f.write(gasto_line)
-    
-    def get_user_saldo(self, user_id):
-        """Obtém saldo do usuário"""
-        return self.saldo.get(str(user_id), 0.0)
-    
-    def add_saldo(self, user_id, valor):
-        """Adiciona saldo ao usuário"""
-        current = self.saldo.get(str(user_id), 0.0)
-        self.saldo[str(user_id)] = current + valor
-        self.save_saldo()
-    
-    def remove_saldo(self, user_id, valor):
-        """Remove saldo do usuário"""
-        current = self.saldo.get(str(user_id), 0.0)
-        if current >= valor:
-            self.saldo[str(user_id)] = current - valor
-            self.save_saldo()
-            return True
-        return False
+    # Adicionar diretório de dados à configuração
+    config['data_dir'] = os.path.dirname(os.path.abspath(__file__))
+    return config
+
+# Carregar configuração
+config = load_config()
+TOKEN = config['token']
+SMS_ACTIVATE_API_KEY = config['sms_activate_api_key']
+ADMINS = config['admins']
+PHOTO_MENU_FILE = config['photo_menu_file']
+
 
 # Instância global dos dados
-bot_data = BotData()
-
-class SMSActivateService:
-    def __init__(self, api_key: str):
-        self.api_key = api_key
-        self.base_url = "https://sms-activate.org/stubs/handler_api.php"
-    
-    async def get_balance(self):
-        """Obtém saldo da conta SMS-ACTIVATE"""
-        try:
-            async with aiohttp.ClientSession() as session:
-                params = {
-                    'api_key': self.api_key,
-                    'action': 'getBalance'
-                }
-                async with session.get(self.base_url, params=params) as response:
-                    result = await response.text()
-                    if result.startswith('ACCESS_BALANCE'):
-                        return float(result.split(':')[1])
-                    return 0.0
-        except Exception as e:
-            logger.error(f"Erro ao obter saldo SMS-ACTIVATE: {e}")
-            return 0.0
-    
-    async def rent_number(self, service: str, country: str):
-        """Aluga um número"""
-        try:
-            async with aiohttp.ClientSession() as session:
-                params = {
-                    'api_key': self.api_key,
-                    'action': 'getNumber',
-                    'service': service,
-                    'country': country
-                }
-                async with session.get(self.base_url, params=params) as response:
-                    result = await response.text()
-                    if result.startswith('ACCESS_NUMBER'):
-                        parts = result.split(':')
-                        return {
-                            'id': parts[1],
-                            'number': parts[2],
-                            'status': 'rented'
-                        }
-                    return None
-        except Exception as e:
-            logger.error(f"Erro ao alugar número: {e}")
-            return None
-    
-    async def get_sms(self, activation_id: str):
-        """Obtém SMS do número"""
-        try:
-            async with aiohttp.ClientSession() as session:
-                params = {
-                    'api_key': self.api_key,
-                    'action': 'getStatus',
-                    'id': activation_id
-                }
-                async with session.get(self.base_url, params=params) as response:
-                    result = await response.text()
-                    if result.startswith('STATUS_OK'):
-                        return result.split(':')[1]
-                    return None
-        except Exception as e:
-            logger.error(f"Erro ao obter SMS: {e}")
-            return None
-    
-    async def cancel_activation(self, activation_id: str):
-        """Cancela ativação"""
-        try:
-            async with aiohttp.ClientSession() as session:
-                params = {
-                    'api_key': self.api_key,
-                    'action': 'setStatus',
-                    'status': '8',  # Cancel
-                    'id': activation_id
-                }
-                async with session.get(self.base_url, params=params) as response:
-                    result = await response.text()
-                    return result == 'ACCESS_CANCEL'
-        except Exception as e:
-            logger.error(f"Erro ao cancelar ativação: {e}")
-            return False
+bot_data = BotData(config)
 
 # Instância do serviço SMS
 sms_service = SMSActivateService(SMS_ACTIVATE_API_KEY)
 
-def get_main_keyboard():
-    """Retorna o teclado principal"""
-    keyboard = [
-        [
-            InlineKeyboardButton("🔗 Canal", url="https://t.me/seu_canal"),
-            InlineKeyboardButton("🌍 Países", callback_data="countries")
-        ],
-        [
-            InlineKeyboardButton("👤 Meu Perfil", callback_data="profile"),
-            InlineKeyboardButton("📋 Comandos", callback_data="commands")
-        ],
-        [
-            InlineKeyboardButton("👥 Referente", callback_data="referral"),
-            InlineKeyboardButton("🆘 Suporte", callback_data="support")
-        ],
-        [
-            InlineKeyboardButton("📄 Termos", callback_data="terms"),
-            InlineKeyboardButton("💰 Recarga", callback_data="recharge")
-        ],
-        [
-            InlineKeyboardButton("🗑️ Deletar", callback_data="delete_menu")
-        ]
-    ]
-    return InlineKeyboardMarkup(keyboard)
-
-def get_countries_keyboard():
-    """Retorna teclado de países"""
-    keyboard = []
-    for country in bot_data.config.get("countries", []):
-        price = country["base_price"]
-        text = f"{country['flag']} {country['name']} - R$ {price:.2f}"
-        keyboard.append([InlineKeyboardButton(text, callback_data=f"buy:{country['code']}")])
-    
-    keyboard.append([InlineKeyboardButton("🔙 Voltar", callback_data="back_to_menu")])
-    return InlineKeyboardMarkup(keyboard)
-
-def get_recharge_keyboard():
-    """Retorna teclado de recarga"""
-    keyboard = []
-    values = bot_data.config.get("recharge_values", [10, 15, 20, 30, 50])
-    
-    for i in range(0, len(values), 2):
-        row = []
-        row.append(InlineKeyboardButton(f"R$ {values[i]}", callback_data=f"recharge:{values[i]}"))
-        if i + 1 < len(values):
-            row.append(InlineKeyboardButton(f"R$ {values[i+1]}", callback_data=f"recharge:{values[i+1]}"))
-        keyboard.append(row)
-    
-    keyboard.append([InlineKeyboardButton("🔙 Voltar", callback_data="back_to_menu")])
-    return InlineKeyboardMarkup(keyboard)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Comando /start"""
@@ -356,7 +97,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = f"Olá, <b>{first_name}</b>! Bem-vindo(a). Use o menu abaixo para comprar números, recarregar saldo e mais."
     
     # Enviar com foto se existir
-    photo_path = os.path.join(CURRENT_DIR, PHOTO_MENU_FILE)
+    photo_path = os.path.join(config['data_dir'], PHOTO_MENU_FILE)
     if os.path.exists(photo_path):
         try:
             with open(photo_path, 'rb') as photo:
@@ -396,7 +137,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_caption(
             caption="🌍 Escolha um país:",
             parse_mode=ParseMode.HTML,
-            reply_markup=get_countries_keyboard()
+            reply_markup=get_countries_keyboard(bot_data)
         )
     
     elif data == "profile":
@@ -416,14 +157,14 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 except:
                     pass
         
-        profile_text = f"""👤 <b>Meu Perfil</b>
+        profile_text = f'''👤 <b>Meu Perfil</b>
 
 <b>Nome:</b> {query.from_user.first_name}
 <b>ID:</b> {user_id}
 <b>Saldo:</b> R$ {saldo:.2f}
 <b>Coins:</b> {coins}
 <b>Números usados:</b> 0
-<b>Status VIP:</b> {vip_status}"""
+<b>Status VIP:</b> {vip_status}'''
         
         keyboard = [[InlineKeyboardButton("🔙 Voltar", callback_data="back_to_menu")]]
         await query.edit_message_caption(
@@ -433,7 +174,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     
     elif data == "commands":
-        commands_text = """📋 <b>Comandos Disponíveis</b>
+        commands_text = '''📋 <b>Comandos Disponíveis</b>
 
 <blockquote>
 /start - Iniciar o bot
@@ -441,7 +182,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 /converte &lt;valor&gt; - Converter coins em saldo
 /status - Status do bot
 /fotomenu - Definir foto do menu (admin)
-</blockquote>"""
+</blockquote>'''
         
         keyboard = [[InlineKeyboardButton("🔙 Voltar", callback_data="back_to_menu")]]
         await query.edit_message_caption(
@@ -453,12 +194,12 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "referral":
         bot_username = context.bot.username
         referral_link = f"https://t.me/{bot_username}?start={user_id}"
-        referral_text = f"""👥 <b>Sistema de Referência</b>
+        referral_text = f'''👥 <b>Sistema de Referência</b>
 
 Seu link de referência:
 <code>{referral_link}</code>
 
-Você ganha R$ 0,01 por cada pessoa que iniciar usando esse link."""
+Você ganha R$ 0,01 por cada pessoa que iniciar usando esse link.'''
         
         keyboard = [[InlineKeyboardButton("🔙 Voltar", callback_data="back_to_menu")]]
         await query.edit_message_caption(
@@ -468,12 +209,12 @@ Você ganha R$ 0,01 por cada pessoa que iniciar usando esse link."""
         )
     
     elif data == "support":
-        support_text = """💬 <b>Suporte</b>
+        support_text = '''💬 <b>Suporte</b>
 
 Para suporte técnico, entre em contato:
 @santsz_7 
 
-Horário de atendimento: 24h"""
+Horário de atendimento: 24h'''
         
         keyboard = [
             [InlineKeyboardButton("💬 Abrir Chat", url="https://t.me/santsz_7")],
@@ -486,7 +227,7 @@ Horário de atendimento: 24h"""
         )
     
     elif data == "terms":
-        terms_text = """📄 <b>Termos de Serviço</b>
+        terms_text = '''📄 <b>Termos de Serviço</b>
 
 1. Este bot fornece números virtuais para verificação
 2. Não garantimos recebimento de SMS
@@ -494,7 +235,7 @@ Horário de atendimento: 24h"""
 4. Proibido uso para atividades ilegais
 5. Nos reservamos o direito de banir usuários
 
-Ao usar este bot, você concorda com os termos."""
+Ao usar este bot, você concorda com os termos.'''
         
         keyboard = [[InlineKeyboardButton("🔙 Voltar", callback_data="back_to_menu")]]
         await query.edit_message_caption(
@@ -504,14 +245,14 @@ Ao usar este bot, você concorda com os termos."""
         )
     
     elif data == "recharge":
-        recharge_text = """💰 <b>Recarga de Saldo</b>
+        recharge_text = '''💰 <b>Recarga de Saldo</b>
 
-Escolha o valor para recarregar:"""
+Escolha o valor para recarregar:'''
         
         await query.edit_message_caption(
             caption=recharge_text,
             parse_mode=ParseMode.HTML,
-            reply_markup=get_recharge_keyboard()
+            reply_markup=get_recharge_keyboard(bot_data)
         )
     
     elif data == "delete_menu":
@@ -560,14 +301,14 @@ Escolha o valor para recarregar:"""
             # Salvar gasto
             bot_data.add_gasto(user_id, query.from_user.first_name, price, order_id, country["name"])
             
-            success_text = f"""✅ <b>Pedido Concluído!</b>
+            success_text = f'''✅ <b>Pedido Concluído!</b>
 
 📱 <b>Número:</b> <code>{numero_fake}</code>
 🌍 <b>País:</b> {country['flag']} {country['name']}
 💰 <b>Valor:</b> R$ {price:.2f}
 📋 <b>Pedido ID:</b> {order_id}
 
-Aguarde o SMS chegar..."""
+Aguarde o SMS chegar...'''
             
             await query.edit_message_caption(
                 caption=success_text,
@@ -612,12 +353,12 @@ async def my_profile(update: Update, context: ContextTypes.DEFAULT_TYPE):
     coins = bot_data.coins.get(str(user_id), 0)
     saldo = bot_data.get_user_saldo(user_id)
     
-    profile_text = f"""👤 <b>Meu Perfil</b>
+    profile_text = f'''👤 <b>Meu Perfil</b>
 
 <b>Nome:</b> {update.effective_user.first_name}
 <b>ID:</b> {user_id}
 <b>Saldo:</b> R$ {saldo:.2f}
-<b>Coins:</b> {coins}"""
+<b>Coins:</b> {coins}'''
     
     await update.message.reply_text(profile_text, parse_mode=ParseMode.HTML)
 
@@ -664,12 +405,12 @@ async def bot_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     total_users = len(bot_data.users)
     total_recharges = sum(bot_data.recharges)
     
-    status_text = f"""📊 <b>Status do Bot</b>
+    status_text = f'''📊 <b>Status do Bot</b>
 
 👥 Total de usuários: {total_users}
 💰 Total recargas: R$ {total_recharges:.2f}
 🔧 Manutenção: {"Sim" if bot_data.maintenance_mode else "Não"}
-⏱️ Latência: ~50ms"""
+⏱️ Latência: ~50ms'''
     
     await update.message.reply_text(status_text, parse_mode=ParseMode.HTML)
 
@@ -683,7 +424,7 @@ async def photo_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Salvar foto
         photo = update.message.photo[-1]
         file = await context.bot.get_file(photo.file_id)
-        photo_path = os.path.join(CURRENT_DIR, PHOTO_MENU_FILE)
+        photo_path = os.path.join(config['data_dir'], PHOTO_MENU_FILE)
         await file.download_to_drive(photo_path)
         await update.message.reply_text("✅ Foto do menu atualizada!")
     else:
@@ -834,7 +575,7 @@ async def get_gastos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id not in ADMINS:
         return
     
-    gastos_file = os.path.join(CURRENT_DIR, "gastos.txt")
+    gastos_file = os.path.join(config['data_dir'], "gastos.txt")
     if os.path.exists(gastos_file):
         await update.message.reply_document(document=open(gastos_file, 'rb'))
     else:
