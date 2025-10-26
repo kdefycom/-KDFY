@@ -14,8 +14,8 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Cont
 from telegram.constants import ParseMode
 
 # Configurações diretas (editáveis)
-TOKEN = "8366867696:AAGjcPlIMQzigIoNBN-udIyklYr3Muob8RU"
-SMS_ACTIVATE_API_KEY = "48ed2616A71bdA2cAb5d18812245c093"
+TOKEN = "83....."
+SMS_ACTIVATE_API_KEY = "....."
 ADMINS = [6939434522, 987654321]  # IDs dos admins
 PHOTO_MENU_FILE = "menu.jpg"
 
