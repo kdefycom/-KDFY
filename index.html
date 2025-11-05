@@ -3,101 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enviar Grupo - Kdefy</title>
+  <title>Enviar Grupo</title>
   <style>
-    body {font-family: sans-serif; background:#f5f5f5; padding:20px;}
-    .form {background:#fff; padding:20px; border-radius:8px; max-width:400px; margin:auto;}
-    input, select, button {width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:5px;}
-    button {background:#25d366; color:#fff; cursor:pointer;}
+    body {font-family: Arial; background:#f5f5f5; margin:0; padding:20px;}
+    .form {background:white; padding:20px; border-radius:8px; max-width:400px; margin:auto;}
+    input, button {width:100%; padding:10px; margin:8px 0; border-radius:5px; border:1px solid #ccc;}
+    button {background:#25d366; color:white; cursor:pointer;}
     .msg {text-align:center; margin-top:10px;}
-    .groups {margin-top:30px;}
-    .group {background:#fff; padding:15px; margin:10px 0; border-radius:6px; text-align:center;}
-    .group a {background:#25d366; color:#fff; padding:10px 20px; border-radius:5px; text-decoration:none;}
+    .sidebar {background:#fff; padding:15px; margin-top:30px; border-radius:8px;}
+    .group {border-bottom:1px solid #ccc; padding:5px 0;}
   </style>
 </head>
 <body>
   <div class="form">
-    <h2>Enviar Grupo</h2>
-    <select id="tipo">
-      <option value="whatsapp">WhatsApp</option>
-      <option value="telegram">Telegram</option>
-    </select>
-
-    <input id="link" placeholder="Link do grupo (ex: https://chat.whatsapp.com/...)">
-
-    <select id="categoria">
-      <option value="Geral">Geral</option>
-      <option value="Tecnologia">Tecnologia</option>
-      <option value="Games">Games</option>
-      <option value="Estudos">Estudos</option>
-      <option value="Trabalho">Trabalho</option>
-      <option value="Humor">Humor</option>
-      <option value="Notícias">Notícias</option>
-      <option value="Outros">Outros</option>
-    </select>
-
+    <h2>Enviar Grupo WhatsApp</h2>
+    <input id="nome" placeholder="Nome do grupo">
+    <input id="link" placeholder="Link (https://chat.whatsapp.com/...)">
     <button id="enviar">Enviar</button>
-    <div id="msg" class="msg"></div>
+    <div class="msg" id="msg"></div>
   </div>
 
-  <div class="groups" id="grupos"></div>
+  <div class="sidebar" id="aprovados">
+    <h3>Grupos Aprovados</h3>
+  </div>
 
   <script>
-    const SUPABASE_URL = 'https://aqyaxfrukssndxgctukf.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
+    const URL = 'https://aqyaxfrukssndxgctukf.supabase.co';
+    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
 
-    async function salvarGrupo() {
-      const tipo = document.getElementById('tipo').value;
+    async function verificarDuplicado(nome, link) {
+      const res = await fetch(`${URL}/rest/v1/grupos?or=(nome.eq.${encodeURIComponent(nome)},link.eq.${encodeURIComponent(link)})&select=*`, {
+        headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }
+      });
+      const data = await res.json();
+      return data.length > 0;
+    }
+
+    async function enviar() {
+      const nome = document.getElementById('nome').value.trim();
       const link = document.getElementById('link').value.trim();
-      const categoria = document.getElementById('categoria').value;
       const msg = document.getElementById('msg');
 
-      if (!link) {
-        msg.textContent = "Informe o link do grupo.";
+      if (!nome || !link.startsWith("https://chat.whatsapp.com/")) {
+        msg.textContent = "Preencha um nome e um link válido!";
         msg.style.color = "red";
         return;
       }
 
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos`, {
+      const duplicado = await verificarDuplicado(nome, link);
+      if (duplicado) {
+        msg.textContent = "Nome ou link já cadastrado!";
+        msg.style.color = "red";
+        return;
+      }
+
+      const res = await fetch(`${URL}/rest/v1/grupos`, {
         method: 'POST',
         headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          apikey: KEY,
+          Authorization: `Bearer ${KEY}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ link, categoria, tipo, aprovado: false })
+        body: JSON.stringify({ nome, link, aprovado: false })
       });
 
       if (res.ok) {
-        msg.textContent = "Grupo enviado para aprovação!";
+        msg.textContent = "Enviado para aprovação!";
         msg.style.color = "green";
+        document.getElementById('nome').value = '';
         document.getElementById('link').value = '';
-        carregarGrupos();
       } else {
-        msg.textContent = "Erro ao enviar. Tente novamente.";
+        msg.textContent = "Erro ao enviar.";
         msg.style.color = "red";
       }
     }
 
-    async function carregarGrupos() {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos?aprovado=eq.true&select=*`, {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-        }
+    async function carregarAprovados() {
+      const res = await fetch(`${URL}/rest/v1/grupos?aprovado=eq.true&select=*`, {
+        headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }
       });
       const data = await res.json();
-      const box = document.getElementById('grupos');
-      box.innerHTML = '<h2>Grupos Aprovados</h2>' + data.map(g =>
-        `<div class="group">
-           <p><b>${g.tipo.toUpperCase()}</b> - ${g.categoria}</p>
-           <a href="${g.link}" target="_blank">Entrar no grupo</a>
-         </div>`
+      const box = document.getElementById('aprovados');
+      box.innerHTML = '<h3>Grupos Aprovados</h3>' + data.map(g =>
+        `<div class="group"><b>${g.nome}</b><br><a href="${g.link}" target="_blank">Entrar</a></div>`
       ).join('');
     }
 
-    document.getElementById('enviar').onclick = salvarGrupo;
-    carregarGrupos();
+    document.getElementById('enviar').onclick = enviar;
+    carregarAprovados();
   </script>
 </body>
 </html>
