@@ -7,18 +7,22 @@
   <style>
     body {font-family: Arial; background:#f5f5f5; margin:0; padding:20px;}
     .form {background:white; padding:20px; border-radius:8px; max-width:400px; margin:auto;}
-    input, button {width:100%; padding:10px; margin:8px 0; border-radius:5px; border:1px solid #ccc;}
+    input, select, button {width:100%; padding:10px; margin:8px 0; border-radius:5px; border:1px solid #ccc;}
     button {background:#25d366; color:white; cursor:pointer;}
     .msg {text-align:center; margin-top:10px;}
-    .sidebar {background:#fff; padding:15px; margin-top:30px; border-radius:8px;}
+    .sidebar {background:#fff; padding:15px; margin-top:30px; border-radius:8px; max-width:400px; margin:auto;}
     .group {border-bottom:1px solid #ccc; padding:5px 0;}
   </style>
 </head>
 <body>
   <div class="form">
-    <h2>Enviar Grupo WhatsApp</h2>
+    <h2>Enviar Grupo</h2>
     <input id="nome" placeholder="Nome do grupo">
-    <input id="link" placeholder="Link (https://chat.whatsapp.com/...)">
+    <select id="tipo">
+      <option value="whatsapp">WhatsApp</option>
+      <option value="telegram">Telegram</option>
+    </select>
+    <input id="link" placeholder="Link do grupo">
     <button id="enviar">Enviar</button>
     <div class="msg" id="msg"></div>
   </div>
@@ -29,10 +33,10 @@
 
   <script>
     const URL = 'https://aqyaxfrukssndxgctukf.supabase.co';
-    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
+    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw'; // coloque aqui a anon key da Supabase
 
     async function verificarDuplicado(nome, link) {
-      const res = await fetch(`${URL}/rest/v1/grupos?or=(nome.eq.${encodeURIComponent(nome)},link.eq.${encodeURIComponent(link)})&select=*`, {
+      const res = await fetch(`${URL}/rest/v1/grupos?or=(nome.eq.${encodeURIComponent(nome)},link.eq.${encodeURIComponent(link)})&select=id`, {
         headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }
       });
       const data = await res.json();
@@ -41,18 +45,31 @@
 
     async function enviar() {
       const nome = document.getElementById('nome').value.trim();
+      const tipo = document.getElementById('tipo').value;
       const link = document.getElementById('link').value.trim();
       const msg = document.getElementById('msg');
 
-      if (!nome || !link.startsWith("https://chat.whatsapp.com/")) {
-        msg.textContent = "Preencha um nome e um link válido!";
+      if (!nome || !link) {
+        msg.textContent = "Preencha todos os campos.";
+        msg.style.color = "red";
+        return;
+      }
+
+      if (tipo === "whatsapp" && !link.startsWith("https://chat.whatsapp.com/")) {
+        msg.textContent = "Link de WhatsApp inválido.";
+        msg.style.color = "red";
+        return;
+      }
+
+      if (tipo === "telegram" && !link.startsWith("https://t.me/")) {
+        msg.textContent = "Link de Telegram inválido.";
         msg.style.color = "red";
         return;
       }
 
       const duplicado = await verificarDuplicado(nome, link);
       if (duplicado) {
-        msg.textContent = "Nome ou link já cadastrado!";
+        msg.textContent = "Nome ou link já cadastrado.";
         msg.style.color = "red";
         return;
       }
@@ -64,14 +81,15 @@
           Authorization: `Bearer ${KEY}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ nome, link, aprovado: false })
+        body: JSON.stringify({ nome, link, tipo, aprovado: false })
       });
 
       if (res.ok) {
-        msg.textContent = "Enviado para aprovação!";
+        msg.textContent = "Grupo enviado para aprovação!";
         msg.style.color = "green";
         document.getElementById('nome').value = '';
         document.getElementById('link').value = '';
+        carregarAprovados();
       } else {
         msg.textContent = "Erro ao enviar.";
         msg.style.color = "red";
@@ -79,14 +97,17 @@
     }
 
     async function carregarAprovados() {
-      const res = await fetch(`${URL}/rest/v1/grupos?aprovado=eq.true&select=*`, {
+      const res = await fetch(`${URL}/rest/v1/grupos?aprovado=eq.true&select=nome,link,tipo`, {
         headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }
       });
       const data = await res.json();
       const box = document.getElementById('aprovados');
-      box.innerHTML = '<h3>Grupos Aprovados</h3>' + data.map(g =>
-        `<div class="group"><b>${g.nome}</b><br><a href="${g.link}" target="_blank">Entrar</a></div>`
-      ).join('');
+      box.innerHTML = '<h3>Grupos Aprovados</h3>' + (data.length ? data.map(g =>
+        `<div class="group">
+          <b>${g.nome}</b> (${g.tipo})<br>
+          <a href="${g.link}" target="_blank">Entrar</a>
+        </div>`
+      ).join('') : "<p>Nenhum grupo aprovado ainda.</p>");
     }
 
     document.getElementById('enviar').onclick = enviar;
