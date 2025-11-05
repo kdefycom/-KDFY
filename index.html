@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grupos WhatsApp</title>
+  <title>Enviar Grupo - Kdefy</title>
   <style>
     body {font-family: sans-serif; background:#f5f5f5; padding:20px;}
     .form {background:#fff; padding:20px; border-radius:8px; max-width:400px; margin:auto;}
     input, select, button {width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:5px;}
+    button {background:#25d366; color:#fff; cursor:pointer;}
+    .msg {text-align:center; margin-top:10px;}
     .groups {margin-top:30px;}
     .group {background:#fff; padding:15px; margin:10px 0; border-radius:6px; text-align:center;}
     .group a {background:#25d366; color:#fff; padding:10px 20px; border-radius:5px; text-decoration:none;}
@@ -23,6 +25,7 @@
       <option value="Games">Games</option>
     </select>
     <button id="enviar">Enviar</button>
+    <div id="msg" class="msg"></div>
   </div>
 
   <div class="groups" id="grupos"></div>
@@ -32,11 +35,17 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
 
     async function salvarGrupo() {
-      const link = document.getElementById('link').value;
+      const link = document.getElementById('link').value.trim();
       const categoria = document.getElementById('categoria').value;
-      if (!link) return alert('Informe o link');
+      const msg = document.getElementById('msg');
 
-      await fetch(`${SUPABASE_URL}/rest/v1/grupos`, {
+      if (!link || !link.startsWith("https://chat.whatsapp.com/")) {
+        msg.textContent = "Link inválido!";
+        msg.style.color = "red";
+        return;
+      }
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos`, {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_ANON_KEY,
@@ -46,13 +55,19 @@
         body: JSON.stringify({ link, categoria, aprovado: false })
       });
 
-      alert('Enviado para aprovação!');
-      document.getElementById('link').value = '';
-      carregarGrupos();
+      if (res.ok) {
+        msg.textContent = "Enviado para aprovação!";
+        msg.style.color = "green";
+        document.getElementById('link').value = '';
+        carregarGrupos();
+      } else {
+        msg.textContent = "Erro ao enviar. Tente novamente.";
+        msg.style.color = "red";
+      }
     }
 
     async function carregarGrupos() {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos?aprovado=eq.true`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos?aprovado=eq.true&select=*`, {
         headers: {
           'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
