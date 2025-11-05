@@ -3,76 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Kdefy</title>
+  <title>Enviar Grupo - Kdefy</title>
   <style>
-    body{font-family:sans-serif;background:#f5f5f5;padding:20px;}
-    .card{background:#fff;padding:15px;margin:10px 0;border-radius:6px;}
-    button{margin:5px;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;}
-    .aprovar{background:#4CAF50;color:#fff;}
-    .rejeitar{background:#f44336;color:#fff;}
-    .msg{margin-top:10px;color:#333;}
+    body {font-family: sans-serif; background:#f5f5f5; padding:20px;}
+    .form {background:#fff; padding:20px; border-radius:8px; max-width:400px; margin:auto;}
+    input, select, button {width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:5px;}
+    button {background:#25d366; color:#fff; cursor:pointer;}
+    .msg {text-align:center; margin-top:10px;}
+    .groups {margin-top:30px;}
+    .group {background:#fff; padding:15px; margin:10px 0; border-radius:6px; text-align:center;}
+    .group a {background:#25d366; color:#fff; padding:10px 20px; border-radius:5px; text-decoration:none;}
   </style>
 </head>
 <body>
-  <h2>Painel Admin</h2>
-  <div id="msg" class="msg"></div>
-  <div id="lista"></div>
+  <div class="form">
+    <h2>Enviar Grupo</h2>
+    <select id="tipo">
+      <option value="whatsapp">WhatsApp</option>
+      <option value="telegram">Telegram</option>
+    </select>
+
+    <input id="link" placeholder="Link do grupo (ex: https://chat.whatsapp.com/...)">
+
+    <select id="categoria">
+      <option value="Geral">Geral</option>
+      <option value="Tecnologia">Tecnologia</option>
+      <option value="Games">Games</option>
+      <option value="Estudos">Estudos</option>
+      <option value="Trabalho">Trabalho</option>
+      <option value="Humor">Humor</option>
+      <option value="Notícias">Notícias</option>
+      <option value="Outros">Outros</option>
+    </select>
+
+    <button id="enviar">Enviar</button>
+    <div id="msg" class="msg"></div>
+  </div>
+
+  <div class="groups" id="grupos"></div>
+
   <script>
     const SUPABASE_URL = 'https://aqyaxfrukssndxgctukf.supabase.co';
-    const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
 
-    async function carregarPendentes() {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos?or=(aprovado.is.null,aprovado.eq.false)`, {
+    async function salvarGrupo() {
+      const tipo = document.getElementById('tipo').value;
+      const link = document.getElementById('link').value.trim();
+      const categoria = document.getElementById('categoria').value;
+      const msg = document.getElementById('msg');
+
+      if (!link) {
+        msg.textContent = "Informe o link do grupo.";
+        msg.style.color = "red";
+        return;
+      }
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos`, {
+        method: 'POST',
         headers: {
-          'apikey': SERVICE_ROLE_KEY,
-          'Authorization': `Bearer ${SERVICE_ROLE_KEY}`
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ link, categoria, tipo, aprovado: false })
+      });
+
+      if (res.ok) {
+        msg.textContent = "Grupo enviado para aprovação!";
+        msg.style.color = "green";
+        document.getElementById('link').value = '';
+        carregarGrupos();
+      } else {
+        msg.textContent = "Erro ao enviar. Tente novamente.";
+        msg.style.color = "red";
+      }
+    }
+
+    async function carregarGrupos() {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos?aprovado=eq.true&select=*`, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
         }
       });
       const data = await res.json();
-      const lista = document.getElementById('lista');
-      if (!data.length) {
-        lista.innerHTML = '<p>Nenhum grupo pendente.</p>';
-        return;
-      }
-      lista.innerHTML = data.map(g =>
-        `<div class="card">
-          <p><b>ID:</b> ${g.id}</p>
-          <p><b>Tipo:</b> ${g.tipo || "N/A"}</p>
-          <p><b>Categoria:</b> ${g.categoria}</p>
-          <p><b>Link:</b> <a href="${g.link}" target="_blank">${g.link}</a></p>
-          <button class="aprovar" onclick="atualizar(${g.id}, true)">Aprovar</button>
-          <button class="rejeitar" onclick="rejeitar(${g.id})">Rejeitar</button>
-        </div>`
+      const box = document.getElementById('grupos');
+      box.innerHTML = '<h2>Grupos Aprovados</h2>' + data.map(g =>
+        `<div class="group">
+           <p><b>${g.tipo.toUpperCase()}</b> - ${g.categoria}</p>
+           <a href="${g.link}" target="_blank">Entrar no grupo</a>
+         </div>`
       ).join('');
     }
 
-    async function atualizar(id, aprovado) {
-      await fetch(`${SUPABASE_URL}/rest/v1/grupos?id=eq.${id}`, {
-        method: 'PATCH',
-        headers: {
-          'apikey': SERVICE_ROLE_KEY,
-          'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ aprovado })
-      });
-      document.getElementById('msg').textContent = `Grupo ${id} aprovado com sucesso.`;
-      carregarPendentes();
-    }
-
-    async function rejeitar(id) {
-      await fetch(`${SUPABASE_URL}/rest/v1/grupos?id=eq.${id}`, {
-        method: 'DELETE',
-        headers: {
-          'apikey': SERVICE_ROLE_KEY,
-          'Authorization': `Bearer ${SERVICE_ROLE_KEY}`
-        }
-      });
-      document.getElementById('msg').textContent = `Grupo ${id} foi rejeitado.`;
-      carregarPendentes();
-    }
-
-    carregarPendentes();
+    document.getElementById('enviar').onclick = salvarGrupo;
+    carregarGrupos();
   </script>
 </body>
 </html>
