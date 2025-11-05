@@ -19,7 +19,7 @@
   <div id="lista"></div>
   <script>
     const SUPABASE_URL = 'https://aqyaxfrukssndxgctukf.supabase.co';
-    const SERVICE_ROLE_KEY = 'SUA_SERVICE_ROLE_KEY_AQUI';
+    const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
 
     async function carregarPendentes() {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos?aprovado=eq.false`, {
