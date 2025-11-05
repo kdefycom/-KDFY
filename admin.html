@@ -15,10 +15,11 @@
 <body>
   <h2>Painel Admin</h2>
   <div id="lista"></div>
+  <div id="status" style="margin-top:10px;"></div>
 
   <script>
     const URL = 'https://aqyaxfrukssndxgctukf.supabase.co';
-    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw'; // coloque aqui a key service_role da Supabase
+    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw'; // precisa ser a service_role
 
     async function carregarPendentes() {
       const res = await fetch(`${URL}/rest/v1/grupos?aprovado=eq.false`, {
@@ -36,20 +37,43 @@
       ).join('') : "<p>Nenhum grupo pendente.</p>";
     }
 
-    async function atualizar(id, aprovado, deletar=false) {
-      if (deletar) {
-        await fetch(`${URL}/rest/v1/grupos?id=eq.${id}`, {
-          method: 'DELETE',
-          headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }
-        });
-      } else {
-        await fetch(`${URL}/rest/v1/grupos?id=eq.${id}`, {
-          method: 'PATCH',
-          headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ aprovado })
-        });
+    async function atualizar(id, aprovado, deletar = false) {
+      const status = document.getElementById('status');
+      try {
+        let res;
+        if (deletar) {
+          res = await fetch(`${URL}/rest/v1/grupos?id=eq.${id}`, {
+            method: 'DELETE',
+            headers: {
+              apikey: KEY,
+              Authorization: `Bearer ${KEY}`
+            }
+          });
+        } else {
+          res = await fetch(`${URL}/rest/v1/grupos?id=eq.${id}`, {
+            method: 'PATCH',
+            headers: {
+              apikey: KEY,
+              Authorization: `Bearer ${KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ aprovado })
+          });
+        }
+
+        if (res.ok) {
+          status.textContent = deletar ? "Grupo removido." : "Grupo aprovado!";
+          status.style.color = "green";
+          carregarPendentes();
+        } else {
+          const err = await res.text();
+          status.textContent = "Erro: " + err;
+          status.style.color = "red";
+        }
+      } catch (e) {
+        status.textContent = "Falha de rede ou chave incorreta.";
+        status.style.color = "red";
       }
-      carregarPendentes();
     }
 
     carregarPendentes();
