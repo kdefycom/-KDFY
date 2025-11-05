@@ -18,7 +18,7 @@
 
   <script>
     const URL = 'https://aqyaxfrukssndxgctukf.supabase.co';
-    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
+    const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw'; // coloque aqui a key service_role da Supabase
 
     async function carregarPendentes() {
       const res = await fetch(`${URL}/rest/v1/grupos?aprovado=eq.false`, {
@@ -28,7 +28,7 @@
       const lista = document.getElementById('lista');
       lista.innerHTML = data.length ? data.map(g =>
         `<div class="card">
-          <b>${g.nome}</b><br>
+          <b>${g.nome}</b> (${g.tipo})<br>
           <a href="${g.link}" target="_blank">${g.link}</a><br>
           <button class="aprovar" onclick="atualizar(${g.id}, true)">Aprovar</button>
           <button class="rejeitar" onclick="atualizar(${g.id}, false, true)">Rejeitar</button>
