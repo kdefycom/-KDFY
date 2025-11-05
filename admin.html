@@ -22,7 +22,7 @@
     const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeWF4ZnJ1a3NzbmR4Z2N0dWtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIzMDY0MTYsImV4cCI6MjA3Nzg4MjQxNn0.fqP4BfoGBr-A8piJevWto3DnJByYvLxB9gudq81KvJw';
 
     async function carregarPendentes() {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos?aprovado=eq.false`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/grupos?or=(aprovado.is.null,aprovado.eq.false)`, {
         headers: {
           'apikey': SERVICE_ROLE_KEY,
           'Authorization': `Bearer ${SERVICE_ROLE_KEY}`
@@ -37,6 +37,7 @@
       lista.innerHTML = data.map(g =>
         `<div class="card">
           <p><b>ID:</b> ${g.id}</p>
+          <p><b>Tipo:</b> ${g.tipo || "N/A"}</p>
           <p><b>Categoria:</b> ${g.categoria}</p>
           <p><b>Link:</b> <a href="${g.link}" target="_blank">${g.link}</a></p>
           <button class="aprovar" onclick="atualizar(${g.id}, true)">Aprovar</button>
