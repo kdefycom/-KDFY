@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços - kdefy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 2rem 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-logo {
+            padding: 0 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .sidebar-logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6b46c1;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.875rem 2rem;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #f7f5ff;
+            color: #6b46c1;
+            border-left-color: #6b46c1;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: #6b46c1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 3rem;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f7f5ff 0%, #ffffff 100%);
+            border-radius: 16px;
+            margin-bottom: 4rem;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .page-header p {
+            font-size: 1.125rem;
+            color: #4a5568;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 3rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(107, 70, 193, 0.15);
+            border-color: #6b46c1;
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6b46c1 0%, #9f7aea 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .service-card h2 {
+            font-size: 1.75rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .service-features li {
+            color: #4a5568;
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .service-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #6b46c1;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .service-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6b46c1;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-price span {
+            font-size: 1rem;
+            color: #718096;
+            font-weight: 400;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #6b46c1;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #553c9a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+        }
+
+        footer {
+            background: #f7fafc;
+            padding: 3rem 2rem 1.5rem;
+            margin-top: 5rem;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #6b46c1;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #4a5568;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #6b46c1;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e5e5;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 5rem 1.5rem 2rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>kdefy</h1>
+        </div>
+        <nav>
+            <ul class="sidebar-nav">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="servicos.html" class="active">Serviços</a></li>
+                <li><a href="contrato.html">Contrato</a></li>
+                <li><a href="#termos">Termos de Uso</a></li>
+                <li><a href="#privacidade">Privacidade</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <section class="page-header">
+            <h1>Nossos Serviços</h1>
+            <p>Soluções completas e personalizadas para transformar sua presença digital e impulsionar seus resultados</p>
+        </section>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h2>Desenvolvimento Web</h2>
+                <p>Sites modernos, responsivos e otimizados para converter visitantes em clientes</p>
+                <ul class="service-features">
+                    <li>Design responsivo e moderno</li>
+                    <li>Otimização SEO</li>
+                    <li>Performance otimizada</li>
+                    <li>Integração com APIs</li>
+                    <li>Manutenção mensal incluída</li>
+                </ul>
+                <div class="service-price">
+                    R$ 2.999 <span>/ projeto</span>
+                </div>
+                <a href="contrato.html" class="btn">Contratar Agora</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">📱</div>
+                <h2>Aplicativos Mobile</h2>
+                <p>Apps nativos e progressivos para iOS e Android com experiência excepcional</p>
+                <ul class="service-features">
+                    <li>Desenvolvimento nativo</li>
+                    <li>UI/UX profissional</li>
+                    <li>Publicação nas lojas</li>
+                    <li>Notificações push</li>
+                    <li>Suporte técnico contínuo</li>
+                </ul>
+                <div class="service-price">
+                    R$ 5.999 <span>/ projeto</span>
+                </div>
+                <a href="contrato.html" class="btn">Contratar Agora</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h2>Design & Branding</h2>
+                <p>Identidade visual completa que destaca sua marca no mercado</p>
+                <ul class="service-features">
+                    <li>Logo profissional</li>
+                    <li>Manual de marca</li>
+                    <li>Material gráfico</li>
+                    <li>Paleta de cores</li>
+                    <li>Tipografia personalizada</li>
+                </ul>
+                <div class="service-price">
+                    R$ 1.999 <span>/ projeto</span>
+                </div>
+                <a href="contrato.html" class="btn">Contratar Agora</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h2>Marketing Digital</h2>
+                <p>Estratégias completas para aumentar sua visibilidade e vendas online</p>
+                <ul class="service-features">
+                    <li>Gestão de redes sociais</li>
+                    <li>Campanhas de anúncios</li>
+                    <li>SEO e conteúdo</li>
+                    <li>E-mail marketing</li>
+                    <li>Relatórios mensais</li>
+                </ul>
+                <div class="service-price">
+                    R$ 1.500 <span>/ mês</span>
+                </div>
+                <a href="contrato.html" class="btn">Contratar Agora</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">🛡️</div>
+                <h2>Consultoria Tech</h2>
+                <p>Orientação especializada para otimizar sua infraestrutura tecnológica</p>
+                <ul class="service-features">
+                    <li>Auditoria técnica</li>
+                    <li>Planejamento estratégico</li>
+                    <li>Otimização de processos</li>
+                    <li>Segurança digital</li>
+                    <li>Suporte especializado</li>
+                </ul>
+                <div class="service-price">
+                    R$ 500 <span>/ hora</span>
+                </div>
+                <a href="contrato.html" class="btn">Contratar Agora</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">⚙️</div>
+                <h2>Automação & Integração</h2>
+                <p>Automatize processos e integre sistemas para máxima eficiência</p>
+                <ul class="service-features">
+                    <li>Automação de processos</li>
+                    <li>Integração de sistemas</li>
+                    <li>APIs personalizadas</li>
+                    <li>Dashboards gerenciais</li>
+                    <li>Otimização de workflow</li>
+                </ul>
+                <div class="service-price">
+                    R$ 3.999 <span>/ projeto</span>
+                </div>
+                <a href="contrato.html" class="btn">Contratar Agora</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>kdefy</h3>
+                <p style="color: #4a5568;">Soluções digitais inovadoras para o seu negócio crescer.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <a href="index.html">Início</a>
+                <a href="servicos.html">Serviços</a>
+                <a href="contrato.html">Contrato</a>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <a href="#termos">Termos de Uso</a>
+                <a href="#privacidade">Política de Privacidade</a>
+                <a href="#cookies">Política de Cookies</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <a href="mailto:contato@kdefy.com">contato@kdefy.com</a>
+                <a href="tel:+5511999999999">+55 11 99999-9999</a>
+            </div>
+        </div>
+        <div class="copyright">
+            © <span id="year"></span> kdefy. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        function generateFavicon() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 64, 64);
+            ctx.strokeStyle = '#6b46c1';
+            ctx.fillStyle = '#6b46c1';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(15, 10);
+            ctx.lineTo(15, 54);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(15, 28);
+            ctx.bezierCurveTo(25, 25, 35, 18, 48, 12);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(15, 32);
+            ctx.bezierCurveTo(28, 38, 38, 45, 48, 52);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(17, 30);
+            ctx.bezierCurveTo(26, 28, 34, 22, 46, 16);
+            ctx.stroke();
+
+            const link = document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'icon';
+            link.href = canvas.toDataURL();
+            document.head.appendChild(link);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+        generateFavicon();
+    </script>
+</body>
+</html>
