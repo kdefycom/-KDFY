@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kdefy - Soluções Digitais Inovadoras</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 2rem 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-logo {
+            padding: 0 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .sidebar-logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6b46c1;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.875rem 2rem;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #f7f5ff;
+            color: #6b46c1;
+            border-left-color: #6b46c1;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: #6b46c1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 3rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #f7f5ff 0%, #ffffff 100%);
+            border-radius: 16px;
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #4a5568;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #6b46c1;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: #553c9a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #6b46c1;
+            color: #6b46c1;
+        }
+
+        .btn-outline:hover {
+            background: #6b46c1;
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(107, 70, 193, 0.1);
+            border-color: #6b46c1;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6b46c1 0%, #9f7aea 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #4a5568;
+            line-height: 1.7;
+        }
+
+        footer {
+            background: #f7fafc;
+            padding: 3rem 2rem 1.5rem;
+            margin-top: 5rem;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #6b46c1;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #4a5568;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #6b46c1;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e5e5;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 5rem 1.5rem 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>kdefy</h1>
+        </div>
+        <nav>
+            <ul class="sidebar-nav">
+                <li><a href="index.html" class="active">Início</a></li>
+                <li><a href="servicos.html">Serviços</a></li>
+                <li><a href="contrato.html">Contrato</a></li>
+                <li><a href="#termos">Termos de Uso</a></li>
+                <li><a href="#privacidade">Privacidade</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="hero">
+            <h1>Transforme Seu Negócio Digital</h1>
+            <p>Soluções inovadoras em tecnologia para impulsionar sua empresa ao próximo nível</p>
+            <a href="servicos.html" class="btn">Conheça Nossos Serviços</a>
+            <a href="contrato.html" class="btn btn-outline" style="margin-left: 1rem;">Ver Contratos</a>
+        </section>
+
+        <section class="section">
+            <h2>Por Que Escolher a kdefy?</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Rapidez</h3>
+                    <p>Entrega ágil de projetos com alta qualidade e eficiência comprovada</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Precisão</h3>
+                    <p>Soluções personalizadas que atendem exatamente suas necessidades</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Inovação</h3>
+                    <p>Tecnologias de ponta para manter seu negócio competitivo</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Criatividade</h3>
+                    <p>Design moderno e funcional que encanta seus clientes</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Segurança</h3>
+                    <p>Proteção total dos seus dados e informações empresariais</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Responsivo</h3>
+                    <p>Soluções que funcionam perfeitamente em todos os dispositivos</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="text-align: center; background: linear-gradient(135deg, #f7f5ff 0%, #ffffff 100%); padding: 4rem 2rem; border-radius: 16px;">
+            <h2>Pronto Para Começar?</h2>
+            <p style="font-size: 1.125rem; color: #4a5568; margin-bottom: 2rem;">Entre em contato e descubra como podemos ajudar seu negócio</p>
+            <a href="contrato.html" class="btn">Solicitar Orçamento</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>kdefy</h3>
+                <p style="color: #4a5568;">Soluções digitais inovadoras para o seu negócio crescer.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <a href="index.html">Início</a>
+                <a href="servicos.html">Serviços</a>
+                <a href="contrato.html">Contrato</a>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <a href="#termos">Termos de Uso</a>
+                <a href="#privacidade">Política de Privacidade</a>
+                <a href="#cookies">Política de Cookies</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <a href="mailto:contato@kdefy.com">contato@kdefy.com</a>
+                <a href="tel:+5511999999999">+55 11 99999-9999</a>
+            </div>
+        </div>
+        <div class="copyright">
+            © <span id="year"></span> kdefy. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        // Favicon Generator
+        function generateFavicon() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+
+            // Background transparente
+            ctx.clearRect(0, 0, 64, 64);
+
+            // Criar K estilizado com efeito nuvem/interligado
+            ctx.strokeStyle = '#6b46c1';
+            ctx.fillStyle = '#6b46c1';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // Linha vertical do K
+            ctx.beginPath();
+            ctx.moveTo(15, 10);
+            ctx.lineTo(15, 54);
+            ctx.stroke();
+
+            // Parte superior do K (com curva)
+            ctx.beginPath();
+            ctx.moveTo(15, 28);
+            ctx.bezierCurveTo(25, 25, 35, 18, 48, 12);
+            ctx.stroke();
+
+            // Parte inferior do K (com curva)
+            ctx.beginPath();
+            ctx.moveTo(15, 32);
+            ctx.bezierCurveTo(28, 38, 38, 45, 48, 52);
+            ctx.stroke();
+
+            // Detalhe preto (sombra/profundidade)
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(17, 30);
+            ctx.bezierCurveTo(26, 28, 34, 22, 46, 16);
+            ctx.stroke();
+
+            const link = document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'icon';
+            link.href = canvas.toDataURL();
+            document.head.appendChild(link);
+        }
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        // Set current year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Initialize
+        generateFavicon();
+    </script>
+</body>
+</html>
