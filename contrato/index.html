@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato - kdefy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e5e5e5;
+            padding: 2rem 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-logo {
+            padding: 0 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .sidebar-logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6b46c1;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.875rem 2rem;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background: #f7f5ff;
+            color: #6b46c1;
+            border-left-color: #6b46c1;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            background: #6b46c1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 3rem;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f7f5ff 0%, #ffffff 100%);
+            border-radius: 16px;
+            margin-bottom: 4rem;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .page-header p {
+            font-size: 1.125rem;
+            color: #4a5568;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .contract-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #6b46c1;
+            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-group small {
+            display: block;
+            color: #718096;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: #6b46c1;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #553c9a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(107, 70, 193, 0.3);
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        footer {
+            background: #f7fafc;
+            padding: 3rem 2rem 1.5rem;
+            margin-top: 5rem;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #6b46c1;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #4a5568;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #6b46c1;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e5e5;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-toggle {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 5rem 1.5rem 2rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .contract-form {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <h1>kdefy</h1>
+        </div>
+        <nav>
+            <ul class="sidebar-nav">
+                <li><a href="index.html">Início</a></li>
+                <li><a href="servicos.html">Serviços</a></li>
+                <li><a href="contrato.html" class="active">Contrato</a></li>
+                <li><a href="#termos">Termos de Uso</a></li>
+                <li><a href="#privacidade">Privacidade</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <section class="page-header">
+            <h1>Solicitar Orçamento</h1>
+            <p>Preencha o formulário abaixo e nossa equipe entrará em contato em até 24 horas</p>
+        </section>
+
+        <form class="contract-form" id="contractForm" onsubmit="handleSubmit(event)">
+            <div class="form-group">
+                <label for="name">Nome Completo *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Telefone *</label>
+                <input type="tel" id="phone" name="phone" required placeholder="(11) 99999-9999">
+            </div>
+
+            <div class="form-group">
+                <label for="company">Empresa</label>
+                <input type="text" id="company" name="company">
+            </div>
+
+            <div class="form-group">
+                <label for="service">Serviço de Interesse *</label>
+                <select id="service" name="service" required>
+                    <option value="">Selecione um serviço</option>
+                    <option value="web">Desenvolvimento Web</option>
+                    <option value="mobile">Aplicativos Mobile</option>
+                    <option value="design">Design & Branding</option>
+                    <option value="marketing">Marketing Digital</option>
+                    <option value="consultoria">Consultoria Tech</option>
+                    <option value="automacao">Automação & Integração</option>
+                    <option value="outro">Outro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="budget">Orçamento Estimado</label>
+                <select id="budget" name="budget">
+                    <option value="">Selecione uma faixa</option>
+                    <option value="ate-2k">Até R$ 2.000</option>
+                    <option value="2k-5k">R$ 2.000 - R$ 5.000</option>
+                    <option value="5k-10k">R$ 5.000 - R$ 10.000</option>
+                    <option value="10k-mais">Acima de R$ 10.000</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="deadline">Prazo Desejado</label>
+                <select id="deadline" name="deadline">
+                    <option value="">Selecione um prazo</option>
+                    <option value="urgente">Urgente (até 1 semana)</option>
+                    <option value="rapido">Rápido (1-2 semanas)</option>
+                    <option value="normal">Normal (2-4 semanas)</option>
+                    <option value="flexivel">Flexível (mais de 1 mês)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Descreva Seu Projeto *</label>
+                <textarea id="message" name="message" required placeholder="Conte-nos mais sobre o que você precisa..."></textarea>
+                <small>Inclua detalhes importantes sobre seu projeto, objetivos e necessidades específicas</small>
+            </div>
+
+            <button type="submit" class="btn">Enviar Solicitação</button>
+
+            <div class="success-message" id="successMessage">
+                ✓ Solicitação enviada com sucesso! Nossa equipe entrará em contato em breve.
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>kdefy</h3>
+                <p style="color: #4a5568;">Soluções digitais inovadoras para o seu negócio crescer.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <a href="index.html">Início</a>
+                <a href="servicos.html">Serviços</a>
+                <a href="contrato.html">Contrato</a>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <a href="#termos">Termos de Uso</a>
+                <a href="#privacidade">Política de Privacidade</a>
+                <a href="#cookies">Política de Cookies</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <a href="mailto:contato@kdefy.com">contato@kdefy.com</a>
+                <a href="tel:+5511999999999">+55 11 99999-9999</a>
+            </div>
+        </div>
+        <div class="copyright">
+            © <span id="year"></span> kdefy. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <script>
+        function generateFavicon() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 64, 64);
+            ctx.strokeStyle = '#6b46c1';
+            ctx.fillStyle = '#6b46c1';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(15, 10);
+            ctx.lineTo(15, 54);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(15, 28);
+            ctx.bezierCurveTo(25, 25, 35, 18, 48, 12);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(15, 32);
+            ctx.bezierCurveTo(28, 38, 38, 45, 48, 52);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(17, 30);
+            ctx.bezierCurveTo(26, 28, 34, 22, 46, 16);
+            ctx.stroke();
+
+            const link = document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'icon';
+            link.href = canvas.toDataURL();
+            document.head.appendChild(link);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Simula envio do formulário
+            const form = document.getElementById('contractForm');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Aqui você pode adicionar integração com backend/API
+            console.log('Formulário enviado:', new FormData(form));
+            
+            // Mostra mensagem de sucesso
+            successMessage.classList.add('show');
+            
+            // Reseta o formulário
+            form.reset();
+            
+            // Esconde mensagem após 5 segundos
+            setTimeout(() => {
+                successMessage.classList.remove('show');
+            }, 5000);
+            
+            // Scroll suave até a mensagem
+            successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+        generateFavicon();
+    </script>
+</body>
+</html>
